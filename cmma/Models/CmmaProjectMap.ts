@@ -2,9 +2,9 @@ import CmmaContext from './CmmaContext'
 import CmmaArtifactsGroup from './CmmaArtifactsGroup'
 
 type CmmaProjectMap = {
-  Contexts: Record<string, CmmaContext>
+  contexts: Record<string, CmmaContext>
 
-  Artifacts: CmmaArtifactsGroup
+  artifacts: CmmaArtifactsGroup
 }
 
 export default CmmaProjectMap

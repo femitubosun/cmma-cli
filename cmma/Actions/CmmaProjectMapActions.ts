@@ -15,7 +15,7 @@ export default class CmmaProjectMapActions {
   }) {
     const { contextLabel, context, projectMap } = addContextToProjectOptions
 
-    Object.assign(projectMap.Contexts, {
+    Object.assign(projectMap.contexts, {
       [contextLabel]: context,
     })
   }
@@ -30,9 +30,9 @@ export default class CmmaProjectMapActions {
     projectMap: CmmaProjectMap
   }): CmmaContext {
     const { contextIndex, projectMap } = getContextObjectByIndexOptions
-    const contextLabels = Object.keys(projectMap.Contexts)
+    const contextLabels = Object.keys(projectMap.contexts)
 
-    return projectMap.Contexts[contextLabels[contextIndex]]
+    return projectMap.contexts[contextLabels[contextIndex]]
   }
 
   /**
@@ -46,7 +46,7 @@ export default class CmmaProjectMapActions {
   }) {
     const { projectMap, contextLabel } = getContextFromProjectMapOptions
 
-    return projectMap.Contexts[contextLabel]
+    return projectMap.contexts[contextLabel]
   }
 
   /**
@@ -55,7 +55,7 @@ export default class CmmaProjectMapActions {
    * @param {CmmaProjectMap} projectMap
    */
   public static listContextsInProject(projectMap: CmmaProjectMap) {
-    return Object.keys(projectMap.Contexts)
+    return Object.keys(projectMap.contexts)
   }
 
   /**
@@ -68,11 +68,11 @@ export default class CmmaProjectMapActions {
     projectMap: CmmaProjectMap
   }) {
     const { contextIndex, projectMap } = deleteContextByIndexOptions
-    const contextLabels = Object.keys(projectMap.Contexts)
+    const contextLabels = Object.keys(projectMap.contexts)
 
     const contextLabel = contextLabels[contextIndex]
 
-    delete projectMap.Contexts[contextLabel]
+    delete projectMap.contexts[contextLabel]
   }
 
   /**
@@ -86,7 +86,7 @@ export default class CmmaProjectMapActions {
   }) {
     const { projectMap, contextLabel } = deleteContextByLabelOptions
 
-    delete projectMap.Contexts[contextLabel]
+    delete projectMap.contexts[contextLabel]
   }
 
   /**
@@ -109,7 +109,7 @@ export default class CmmaProjectMapActions {
   }) {
     const { artifact, projectMap } = addArtifactToProjectOptions
 
-    projectMap.Artifacts.push(artifact)
+    projectMap.artifacts.push(artifact)
   }
 
   /**
@@ -118,8 +118,8 @@ export default class CmmaProjectMapActions {
    */
   public static get blankProjectMap(): CmmaProjectMap {
     return {
-      Contexts: {},
-      Artifacts: [],
+      contexts: {},
+      artifacts: [],
     }
   }
 }

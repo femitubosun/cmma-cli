@@ -76,7 +76,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       projectContextLabels
     )
 
-    const contextMap = projectMap.Contexts[this.contextLabel]
+    const contextMap = projectMap.contexts[this.contextLabel]
 
     /**
      * Ensure the System isn't already in Project

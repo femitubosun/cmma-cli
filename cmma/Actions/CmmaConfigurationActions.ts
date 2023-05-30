@@ -1,7 +1,6 @@
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import { string } from '@ioc:Adonis/Core/Helpers'
-
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
@@ -268,13 +267,36 @@ export default class CmmaConfigurationActions {
       defaultProjectRootDirInApp: '',
       defaultSystemInternalApiSuffix: '',
       defaultCasePattern: 'pascalcase',
-      defaultProjectRoutesFileName: '',
       defaultSystemArtifactDirs: [],
       defaultModuleDirIn: [],
       logs: [],
       projectMap: {
-        Contexts: {},
-        Artifacts: [],
+        contexts: {},
+        artifacts: [],
+      },
+    }
+  }
+
+  public static get defaultCmmaConfiguration(): CmmaConfiguration {
+    return {
+      defaultProjectRootDirInApp: 'Systems',
+      defaultSystemInternalApiSuffix: 'System',
+      defaultCasePattern: 'pascalcase',
+      defaultSystemArtifactDirs: [
+        'actions',
+        'controllers',
+        'migrations',
+        'models',
+        'routes',
+        'typechecking',
+        'validators',
+        'views',
+      ],
+      defaultModuleDirIn: ['controllers', 'validators'],
+      logs: [],
+      projectMap: {
+        contexts: {},
+        artifacts: [],
       },
     }
   }
