@@ -1,12 +1,11 @@
 import { BaseCmmaBoundaryCommand } from '../../cmma/CommandBase/BaseCmmaBoundaryCommand'
 import { flags } from '@adonisjs/core/build/standalone'
-import CmmaProjectCasePatternType from '../../cmma/TypeChecking/CmmaProjectCasePatternType'
 import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationActions'
 import CmmaProjectMapActions from '../../cmma/Actions/CmmaProjectMapActions'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaContextActions from '../../cmma/Actions/CmmaContextActions'
-import CmmaDefaultSystemArtifactDirLabel from '../../cmma/TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 import CmmaNodeMap from '../../cmma/Models/CmmaNodeMap'
+import { INITIALIZING_ADONIS_PROJECT_FOR_CMMA } from '../../cmma/Helpers/SystemMessages'
 
 export default class Init extends BaseCmmaBoundaryCommand {
   /**
@@ -28,65 +27,10 @@ export default class Init extends BaseCmmaBoundaryCommand {
    * CMMA Configurations
    */
   protected commandShortCode = 'in'
-  protected boundaryObject = CmmaProjectMapActions.blankProjectMap
-  protected PROJECT_CONFIG = CmmaConfigurationActions.blankCmmaConfiguration
-
-  /**
-   * Customizable Project Defaults
-   */
-  private defaultCmmaProjectRoot = 'Systems'
-  private defaultCmmaSystemInternalApiSuffix = 'System'
-  private defaultCmmaModuleDirIn: Array<CmmaDefaultSystemArtifactDirLabel> = [
-    'controllers',
-    'validators',
-  ]
-  private defaultProjectRoutesFileName = 'Project'
-  private defaultCmmaProjectCasePattern: CmmaProjectCasePatternType = 'pascalcase'
-  private defaultCmmaProjectSystemArtifactDirectories: Array<CmmaDefaultSystemArtifactDirLabel> = [
-    'actions',
-    'controllers',
-    'migrations',
-    'models',
-    'routes',
-    'typechecking',
-    'views',
-  ]
-  // Todo Make Log an Entity
-  private defaultCmmaLogs = []
-  private defaultCmmaProjectMap = CmmaProjectMapActions.blankProjectMap
+  protected PROJECT_CONFIG = this.projectConfiguration!
 
   public async run() {
-    /**
-     * Check Configuration File Exists
-     */
-
-    if (this.projectConfigFileExists) {
-      this.logger.error(
-        `Config file: ${this.colors.cyan(
-          this.CONFIG_FILE_NAME
-        )} already exists. Proceeding will overwrite existing configuration file.`
-      )
-      const confirmProceed = await this.prompt.confirm('Proceed?')
-
-      if (!confirmProceed) {
-        this.logger.info('Exiting....')
-        await this.exit()
-      }
-
-      await this.kernel.exec('cmma:clean', ['y'])
-    }
-
-    /**
-     * Set CMMA Defaults
-     */
-    this.PROJECT_CONFIG.defaultProjectRootDirInApp = this.defaultCmmaProjectRoot
-    this.PROJECT_CONFIG.defaultSystemInternalApiSuffix = this.defaultCmmaSystemInternalApiSuffix
-    this.PROJECT_CONFIG.defaultCasePattern = this.defaultCmmaProjectCasePattern
-    this.PROJECT_CONFIG.defaultProjectRoutesFileName = this.defaultProjectRoutesFileName
-    this.PROJECT_CONFIG.defaultModuleDirIn = this.defaultCmmaModuleDirIn
-    this.PROJECT_CONFIG.defaultSystemArtifactDirs = this.defaultCmmaProjectSystemArtifactDirectories
-    this.PROJECT_CONFIG.logs = this.defaultCmmaLogs
-    this.PROJECT_CONFIG.projectMap = this.defaultCmmaProjectMap
+    await this.startCmmaCommand()
 
     const projectMap = this.PROJECT_CONFIG.projectMap
 
@@ -95,7 +39,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
      */
     this.ui
       .sticker()
-      .heading("Initializing Adonis Project for Crenet's Modular Monolith Architecture (C.M.M.A)")
+      .heading(INITIALIZING_ADONIS_PROJECT_FOR_CMMA)
       .add('Project Defaults')
       .add('')
       .add(
@@ -105,9 +49,6 @@ export default class Init extends BaseCmmaBoundaryCommand {
         `System Internal API Suffix:           ${this.PROJECT_CONFIG.defaultSystemInternalApiSuffix}`
       )
       .add(`Case Pattern for Generated Files:     ${this.PROJECT_CONFIG.defaultCasePattern}`)
-      .add(
-        `Project Routes Filename:              ${this.PROJECT_CONFIG.defaultProjectRoutesFileName}`
-      )
       .add(`Create Module Directory In:           ${this.PROJECT_CONFIG.defaultModuleDirIn}`)
 
       .add(`Default System Directories:           ${this.PROJECT_CONFIG.defaultSystemArtifactDirs}`)
@@ -115,35 +56,28 @@ export default class Init extends BaseCmmaBoundaryCommand {
       .render()
 
     /**
-     * Create Project Files
-     *
-     * 1. Routes
-     * 2. TODO Views
-     */
-
-    /**
      * Create RoutesFile
      */
 
-    const projectRoutesNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const projectRoutesFileNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
-        artifactLabel: this.PROJECT_CONFIG.defaultProjectRoutesFileName,
+        label: 'Project',
         artifactType: 'routes',
       })
 
-    const projectRoutesFilePath = CmmaFileActions.createAbsolutePathFromNodePath({
-      nodePath: projectRoutesNodePath,
-      applicationRoot: this.application.appRoot,
-      projectRootDirInApp: this.PROJECT_CONFIG.defaultProjectRootDirInApp,
-    })
+    const projectRoutesFileFilePath = projectRoutesFileNodePath.getAbsoluteOsPath(
+      this.application.appRoot
+    )
 
-    CmmaFileActions.ensureAFileExists(projectRoutesFilePath)
+    CmmaFileActions.ensureAFileExists(projectRoutesFileFilePath)
 
-    this.logger.action('create').succeeded(projectRoutesFilePath)
+    this.logger.action('create').succeeded(projectRoutesFileFilePath)
+
+    const PROJECT_ROUTES_FILENAME = projectRoutesFileNodePath.artifactLabel?.split('.')[0]
 
     CmmaProjectMapActions.addArtifactToProject({
-      artifact: this.PROJECT_CONFIG.defaultProjectRoutesFileName,
+      artifact: PROJECT_ROUTES_FILENAME!,
       projectMap,
     })
 
@@ -156,13 +90,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
       'routes.ts',
     ])
 
-    const projectImportString = `import 'App/Systems/${CmmaConfigurationActions.resolveArtifactLabel(
-      {
-        artifactLabel: this.PROJECT_CONFIG.defaultProjectRoutesFileName + 'Routes',
-        artifactGroupLabel: 'routes',
-        configObject: this.PROJECT_CONFIG,
-      }
-    )}'`
+    const projectImportString = `import 'App/Systems/${PROJECT_ROUTES_FILENAME}'`
 
     CmmaFileActions.appendToFile({
       filePath: adonisRoutesPath,
@@ -227,15 +155,10 @@ export default class Init extends BaseCmmaBoundaryCommand {
      */
 
     for (let contextLabel of CmmaProjectMapActions.listContextsInProject(projectMap)) {
-      const contextRoutesFileNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+      const contextDir = new CmmaNodeMap(this.PROJECT_CONFIG)
         .buildPathFromNullNode()
         .toContext(contextLabel)
-
-      const contextRoutesDestinationFilePath = CmmaFileActions.createAbsolutePathFromNodePath({
-        nodePath: contextRoutesFileNodePath,
-        applicationRoot: this.application.appRoot,
-        projectRootDirInApp: this.PROJECT_CONFIG.defaultProjectRootDirInApp,
-      })
+        .getAbsoluteOsPath(this.application.appRoot)
 
       const generatedContextRoutesFile = this.generator
         .addFile(
@@ -245,14 +168,14 @@ export default class Init extends BaseCmmaBoundaryCommand {
             configObject: this.PROJECT_CONFIG,
           })
         )
-        .destinationDir(contextRoutesDestinationFilePath)
+        .destinationDir(contextDir)
 
       const contextImportString = `import './${contextLabel}/${
         generatedContextRoutesFile.toJSON().filename
       }'`
 
       CmmaFileActions.appendToFile({
-        filePath: projectRoutesFilePath,
+        filePath: projectRoutesFileFilePath,
         text: contextImportString,
       })
     }

@@ -1,6 +1,5 @@
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
-import CmmaArtifactNode from './CmmaArtifactNode'
-import CmmaBoundaryNode from './CmmaBoundaryNode'
+import CmmaNode from './CmmaNode'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaArtifactLabelObject from '../TypeChecking/CmmaArtifactLabelObject'
 import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
@@ -9,16 +8,11 @@ import CmmaContext from './CmmaContext'
 import CmmaSystemActions from '../Actions/CmmaSystemActions'
 import CmmaProjectMapActions from '../Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../Actions/CmmaContextActions'
-import CmmaProjectNodes from '../TypeChecking/CmmaProjectNodes'
+import CmmaProjectMapNodes from '../TypeChecking/CmmaProjectMapNodes'
+import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 
 export default class CmmaNodeMap {
-  private context: CmmaBoundaryNode
-  private system: CmmaBoundaryNode
-  private module: CmmaBoundaryNode
-  private systemArtifactsDir: CmmaBoundaryNode
-  private artifact: CmmaArtifactNode
-
-  private nodes: CmmaProjectNodes
+  private nodes: CmmaProjectMapNodes
 
   constructor(private cmmaConfiguration: CmmaConfiguration) {
     this.nodes = {
@@ -26,6 +20,7 @@ export default class CmmaNodeMap {
       system: undefined,
       module: undefined,
       systemArtifactsDir: undefined,
+      modelDir: undefined,
       artifact: undefined,
     }
   }
@@ -33,16 +28,8 @@ export default class CmmaNodeMap {
   /**
    * @description Get Relative Path from Node Path
    * @author FATE
-   * @param noExt Remove Extension From Artifact
    */
-  public getRelativePath(noExt?: boolean) {
-    if (noExt) {
-      const artifactNode = this.path[this.length - 1]
-      const artifactNodeSplit = artifactNode.split('.')
-
-      this.path[this.length - 1] = artifactNodeSplit[0]
-    }
-
+  public getRelativePath() {
     return this.path.join('/')
   }
 
@@ -60,6 +47,10 @@ export default class CmmaNodeMap {
     ])
   }
 
+  /**
+   * @description Get Migrations Folder Imports Style Path
+   * @author FATE
+   */
   public getMigrationTypePath() {
     return (
       './app/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
@@ -80,9 +71,12 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toContext(label: string): CmmaNodeMap {
-    this.nodes.context = new CmmaBoundaryNode(label)
-    this.context = new CmmaBoundaryNode(label)
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+      identifier: label,
+      casePattern: this.cmmaConfiguration.defaultCasePattern,
+    })
 
+    this.nodes.context = new CmmaNode(nodeLabel)
     return this
   }
 
@@ -92,9 +86,12 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toSystem(label: string): CmmaNodeMap {
-    this.nodes.system = new CmmaBoundaryNode(label)
-    this.system = new CmmaBoundaryNode(label)
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+      identifier: label,
+      casePattern: this.cmmaConfiguration.defaultCasePattern,
+    })
 
+    this.nodes.system = new CmmaNode(nodeLabel)
     return this
   }
 
@@ -104,8 +101,27 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toSystemArtifactsDir(label: CmmaArtifactGroupLabel): CmmaNodeMap {
-    this.nodes.systemArtifactsDir = new CmmaBoundaryNode(label)
-    this.systemArtifactsDir = new CmmaBoundaryNode(label)
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+      identifier: label,
+      casePattern: this.cmmaConfiguration.defaultCasePattern,
+    })
+
+    this.nodes.systemArtifactsDir = new CmmaNode(nodeLabel)
+    return this
+  }
+
+  /**
+   * @description Add model Directory Node to Node Path for generating Paths for Typechecking Directory
+   * @author FATE
+   * @param label
+   */
+  public toModelDir(label: string) {
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+      identifier: label,
+      casePattern: this.cmmaConfiguration.defaultCasePattern,
+    })
+
+    this.nodes.modelDir = new CmmaNode(nodeLabel)
 
     return this
   }
@@ -116,150 +132,73 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toModule(label: string) {
-    this.nodes.module = new CmmaBoundaryNode(label)
-    this.module = new CmmaBoundaryNode(label)
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+      identifier: label,
+      casePattern: this.cmmaConfiguration.defaultCasePattern,
+    })
 
+    this.nodes.module = new CmmaNode(nodeLabel)
     return this
   }
 
+  // TODO Change to Artifact Type
   /**
    * @description Add Artifact Path to Node Path
    * @author FATE
-   * @param artifactLabelObject
+   * @param toArtifactOptions
    */
-  public toArtifact(artifactLabelObject: CmmaArtifactLabelObject): CmmaNodeMap {
-    this.nodes.artifact = new CmmaArtifactNode(artifactLabelObject)
+  public toArtifact(toArtifactOptions: {
+    label: string
+    artifactType: CmmaDefaultSystemArtifactDirLabel
+    noExt?: boolean
+  }): CmmaNodeMap {
+    const { label, artifactType, noExt } = toArtifactOptions
 
-    const artifactTransformations = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: artifactLabelObject.artifactType,
+    const transformations = CmmaConfigurationActions.getArtifactGroupTransformation({
+      artifactGroup: artifactType,
       configObject: this.cmmaConfiguration,
     })
 
-    this.nodes.artifact.ext = artifactTransformations.extname
+    const artifactLabel = CmmaConfigurationActions.transformLabel({
+      label: label,
+      transformations,
+      noExt,
+    })
 
-    this.artifact = new CmmaArtifactNode(artifactLabelObject)
+    this.nodes.artifact = new CmmaNode(artifactLabel)
 
     return this
-  }
-
-  /**
-   * @description Get Path
-   * @author FATE
-   * @returns Array<string>
-   */
-  public get path(): Array<string> {
-    const nodeMap: Array<string> = []
-
-    if (this.context) {
-      this.context.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.context.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
-      nodeMap.push(this.context.label)
-    }
-
-    if (this.system) {
-      this.system.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.system.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
-      nodeMap.push(this.system.label)
-    }
-
-    if (this.systemArtifactsDir) {
-      this.systemArtifactsDir.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.systemArtifactsDir.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
-      nodeMap.push(this.systemArtifactsDir.label)
-    }
-
-    if (this.module) {
-      this.module.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.module.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
-      nodeMap.push(this.module.label)
-    }
-
-    if (this.artifact) {
-      const transformations = CmmaConfigurationActions.getArtifactGroupTransformation({
-        artifactGroup: this.artifact.artifactGroupLabel,
-        configObject: this.cmmaConfiguration,
-      })
-
-      nodeMap.push(
-        CmmaConfigurationActions.transformLabel({
-          label: this.artifact.label,
-          transformations,
-        })
-      )
-    }
-
-    return nodeMap
   }
 
   /**
    * @description Get Path of Drawn on Node Map
-   * @param noExt: Remove Extension from artifact
    * @author FATE
    */
-  public getPath(noExt = false): Array<string> {
+  public get path(): Array<string> {
     const nodePath: Array<string> = []
 
     if (this.nodes.context) {
-      this.nodes.context.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.context.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
       nodePath.push(this.nodes.context.label)
     }
 
     if (this.nodes.system) {
-      this.nodes.system.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.system.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
       nodePath.push(this.nodes.system.label)
     }
 
     if (this.nodes.systemArtifactsDir) {
-      this.nodes.systemArtifactsDir.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.systemArtifactsDir.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
       nodePath.push(this.nodes.systemArtifactsDir.label)
     }
 
     if (this.nodes.module) {
-      this.nodes.module.label = CmmaConfigurationActions.resolveIdentifier({
-        identifier: this.module.label,
-        casePattern: this.cmmaConfiguration.defaultCasePattern,
-      })
-
       nodePath.push(this.nodes.module.label)
     }
 
-    if (this.nodes.artifact) {
-      const transformations = CmmaConfigurationActions.getArtifactGroupTransformation({
-        artifactGroup: this.artifact.artifactGroupLabel,
-        configObject: this.cmmaConfiguration,
-      })
+    if (this.nodes.modelDir) {
+      nodePath.push(this.nodes.modelDir.label)
+    }
 
-      nodePath.push(
-        CmmaConfigurationActions.transformLabel({
-          label: this.nodes.artifact.label,
-          transformations,
-          noExt,
-        })
-      )
+    if (this.nodes.artifact) {
+      nodePath.push(this.nodes.artifact.label)
     }
 
     return nodePath
@@ -331,11 +270,15 @@ export default class CmmaNodeMap {
     return this.nodes.system?.label || undefined
   }
 
+  public get artifactLabel() {
+    return this.nodes.artifact?.label || undefined
+  }
+
   /**
    * @description Get Length of Path
    * @author FATE
    */
   public get length() {
-    return this.getPath().length
+    return this.path.length
   }
 }
