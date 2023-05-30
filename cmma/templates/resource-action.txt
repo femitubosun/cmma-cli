@@ -1,0 +1,18 @@
+export default class {{ computedNameWithSuffix }} {
+  public static create{{ computedNameWithoutSuffix }}Record() {}
+
+  public static listActive{{ computedNameWithoutSuffix }}Record() {}
+
+  public static listDisabled{{ computedNameWithoutSuffix }}Record() {}
+
+  public static get{{ computedNameWithoutSuffix }}ById() {}
+
+  public static get{{ computedNameWithoutSuffix }}ByIdentifier() {}
+
+  public static get{{ computedNameWithoutSuffix }}Record(){}
+
+  public static delete{{ computedNameWithoutSuffix }}Record() {}
+
+  public static update{{computedNameWithoutSuffix}}Record() {}
+
+}

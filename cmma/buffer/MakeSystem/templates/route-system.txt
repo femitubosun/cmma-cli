@@ -1,0 +1,15 @@
+/*
+|--------------------------------------------------------------------------
+| CmmaModule Route
+|--------------------------------------------------------------------------
+|
+|Import this file inside `start/routes.ts` as follows
+|
+| import 'App/Systems/{{ filename }}/Routes/index'
+|
+*/
+import Route from '@ioc:Adonis/Core/Route'
+
+Route.group(() => {})
+  .prefix('')
+  .namespace('App/Systems/{{ filename }}/Controllers')
