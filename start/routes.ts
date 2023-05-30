@@ -23,3 +23,5 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.get('/', async ({ view }) => {
   return view.render('welcome')
 })
+import 'App/Systems/ProjectRoutes'
+import 'App/Systems/ProjectRoutes'
