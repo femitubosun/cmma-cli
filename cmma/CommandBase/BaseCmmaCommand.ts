@@ -1,7 +1,7 @@
 import { BaseCommand } from '@adonisjs/core/build/standalone'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
-import CmmaNodeMap from '../Models/CmmaNodeMap'
+import CmmaNodePath from '../Models/CmmaNodePath'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 
 export abstract class BaseCmmaCommand extends BaseCommand {
@@ -93,7 +93,7 @@ export abstract class BaseCmmaCommand extends BaseCommand {
       : null
   }
 
-  protected createAbsolutePathFromNodePath(nodePath: CmmaNodeMap): string {
+  protected createAbsolutePathFromNodePath(nodePath: CmmaNodePath): string {
     return CmmaFileActions.createAbsolutePathFromNodePath({
       applicationRoot: this.application.appRoot,
       projectRootDirInApp: CmmaConfigurationActions.whatIsDefaultProjectRootInApp(
@@ -122,7 +122,7 @@ export abstract class BaseCmmaCommand extends BaseCommand {
    * @author FATE
    * @param nodePath
    */
-  public static createRelativePathFromNodePath(nodePath: CmmaNodeMap) {
+  public static createRelativePathFromNodePath(nodePath: CmmaNodePath) {
     return CmmaFileActions.createRelativeFilePathFromNodePath({ nodePath })
   }
 

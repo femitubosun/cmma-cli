@@ -25,3 +25,5 @@ Route.get('/', async ({ view }) => {
 })
 import 'App/Systems/ProjectRoutes'
 import 'App/Systems/ProjectRoutes'
+import 'App/Systems/ProjectRoutes'
+import 'App/Systems/ProjectRoutes'

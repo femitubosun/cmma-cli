@@ -5,6 +5,9 @@ type CmmaArtifactType =
   | 'migration'
   | 'controller'
   | 'action'
-  | 'typecheck'
+  | 'create-typechecking'
+  | 'update-typechecking'
+  | 'route'
+  | 'index'
 
 export default CmmaArtifactType

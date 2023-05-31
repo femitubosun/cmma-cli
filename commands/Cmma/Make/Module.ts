@@ -8,7 +8,7 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
-import CmmaNodeMap from '../../../cmma/Models/CmmaNodeMap'
+import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Module extends BaseCmmaBoundaryCommand {
   /**
@@ -125,7 +125,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
     for (let moduleDestinationDir of CmmaConfigurationActions.whatIsDefaultCreateModuleDirIn(
       this.PROJECT_CONFIG
     )) {
-      const moduleDirectory = new CmmaNodeMap(this.PROJECT_CONFIG)
+      const moduleDirectory = new CmmaNodePath(this.PROJECT_CONFIG)
         .buildPathFromNullNode()
         .toContext(this.contextLabel)
         .toSystem(this.systemLabel)
@@ -141,14 +141,14 @@ export default class Module extends BaseCmmaBoundaryCommand {
     /**
      * Create Module Routes File
      */
-    const moduleRoutesFile = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const moduleRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
       .toArtifact({
         artifactLabel: this.moduleLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
       })
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -159,17 +159,18 @@ export default class Module extends BaseCmmaBoundaryCommand {
     /**
      * Import Module Route into System
      */
-    const moduleRoutesPath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const moduleRoutesPath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
         artifactLabel: this.moduleLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
+        noExt: true,
       })
-      .getRelativePath(true)
+      .getRelativePath()
 
     const IMPORT_MODULE_ROUTES_STRING = `import './${moduleRoutesPath}'`
 
-    const systemRoutesFile = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const systemRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)

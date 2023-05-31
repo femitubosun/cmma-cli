@@ -9,8 +9,6 @@ type CmmaConfiguration = {
 
   defaultCasePattern: CmmaProjectCasePatternType
 
-  defaultProjectRoutesFileName: string
-
   defaultSystemArtifactDirs: Array<CmmaDefaultSystemArtifactDirLabel>
 
   defaultModuleDirIn: Array<CmmaDefaultSystemArtifactDirLabel>

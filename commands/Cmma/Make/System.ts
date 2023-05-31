@@ -7,7 +7,7 @@ import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaNodeMap from '../../../cmma/Models/CmmaNodeMap'
+import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class System extends BaseCmmaBoundaryCommand {
   /**
@@ -76,7 +76,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       projectContextLabels
     )
 
-    const contextMap = projectMap.Contexts[this.contextLabel]
+    const contextMap = projectMap.contexts[this.contextLabel]
 
     /**
      * Ensure the System isn't already in Project
@@ -115,7 +115,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     for (let systemArtifactDirectoryLabel of CmmaConfigurationActions.whatIsDefaultSystemArtifactDirs(
       this.PROJECT_CONFIG
     )) {
-      const artifactDirectoryFilePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+      const artifactDirectoryFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
         .buildPathFromNullNode()
         .toContext(this.contextLabel)
         .toSystem(this.systemLabel)
@@ -128,7 +128,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     /**
      * Generate System Routes File
      */
-    const systemRoutesFilePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const systemRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
@@ -146,24 +146,25 @@ export default class System extends BaseCmmaBoundaryCommand {
     /**
      * Import System Routes into Context Routes
      */
-    const systemToSystemRoutesRelativePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const systemToSystemRoutesRelativePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
       .toArtifact({
         artifactLabel: 'index',
         artifactType: 'file',
+        noExt: true,
       })
-      .getRelativePath(true)
+      .getRelativePath()
 
     const IMPORT_SYSTEM_ROUTE_STRING = `import './${systemToSystemRoutesRelativePath}'`
 
-    const contextRoutesFilePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const contextRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toArtifact({
         artifactLabel: this.contextLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
       })
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -177,7 +178,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     /**
      * Generate Internal Api
      */
-    const internalApiDestinationPath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const internalApiDestinationPath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)

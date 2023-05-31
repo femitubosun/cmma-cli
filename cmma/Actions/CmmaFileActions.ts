@@ -9,7 +9,7 @@ import {
 import prettier from 'prettier'
 import { join } from 'path'
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
-import CmmaNodeMap from '../Models/CmmaNodeMap'
+import CmmaNodePath from '../Models/CmmaNodePath'
 
 export default class CmmaFileActions {
   /**
@@ -64,7 +64,7 @@ export default class CmmaFileActions {
    * @param createRelativeFilePathFromNodePathOptions
    */
   public static createRelativeFilePathFromNodePath(createRelativeFilePathFromNodePathOptions: {
-    nodePath: CmmaNodeMap
+    nodePath: CmmaNodePath
     noExt?: boolean
   }) {
     const { nodePath, noExt } = createRelativeFilePathFromNodePathOptions
@@ -80,26 +80,12 @@ export default class CmmaFileActions {
   }
 
   /**
-   * @description Create Migrations Path From Node Path
-   * @author FATE
-   * @param {} createMigrationsPathFromNodePathOptions
-   */
-  public static createMigrationPathFromNodePath(createMigrationsPathFromNodePathOptions: {
-    nodePath: CmmaNodeMap
-    configObject: CmmaConfiguration
-  }) {
-    const { nodePath, configObject } = createMigrationsPathFromNodePathOptions
-
-    return './app/' + configObject.defaultProjectRootDirInApp + '/' + nodePath.getRelativePath()
-  }
-
-  /**
    * @description Get an absolute Path from a Node Path
    * @param createAbsolutePathFromNodePathOptions
    * @protected
    */
   public static createAbsolutePathFromNodePath(createAbsolutePathFromNodePathOptions: {
-    nodePath: CmmaNodeMap
+    nodePath: CmmaNodePath
     projectRootDirInApp: string
     applicationRoot: string
   }) {

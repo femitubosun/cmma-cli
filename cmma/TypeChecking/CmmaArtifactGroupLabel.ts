@@ -6,8 +6,10 @@ type CmmaArtifactGroupLabel =
   | 'actions'
   | 'migrations'
   | 'operations'
-  | 'typechecking'
+  | 'create-typechecking'
   | 'file'
   | 'routes'
+  | 'update-typechecking'
+  | 'typechecking'
 
 export default CmmaArtifactGroupLabel

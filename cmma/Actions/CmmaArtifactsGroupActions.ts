@@ -100,28 +100,4 @@ export default class ArtifactGroupActions {
   public static blankArtifactsGroup(): CmmaArtifactsGroup {
     return []
   }
-
-  /**
-   * @description What is node path from Project Map
-   * @author FATE
-   * @param {} whatIsNodeMapFromMeOptions
-   */
-  public static whatIsNodePathFromMe(whatIsNodeMapFromMeOptions: {
-    artifactGroupLabel?: CmmaArtifactGroupLabel
-    artifactLabel?: string
-  }) {
-    const { artifactGroupLabel, artifactLabel } = whatIsNodeMapFromMeOptions
-
-    const nodeMap: Array<string> = []
-
-    if (artifactGroupLabel) {
-      nodeMap.push(artifactGroupLabel)
-    }
-
-    if (artifactLabel) {
-      nodeMap.push(artifactLabel)
-    }
-
-    return nodeMap
-  }
 }

@@ -1,5 +1,5 @@
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
-import CmmaNodeMap from '../Models/CmmaNodeMap'
+import CmmaNodePath from '../Models/CmmaNodePath'
 import CmmaContextActions from './CmmaContextActions'
 import CmmaProjectMapActions from './CmmaProjectMapActions'
 
@@ -17,7 +17,7 @@ export default class CmmaNodePathActions {
     const { systemLabel, configObject, contextLabel } =
       whatIsSystemMigrationsDirectoryNodePathOptions
 
-    return new CmmaNodeMap(configObject)
+    return new CmmaNodePath(configObject)
       .buildPathFromNullNode()
       .toContext(contextLabel)
       .toSystem(systemLabel)
@@ -32,7 +32,7 @@ export default class CmmaNodePathActions {
   public static listContextMigrationsNodePaths(listContextMigrationDirectoriesNodePathsOptions: {
     contextLabel: string
     configObject: CmmaConfiguration
-  }): Array<CmmaNodeMap> {
+  }): Array<CmmaNodePath> {
     const { contextLabel, configObject } = listContextMigrationDirectoriesNodePathsOptions
 
     const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
@@ -53,7 +53,7 @@ export default class CmmaNodePathActions {
 
   public static listProjectMigrationsDirectoryNodePath(
     configObject: CmmaConfiguration
-  ): Array<CmmaNodeMap> {
+  ): Array<CmmaNodePath> {
     const projectContexts = CmmaProjectMapActions.listContextsInProject(configObject.projectMap)
 
     return projectContexts

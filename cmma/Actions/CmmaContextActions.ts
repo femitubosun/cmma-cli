@@ -106,21 +106,12 @@ export default class CmmaContextActions {
   }
 
   /**
-   * @description What is Context's Routes File name
-   * @author FATE
-   * @param context
-   */
-  public static whatIsContextRoutesFileName(context: CmmaContext) {
-    return context.ContextRoutesFileName
-  }
-
-  /**
    * @description What is Contexts' View Filename
    * @author FATE
    * @param context
    */
-  public static whatIsContextViewsFileName(context: CmmaContext) {
-    return context.ContextViewsFileName
+  public static whatIsContextLabel(context: CmmaContext) {
+    return context.contextLabel
   }
 
   /**
@@ -130,8 +121,7 @@ export default class CmmaContextActions {
    */
   public static get blankContext(): CmmaContext {
     return {
-      ContextRoutesFileName: '',
-      ContextViewsFileName: '',
+      contextLabel: '',
       systems: {},
     }
   }

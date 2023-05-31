@@ -1,10 +1,10 @@
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import { string } from '@ioc:Adonis/Core/Helpers'
-
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
 export default class CmmaConfigurationActions {
   /**
@@ -12,7 +12,7 @@ export default class CmmaConfigurationActions {
    * @author FATE
    * @param {} resolveIdentifierOptions
    */
-  public static resolveIdentifier(resolveIdentifierOptions: {
+  public static resolveIdentifierToCasePattern(resolveIdentifierOptions: {
     identifier: string
     casePattern: CmmaProjectCasePatternType
   }) {
@@ -36,35 +36,112 @@ export default class CmmaConfigurationActions {
    * @author FATE
    * @param {} resolveArtifactLabelOptions
    */
-  public static resolveArtifactLabel(resolveArtifactLabelOptions: {
+  public static normalizeArtifactLabel(resolveArtifactLabelOptions: {
     artifactLabel: string
-    artifactGroupLabel: CmmaArtifactGroupLabel
+    artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
+    noExt?: boolean
   }) {
-    const { artifactLabel, artifactGroupLabel, configObject } = resolveArtifactLabelOptions
+    const { artifactLabel, noExt, artifactType, configObject } = resolveArtifactLabelOptions
 
-    if (artifactGroupLabel === 'views') {
-      return this.resolveIdentifier({
-        identifier: artifactLabel,
-        casePattern: 'dashcase',
-      })
+    const Resolve: Record<CmmaArtifactType, Function> = {
+      'index': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: {
+            extname: '.ts',
+            pattern: 'camelcase',
+          },
+          noExt,
+        }),
+      'file': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: {
+            extname: '.ts',
+            pattern: configObject.defaultCasePattern,
+          },
+          noExt,
+        }),
+      'view': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'views',
+            configObject,
+          }),
+          noExt,
+        }),
+      'model': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'models',
+            configObject,
+          }),
+          noExt,
+        }),
+      'migration': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          noExt,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'migrations',
+            configObject,
+          }),
+        }),
+      'controller': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'controllers',
+            configObject,
+          }),
+        }),
+      'action': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'actions',
+            configObject,
+          }),
+        }),
+      'create-typechecking': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'create-typechecking',
+            configObject,
+          }),
+        }),
+      'update-typechecking': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'update-typechecking',
+            configObject,
+          }),
+        }),
+      'route': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'routes',
+            configObject,
+          }),
+        }),
     }
 
-    if (artifactGroupLabel === 'models') {
-      return this.resolveIdentifier({
-        identifier: artifactLabel,
-        casePattern: 'snakecase',
-      })
-    }
-
-    return this.resolveIdentifier({
-      identifier: artifactLabel,
-      casePattern: configObject.defaultCasePattern,
-    })
+    return Resolve[artifactType]()
   }
 
   /**
-   * @description Transform an Artifact Label with Suffix ,Prefix, Extension and Pattern
+   * @description Transform an Artifact Label with Suffix, Prefix, Extension and Pattern
    * @author FATE
    * @param {TransformLabelOptions} transformLabelOptions
    */
@@ -112,63 +189,77 @@ export default class CmmaConfigurationActions {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
     const transformations: Record<CmmaArtifactGroupLabel, StringTransformations> = {
-      actions: {
+      'actions': {
         extname: '.ts',
         suffix: 'Actions',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      controllers: {
+      'controllers': {
         extname: '.ts',
         suffix: 'Controller',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      file: {
+      'file': {
         extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
 
-      migrations: {
+      'migrations': {
         extname: '.ts',
         pattern: 'snakecase',
       },
 
-      models: {
+      'models': {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      operations: {
+      'operations': {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      routes: {
+      'routes': {
         extname: '.ts',
         suffix: 'Routes',
         pattern: configObject.defaultCasePattern,
       },
 
-      typechecking: {
+      'typechecking': {
         extname: '.ts',
-        suffix: 'Options',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'create-typechecking': {
+        extname: '.ts',
+        prefix: 'Create',
+        suffix: 'RecordOptions',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      validators: {
+      'update-typechecking': {
+        extname: '.ts',
+        prefix: 'Update',
+        suffix: 'RecordOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'validators': {
         extname: '.ts',
         suffix: 'Validator',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      views: {
+      'views': {
         extname: '.edge',
         pattern: 'dashcase',
       },
@@ -268,19 +359,37 @@ export default class CmmaConfigurationActions {
       defaultProjectRootDirInApp: '',
       defaultSystemInternalApiSuffix: '',
       defaultCasePattern: 'pascalcase',
-      defaultProjectRoutesFileName: '',
       defaultSystemArtifactDirs: [],
       defaultModuleDirIn: [],
       logs: [],
       projectMap: {
-        Contexts: {},
-        Artifacts: [],
+        contexts: {},
+        artifacts: [],
+      },
+    }
+  }
+
+  public static get defaultCmmaConfiguration(): CmmaConfiguration {
+    return {
+      defaultProjectRootDirInApp: 'Systems',
+      defaultSystemInternalApiSuffix: 'System',
+      defaultCasePattern: 'pascalcase',
+      defaultSystemArtifactDirs: [
+        'actions',
+        'controllers',
+        'migrations',
+        'models',
+        'routes',
+        'typechecking',
+        'validators',
+        'views',
+      ],
+      defaultModuleDirIn: ['controllers', 'validators'],
+      logs: [],
+      projectMap: {
+        contexts: {},
+        artifacts: [],
       },
     }
   }
 }
-
-//
-// -------
-//   Boundary Command
-//   Artifact Command
