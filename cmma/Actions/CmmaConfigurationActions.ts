@@ -4,6 +4,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
 export default class CmmaConfigurationActions {
   /**
@@ -11,7 +12,7 @@ export default class CmmaConfigurationActions {
    * @author FATE
    * @param {} resolveIdentifierOptions
    */
-  public static resolveIdentifier(resolveIdentifierOptions: {
+  public static resolveIdentifierToCasePattern(resolveIdentifierOptions: {
     identifier: string
     casePattern: CmmaProjectCasePatternType
   }) {
@@ -35,35 +36,82 @@ export default class CmmaConfigurationActions {
    * @author FATE
    * @param {} resolveArtifactLabelOptions
    */
-  public static resolveArtifactLabel(resolveArtifactLabelOptions: {
+  public static normalizeArtifactLabel(resolveArtifactLabelOptions: {
     artifactLabel: string
-    artifactGroupLabel: CmmaArtifactGroupLabel
+    artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
   }) {
-    const { artifactLabel, artifactGroupLabel, configObject } = resolveArtifactLabelOptions
+    const { artifactLabel, artifactType, configObject } = resolveArtifactLabelOptions
 
-    if (artifactGroupLabel === 'views') {
-      return this.resolveIdentifier({
-        identifier: artifactLabel,
-        casePattern: 'dashcase',
-      })
+    const Resolve: Record<CmmaArtifactType, Function> = {
+      file: () =>
+        this.resolveIdentifierToCasePattern({
+          identifier: artifactLabel,
+          casePattern: configObject.defaultCasePattern,
+        }),
+      view: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'views',
+            configObject,
+          }),
+        }),
+      model: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'models',
+            configObject,
+          }),
+        }),
+      migration: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'migrations',
+            configObject,
+          }),
+        }),
+      controller: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'controllers',
+            configObject,
+          }),
+        }),
+      action: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'actions',
+            configObject,
+          }),
+        }),
+      typechecking: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'typechecking',
+            configObject,
+          }),
+        }),
+      route: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'routes',
+            configObject,
+          }),
+        }),
     }
 
-    if (artifactGroupLabel === 'models') {
-      return this.resolveIdentifier({
-        identifier: artifactLabel,
-        casePattern: 'snakecase',
-      })
-    }
-
-    return this.resolveIdentifier({
-      identifier: artifactLabel,
-      casePattern: configObject.defaultCasePattern,
-    })
+    return Resolve[artifactType]()
   }
 
   /**
-   * @description Transform an Artifact Label with Suffix ,Prefix, Extension and Pattern
+   * @description Transform an Artifact Label with Suffix, Prefix, Extension and Pattern
    * @author FATE
    * @param {TransformLabelOptions} transformLabelOptions
    */
@@ -301,8 +349,3 @@ export default class CmmaConfigurationActions {
     }
   }
 }
-
-//
-// -------
-//   Boundary Command
-//   Artifact Command
