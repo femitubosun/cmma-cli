@@ -1,6 +1,5 @@
 import CmmaSystem from '../Models/CmmaSystem'
 import CmmaModule from '../Models/CmmaModule'
-import CmmaSystemResource from '../Models/CmmaSystemResource'
 import CmmaArtifact from '../Models/CmmaArtifact'
 import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 import CmmaArtifactsGroup from '../Models/CmmaArtifactsGroup'
@@ -20,23 +19,6 @@ export default class CmmaSystemActions {
 
     Object.assign(systemMap.modules, {
       [moduleLabel]: module,
-    })
-  }
-
-  /**
-   * @description Add a System CmmaResource to a System
-   * @author FATE
-   * @param {} addSystemResourceToSystemOptions
-   */
-  public static addSystemResourceToSystem(addSystemResourceToSystemOptions: {
-    resourceLabel: string
-    systemResource: CmmaSystemResource
-    system: CmmaSystem
-  }) {
-    const { resourceLabel, systemResource, system } = addSystemResourceToSystemOptions
-
-    Object.assign(system.SystemResources, {
-      [resourceLabel]: systemResource,
     })
   }
 
@@ -208,20 +190,6 @@ export default class CmmaSystemActions {
   }
 
   /**
-   * @description Get a System Resource By Label
-   * @author FATE
-   * @param {} getSystemResourceByLabelOptions
-   */
-  public static getSystemResourceByLabel(getSystemResourceByLabelOptions: {
-    systemResourceLabel: string
-    system: CmmaSystem
-  }) {
-    const { system, systemResourceLabel } = getSystemResourceByLabelOptions
-
-    return system.SystemResources[systemResourceLabel]
-  }
-
-  /**
    * @description Get a Module By Index
    * @author FATE
    * @param {} getModuleByIndexOptions
@@ -259,25 +227,6 @@ export default class CmmaSystemActions {
 
     return this.getSystemArtifactByLabel({
       systemArtifactLabel: systemArtifactLabels[systemArtifactIndex],
-      system,
-    })
-  }
-
-  /**
-   * @description Get System Resource By Index
-   * @author FATE
-   * @param {} getSystemResourceByIndexOptions
-   */
-  public static getSystemResourceByIndex(getSystemResourceByIndexOptions: {
-    systemResourceIndex: number
-    system: CmmaSystem
-  }) {
-    const { system, systemResourceIndex } = getSystemResourceByIndexOptions
-
-    const systemResourceLabels = Object.keys(system.SystemResources)
-
-    return this.getSystemResourceByLabel({
-      systemResourceLabel: systemResourceLabels[systemResourceIndex],
       system,
     })
   }
@@ -327,28 +276,6 @@ export default class CmmaSystemActions {
       moduleLabel: moduleLabels[moduleIndex],
       system,
     })
-  }
-
-  // TODO fix System Resources
-  /**
-   * @description Delete System Resource By Index
-   * @author FATE
-   * @param {} deleteSystemResourceByIndexOptions
-   */
-  public static deleteSystemResourceByIndex(deleteSystemResourceByIndexOptions: {
-    systemResourceIndex: number
-    system: CmmaSystem
-  }) {
-    const { system } = deleteSystemResourceByIndexOptions
-
-    const systemResourceLabels = Object.keys(system.SystemResources)
-
-    return systemResourceLabels
-
-    // return this.deleteSystemArtifactByLabel({
-    //   systemArtifactLabel: systemResourceLabels[systemResourceIndex],
-    //   system,
-    // })
   }
 
   /**
@@ -436,9 +363,6 @@ export default class CmmaSystemActions {
         routes: [],
       },
       modules: {},
-      SystemResources: {},
-      SystemRoutesFilename: '',
-      SystemViewsFileName: '',
     }
   }
 }
