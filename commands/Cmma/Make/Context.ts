@@ -5,7 +5,7 @@ import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaNodeMap from '../../../cmma/Models/CmmaNodeMap'
+import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Context extends BaseCmmaBoundaryCommand {
   /**
@@ -61,6 +61,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Add Context To Project
      */
     const defaultContextObject = CmmaContextActions.blankContext
+    defaultContextObject.contextLabel = this.contextLabel
 
     CmmaProjectMapActions.addContextToProject({
       projectMap,
@@ -72,7 +73,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Generate Context Files
      */
 
-    const contextDir = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .getAbsoluteOsPath(this.application.appRoot)
@@ -93,7 +94,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Import Context To Project
      */
 
-    const projectRoutesFile = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
         artifactLabel: 'Project',

@@ -45,7 +45,7 @@ export default class CmmaConfigurationActions {
     const { artifactLabel, noExt, artifactType, configObject } = resolveArtifactLabelOptions
 
     const Resolve: Record<CmmaArtifactType, Function> = {
-      index: () =>
+      'index': () =>
         this.transformLabel({
           label: artifactLabel,
           transformations: {
@@ -54,7 +54,7 @@ export default class CmmaConfigurationActions {
           },
           noExt,
         }),
-      file: () =>
+      'file': () =>
         this.transformLabel({
           label: artifactLabel,
           transformations: {
@@ -63,7 +63,7 @@ export default class CmmaConfigurationActions {
           },
           noExt,
         }),
-      view: () =>
+      'view': () =>
         this.transformLabel({
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
@@ -72,7 +72,7 @@ export default class CmmaConfigurationActions {
           }),
           noExt,
         }),
-      model: () =>
+      'model': () =>
         this.transformLabel({
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
@@ -81,7 +81,7 @@ export default class CmmaConfigurationActions {
           }),
           noExt,
         }),
-      migration: () =>
+      'migration': () =>
         this.transformLabel({
           label: artifactLabel,
           noExt,
@@ -90,7 +90,7 @@ export default class CmmaConfigurationActions {
             configObject,
           }),
         }),
-      controller: () =>
+      'controller': () =>
         this.transformLabel({
           noExt,
           label: artifactLabel,
@@ -99,7 +99,7 @@ export default class CmmaConfigurationActions {
             configObject,
           }),
         }),
-      action: () =>
+      'action': () =>
         this.transformLabel({
           noExt,
           label: artifactLabel,
@@ -108,16 +108,25 @@ export default class CmmaConfigurationActions {
             configObject,
           }),
         }),
-      typechecking: () =>
+      'create-typechecking': () =>
         this.transformLabel({
           noExt,
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'typechecking',
+            artifactGroup: 'create-typechecking',
             configObject,
           }),
         }),
-      route: () =>
+      'update-typechecking': () =>
+        this.transformLabel({
+          noExt,
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'update-typechecking',
+            configObject,
+          }),
+        }),
+      'route': () =>
         this.transformLabel({
           noExt,
           label: artifactLabel,
@@ -180,63 +189,77 @@ export default class CmmaConfigurationActions {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
     const transformations: Record<CmmaArtifactGroupLabel, StringTransformations> = {
-      actions: {
+      'actions': {
         extname: '.ts',
         suffix: 'Actions',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      controllers: {
+      'controllers': {
         extname: '.ts',
         suffix: 'Controller',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      file: {
+      'file': {
         extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
 
-      migrations: {
+      'migrations': {
         extname: '.ts',
         pattern: 'snakecase',
       },
 
-      models: {
+      'models': {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      operations: {
+      'operations': {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      routes: {
+      'routes': {
         extname: '.ts',
         suffix: 'Routes',
         pattern: configObject.defaultCasePattern,
       },
 
-      typechecking: {
+      'typechecking': {
         extname: '.ts',
-        suffix: 'Options',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'create-typechecking': {
+        extname: '.ts',
+        prefix: 'Create',
+        suffix: 'RecordOptions',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      validators: {
+      'update-typechecking': {
+        extname: '.ts',
+        prefix: 'Update',
+        suffix: 'RecordOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'validators': {
         extname: '.ts',
         suffix: 'Validator',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      views: {
+      'views': {
         extname: '.edge',
         pattern: 'dashcase',
       },

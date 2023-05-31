@@ -4,7 +4,7 @@ import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationAction
 import CmmaProjectMapActions from '../../cmma/Actions/CmmaProjectMapActions'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaContextActions from '../../cmma/Actions/CmmaContextActions'
-import CmmaNodeMap from '../../cmma/Models/CmmaNodeMap'
+import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import { INITIALIZING_ADONIS_PROJECT_FOR_CMMA } from '../../cmma/Helpers/SystemMessages'
 
 export default class Init extends BaseCmmaBoundaryCommand {
@@ -59,7 +59,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
      * Create RoutesFile
      */
 
-    const projectRoutesFileNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const projectRoutesFileNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
         artifactLabel: 'Project',
@@ -107,7 +107,6 @@ export default class Init extends BaseCmmaBoundaryCommand {
 
     if (SHOULD_INITIALIZE_PROJECT_CONTEXTS) {
       let contextLabel = 'context'
-      const defaultContextObject = CmmaContextActions.blankContext
 
       while (contextLabel) {
         contextLabel = await this.prompt.ask(
@@ -137,6 +136,10 @@ export default class Init extends BaseCmmaBoundaryCommand {
          * Add Context to Project
          */
 
+        const defaultContextObject = CmmaContextActions.blankContext
+
+        defaultContextObject.contextLabel = contextLabel
+
         CmmaProjectMapActions.addContextToProject({
           contextLabel,
           context: defaultContextObject,
@@ -155,7 +158,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
      */
 
     for (let contextLabel of CmmaProjectMapActions.listContextsInProject(projectMap)) {
-      const contextDir = new CmmaNodeMap(this.PROJECT_CONFIG)
+      const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
         .buildPathFromNullNode()
         .toContext(contextLabel)
         .getAbsoluteOsPath(this.application.appRoot)

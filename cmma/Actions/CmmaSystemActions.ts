@@ -384,25 +384,6 @@ export default class CmmaSystemActions {
   }
 
   /**
-   * @description Get a System's Routes file name
-   * @author FATE
-   * @param {CmmaSystem} system
-   * @returns string
-   */
-  public static whatIsSystemRoutesFileName(system: CmmaSystem) {
-    return system.SystemRoutesFilename
-  }
-
-  /**
-   * @description Get a System's Views file name
-   * @author FATE
-   * @param system
-   */
-  public static whatIsSystemViewsFileName(system: CmmaSystem) {
-    return system.SystemViewsFileName
-  }
-
-  /**
    * @description What is node path from Project Map
    * @author FATE
    * @param {} whatIsNodeMapFromMeOptions

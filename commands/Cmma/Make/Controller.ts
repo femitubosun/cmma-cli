@@ -8,7 +8,7 @@ import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
-import CmmaNodeMap from '../../../cmma/Models/CmmaNodeMap'
+import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Controller extends BaseCmmaArtifactCommand {
   /**
@@ -41,7 +41,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
   protected artifactGroupLabel: CmmaArtifactGroupLabel = 'controllers'
 
   protected getArtifactDestinationNodePath() {
-    const nodePath = new CmmaNodeMap(this.PROJECT_CONFIG).buildPathFromNullNode()
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPathFromNullNode()
 
     nodePath
       .toContext(this.contextLabel)

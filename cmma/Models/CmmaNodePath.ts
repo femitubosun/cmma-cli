@@ -11,7 +11,7 @@ import CmmaContextActions from '../Actions/CmmaContextActions'
 import CmmaProjectMapNodes from '../TypeChecking/CmmaProjectMapNodes'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
-export default class CmmaNodeMap {
+export default class CmmaNodePath {
   private nodes: CmmaProjectMapNodes
 
   constructor(private cmmaConfiguration: CmmaConfiguration) {
@@ -58,6 +58,14 @@ export default class CmmaNodeMap {
   }
 
   /**
+   * @description Get import used in Artifacts
+   * @author FATE
+   */
+  public getArtifactImportTypePath() {
+    return 'App/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
+  }
+
+  /**
    * @description Draw Path From
    * @author FATE
    */
@@ -70,7 +78,7 @@ export default class CmmaNodeMap {
    * @author FATE
    * @param label
    */
-  public toContext(label: string): CmmaNodeMap {
+  public toContext(label: string): CmmaNodePath {
     const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
@@ -85,7 +93,7 @@ export default class CmmaNodeMap {
    * @author FATE
    * @param label
    */
-  public toSystem(label: string): CmmaNodeMap {
+  public toSystem(label: string): CmmaNodePath {
     const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
@@ -100,7 +108,7 @@ export default class CmmaNodeMap {
    * @author FATE
    * @param label
    */
-  public toSystemArtifactsDir(label: CmmaArtifactGroupLabel): CmmaNodeMap {
+  public toSystemArtifactsDir(label: CmmaArtifactGroupLabel): CmmaNodePath {
     const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
@@ -141,7 +149,6 @@ export default class CmmaNodeMap {
     return this
   }
 
-  // TODO Change to Artifact Type
   /**
    * @description Add Artifact Path to Node Path
    * @author FATE
@@ -151,7 +158,7 @@ export default class CmmaNodeMap {
     artifactLabel: string
     artifactType: CmmaArtifactType
     noExt?: boolean
-  }): CmmaNodeMap {
+  }): CmmaNodePath {
     const { artifactLabel, artifactType, noExt } = toArtifactOptions
 
     const normalizedArtifactLabel = CmmaConfigurationActions.normalizeArtifactLabel({
@@ -225,7 +232,8 @@ export default class CmmaNodeMap {
           artifactGroupLabel: artifactObject.artifactType,
         })
       ) {
-        return this.toSystem(systemLabel)
+        this.toSystem(systemLabel)
+        return this.toContext(contextMap.contextLabel)
       }
     }
 
@@ -236,7 +244,7 @@ export default class CmmaNodeMap {
    * @description Find an Artifact in a Project
    * @param artifactObject
    */
-  public findArtifactInProject(artifactObject: CmmaArtifactLabelObject): CmmaNodeMap {
+  public findArtifactInProject(artifactObject: CmmaArtifactLabelObject): CmmaNodePath {
     const projectMap = this.cmmaConfiguration.projectMap
 
     const contextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
@@ -253,8 +261,6 @@ export default class CmmaNodeMap {
       })
 
       if (this.length > 0) {
-        this.toContext(contextLabel)
-
         return this
       }
     }
@@ -268,6 +274,14 @@ export default class CmmaNodeMap {
 
   public get artifactLabel() {
     return this.nodes.artifact?.label || undefined
+  }
+
+  public get contextLabel() {
+    return this.nodes.context?.label || undefined
+  }
+
+  public get artifactDirLabel() {
+    return this.nodes.systemArtifactsDir?.label || undefined
   }
 
   /**

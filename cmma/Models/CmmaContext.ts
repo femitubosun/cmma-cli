@@ -2,8 +2,7 @@ import CmmaSystem from './CmmaSystem'
 
 type CmmaContext = {
   systems: Record<string, CmmaSystem>
-  ContextRoutesFileName: string
-  ContextViewsFileName: string
+  contextLabel: string
 }
 
 export default CmmaContext

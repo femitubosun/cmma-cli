@@ -2,7 +2,7 @@ import { BaseCmmaCommand } from './BaseCmmaCommand'
 import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaFileActions from '../Actions/CmmaFileActions'
-import CmmaNodeMap from '../Models/CmmaNodeMap'
+import CmmaNodePath from '../Models/CmmaNodePath'
 
 export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
   /**
@@ -85,7 +85,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    * @author FATE
    */
   protected getArtifactDestinationNodePath() {
-    return new CmmaNodeMap(this.PROJECT_CONFIG)
+    return new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
