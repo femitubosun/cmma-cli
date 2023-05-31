@@ -1,4 +1,4 @@
-import { BaseCmmaBoundaryCommand } from '../../cmma/CommandBase/BaseCmmaBoundaryCommand'
+import { BaseCmmaBoundaryCommand } from '../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import { flags } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationActions'
 import CmmaProjectMapActions from '../../cmma/Actions/CmmaProjectMapActions'

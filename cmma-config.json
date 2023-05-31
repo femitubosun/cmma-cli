@@ -1,0 +1,73 @@
+{
+  "defaultProjectRootDirInApp": "Systems",
+  "defaultSystemInternalApiSuffix": "System",
+  "defaultCasePattern": "pascalcase",
+  "defaultSystemArtifactDirs": [
+    "actions",
+    "controllers",
+    "migrations",
+    "models",
+    "routes",
+    "typechecking",
+    "validators",
+    "views"
+  ],
+  "defaultModuleDirIn": ["controllers", "validators"],
+  "logs": [
+    "cr|",
+    "in|0",
+    "mk|sys|0|0",
+    "mk|mig|0|0|-1|0",
+    "mk|sys|0|1",
+    "mk|mig|0|1|-1|0",
+    "mk|mig|0|1|-1|1",
+    "mk|mdl|0|1|-1|0",
+    "mk|typ-c|",
+    "mk|typ-u|",
+    "mk|typ-u|",
+    "mk|typ-c|",
+    "mk|typ-c|",
+    "mk|typ-u|",
+    "mk|typ-u|",
+    "mk|mdl|0|1|-1|1",
+    "mk|typ-u|",
+    "mk|typ-u|",
+    "mk|typ-u|"
+  ],
+  "projectMap": {
+    "contexts": {
+      "Client": {
+        "contextLabel": "Client",
+        "systems": {
+          "UserManagement": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": ["User", "Wallet"],
+              "migrations": ["book", "friends"],
+              "routes": []
+            },
+            "modules": {}
+          },
+          "Finance": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": ["sale"],
+              "routes": []
+            },
+            "modules": {}
+          }
+        }
+      }
+    },
+    "artifacts": ["ProjectRoutes"]
+  }
+}
