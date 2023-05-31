@@ -9,7 +9,7 @@ import CmmaSystemActions from '../Actions/CmmaSystemActions'
 import CmmaProjectMapActions from '../Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../Actions/CmmaContextActions'
 import CmmaProjectMapNodes from '../TypeChecking/CmmaProjectMapNodes'
-import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
+import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
 export default class CmmaNodeMap {
   private nodes: CmmaProjectMapNodes
@@ -71,7 +71,7 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toContext(label: string): CmmaNodeMap {
-    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
     })
@@ -86,7 +86,7 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toSystem(label: string): CmmaNodeMap {
-    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
     })
@@ -101,7 +101,7 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toSystemArtifactsDir(label: CmmaArtifactGroupLabel): CmmaNodeMap {
-    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
     })
@@ -116,7 +116,7 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toModelDir(label: string) {
-    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
     })
@@ -132,7 +132,7 @@ export default class CmmaNodeMap {
    * @param label
    */
   public toModule(label: string) {
-    const nodeLabel = CmmaConfigurationActions.resolveIdentifier({
+    const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
     })
@@ -148,24 +148,20 @@ export default class CmmaNodeMap {
    * @param toArtifactOptions
    */
   public toArtifact(toArtifactOptions: {
-    label: string
-    artifactType: CmmaDefaultSystemArtifactDirLabel
+    artifactLabel: string
+    artifactType: CmmaArtifactType
     noExt?: boolean
   }): CmmaNodeMap {
-    const { label, artifactType, noExt } = toArtifactOptions
+    const { artifactLabel, artifactType, noExt } = toArtifactOptions
 
-    const transformations = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: artifactType,
+    const normalizedArtifactLabel = CmmaConfigurationActions.normalizeArtifactLabel({
+      artifactLabel,
+      artifactType,
       configObject: this.cmmaConfiguration,
-    })
-
-    const artifactLabel = CmmaConfigurationActions.transformLabel({
-      label: label,
-      transformations,
       noExt,
     })
 
-    this.nodes.artifact = new CmmaNode(artifactLabel)
+    this.nodes.artifact = new CmmaNode(normalizedArtifactLabel)
 
     return this
   }

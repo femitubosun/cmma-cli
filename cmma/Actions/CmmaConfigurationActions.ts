@@ -40,14 +40,28 @@ export default class CmmaConfigurationActions {
     artifactLabel: string
     artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
+    noExt?: boolean
   }) {
-    const { artifactLabel, artifactType, configObject } = resolveArtifactLabelOptions
+    const { artifactLabel, noExt, artifactType, configObject } = resolveArtifactLabelOptions
 
     const Resolve: Record<CmmaArtifactType, Function> = {
+      index: () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: {
+            extname: '.ts',
+            pattern: 'camelcase',
+          },
+          noExt,
+        }),
       file: () =>
-        this.resolveIdentifierToCasePattern({
-          identifier: artifactLabel,
-          casePattern: configObject.defaultCasePattern,
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: {
+            extname: '.ts',
+            pattern: configObject.defaultCasePattern,
+          },
+          noExt,
         }),
       view: () =>
         this.transformLabel({
@@ -56,6 +70,7 @@ export default class CmmaConfigurationActions {
             artifactGroup: 'views',
             configObject,
           }),
+          noExt,
         }),
       model: () =>
         this.transformLabel({
@@ -64,10 +79,12 @@ export default class CmmaConfigurationActions {
             artifactGroup: 'models',
             configObject,
           }),
+          noExt,
         }),
       migration: () =>
         this.transformLabel({
           label: artifactLabel,
+          noExt,
           transformations: this.getArtifactGroupTransformation({
             artifactGroup: 'migrations',
             configObject,
@@ -75,6 +92,7 @@ export default class CmmaConfigurationActions {
         }),
       controller: () =>
         this.transformLabel({
+          noExt,
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
             artifactGroup: 'controllers',
@@ -83,6 +101,7 @@ export default class CmmaConfigurationActions {
         }),
       action: () =>
         this.transformLabel({
+          noExt,
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
             artifactGroup: 'actions',
@@ -91,6 +110,7 @@ export default class CmmaConfigurationActions {
         }),
       typechecking: () =>
         this.transformLabel({
+          noExt,
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
             artifactGroup: 'typechecking',
@@ -99,6 +119,7 @@ export default class CmmaConfigurationActions {
         }),
       route: () =>
         this.transformLabel({
+          noExt,
           label: artifactLabel,
           transformations: this.getArtifactGroupTransformation({
             artifactGroup: 'routes',

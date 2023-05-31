@@ -153,8 +153,9 @@ export default class System extends BaseCmmaBoundaryCommand {
       .toArtifact({
         artifactLabel: 'index',
         artifactType: 'file',
+        noExt: true,
       })
-      .getRelativePath(true)
+      .getRelativePath()
 
     const IMPORT_SYSTEM_ROUTE_STRING = `import './${systemToSystemRoutesRelativePath}'`
 
@@ -163,7 +164,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       .toContext(this.contextLabel)
       .toArtifact({
         artifactLabel: this.contextLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
       })
       .getAbsoluteOsPath(this.application.appRoot)
 

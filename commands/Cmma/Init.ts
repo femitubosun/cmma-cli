@@ -62,8 +62,8 @@ export default class Init extends BaseCmmaBoundaryCommand {
     const projectRoutesFileNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
-        label: 'Project',
-        artifactType: 'routes',
+        artifactLabel: 'Project',
+        artifactType: 'route',
       })
 
     const projectRoutesFileFilePath = projectRoutesFileNodePath.getAbsoluteOsPath(

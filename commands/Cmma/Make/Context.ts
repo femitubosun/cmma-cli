@@ -1,6 +1,5 @@
 import { BaseCmmaBoundaryCommand } from '../../../cmma/CommandBase/BaseCmmaBoundaryCommand'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
@@ -29,7 +28,6 @@ export default class Context extends BaseCmmaBoundaryCommand {
    * CMMA Configurations
    */
   protected commandShortCode = 'mk|con'
-  protected boundaryObject: CmmaContext
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
   private contextLabel: string
 
@@ -74,13 +72,10 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Generate Context Files
      */
 
-    const contextRouteFileDestinationNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const contextDir = new CmmaNodeMap(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toContext(this.contextLabel)
-
-    const contextFileDestinationPath = this.createAbsolutePathFromNodePath(
-      contextRouteFileDestinationNodePath
-    )
+      .getAbsoluteOsPath(this.application.appRoot)
 
     this.generator
       .addFile(
@@ -90,7 +85,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
           configObject: this.PROJECT_CONFIG,
         })
       )
-      .destinationDir(contextFileDestinationPath)
+      .destinationDir(contextDir)
 
     await this.generator.run()
 
@@ -98,14 +93,13 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Import Context To Project
      */
 
-    const projectRoutesNodePath = new CmmaNodeMap(this.PROJECT_CONFIG)
+    const projectRoutesFile = new CmmaNodeMap(this.PROJECT_CONFIG)
       .buildPathFromNullNode()
       .toArtifact({
-        artifactLabel: this.PROJECT_CONFIG.defaultProjectRoutesFileName,
-        artifactType: 'routes',
+        artifactLabel: 'Project',
+        artifactType: 'route',
       })
-
-    const projectRoutesFilePath = this.createAbsolutePathFromNodePath(projectRoutesNodePath)
+      .getAbsoluteOsPath(this.application.appRoot)
 
     const contextRoutesFileName = CmmaConfigurationActions.transformLabel({
       label: this.contextLabel,
@@ -119,11 +113,11 @@ export default class Context extends BaseCmmaBoundaryCommand {
     const importContextString = `import './${this.contextLabel}/${contextRoutesFileName}'`
 
     CmmaFileActions.appendToFile({
-      filePath: projectRoutesFilePath,
+      filePath: projectRoutesFile,
       text: importContextString,
     })
 
-    this.logger.action('update').succeeded(projectRoutesFilePath)
+    this.logger.action('update').succeeded(projectRoutesFile)
 
     /**
      * Finish Command

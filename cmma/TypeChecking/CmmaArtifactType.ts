@@ -7,5 +7,6 @@ type CmmaArtifactType =
   | 'action'
   | 'typechecking'
   | 'route'
+  | 'index'
 
 export default CmmaArtifactType

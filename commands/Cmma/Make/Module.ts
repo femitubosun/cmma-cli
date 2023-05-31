@@ -148,7 +148,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
       .toSystemArtifactsDir('routes')
       .toArtifact({
         artifactLabel: this.moduleLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
       })
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -163,9 +163,10 @@ export default class Module extends BaseCmmaBoundaryCommand {
       .buildPathFromNullNode()
       .toArtifact({
         artifactLabel: this.moduleLabel,
-        artifactType: 'routes',
+        artifactType: 'route',
+        noExt: true,
       })
-      .getRelativePath(true)
+      .getRelativePath()
 
     const IMPORT_MODULE_ROUTES_STRING = `import './${moduleRoutesPath}'`
 
