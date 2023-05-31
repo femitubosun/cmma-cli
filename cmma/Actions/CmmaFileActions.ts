@@ -121,7 +121,7 @@ export default class CmmaFileActions {
   }
 
   public static getCmmaTemplatesDir(appRoot: string) {
-    return [appRoot, 'cmma', 'templates']
+    return [appRoot, 'cmma', 'Templates']
   }
 
   /**

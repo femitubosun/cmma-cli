@@ -1,4 +1,4 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/CommandBase/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
 import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'

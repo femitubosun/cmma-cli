@@ -1,7 +1,7 @@
 import { removeSync } from 'fs-extra'
 import { flags } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationActions'
-import { BaseCmmaCommand } from '../../cmma/CommandBase/BaseCmmaCommand'
+import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
