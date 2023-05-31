@@ -126,7 +126,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
       this.PROJECT_CONFIG
     )) {
       const moduleDirectory = new CmmaNodePath(this.PROJECT_CONFIG)
-        .buildPathFromNullNode()
+        .drawPath()
         .toContext(this.contextLabel)
         .toSystem(this.systemLabel)
         .toSystemArtifactsDir(moduleDestinationDir)
@@ -142,7 +142,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
      * Create Module Routes File
      */
     const moduleRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
@@ -160,7 +160,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
      * Import Module Route into System
      */
     const moduleRoutesPath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toArtifact({
         artifactLabel: this.moduleLabel,
         artifactType: 'route',
@@ -171,7 +171,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
     const IMPORT_MODULE_ROUTES_STRING = `import './${moduleRoutesPath}'`
 
     const systemRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')

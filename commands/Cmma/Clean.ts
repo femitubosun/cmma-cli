@@ -54,7 +54,7 @@ export default class Clean extends BaseCmmaCommand {
       }
     }
 
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPathFromNullNode()
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
     console.log(this.PROJECT_CONFIG)
 
     const projectRootPath = CmmaFileActions.createAbsolutePathFromNodePath({

@@ -72,6 +72,15 @@ export default class CmmaConfigurationActions {
           }),
           noExt,
         }),
+      'validator': () =>
+        this.transformLabel({
+          label: artifactLabel,
+          transformations: this.getArtifactGroupTransformation({
+            artifactGroup: 'validators',
+            configObject,
+          }),
+          noExt,
+        }),
       'model': () =>
         this.transformLabel({
           label: artifactLabel,
@@ -254,7 +263,7 @@ export default class CmmaConfigurationActions {
 
       'validators': {
         extname: '.ts',
-        suffix: 'Validator',
+        suffix: 'RequestValidator',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },

@@ -40,7 +40,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
   protected getTemplateData(): any {
     const interfaceImport = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('typechecking')

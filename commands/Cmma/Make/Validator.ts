@@ -44,7 +44,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG)
 
     nodePath
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir(this.artifactGroupLabel)

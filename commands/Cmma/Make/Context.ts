@@ -74,7 +74,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -95,7 +95,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toArtifact({
         artifactLabel: 'Project',
         artifactType: 'route',

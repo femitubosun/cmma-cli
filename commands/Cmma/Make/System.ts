@@ -116,7 +116,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       this.PROJECT_CONFIG
     )) {
       const artifactDirectoryFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-        .buildPathFromNullNode()
+        .drawPath()
         .toContext(this.contextLabel)
         .toSystem(this.systemLabel)
         .toSystemArtifactsDir(systemArtifactDirectoryLabel)
@@ -129,7 +129,7 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Generate System Routes File
      */
     const systemRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
@@ -147,7 +147,7 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Import System Routes into Context Routes
      */
     const systemToSystemRoutesRelativePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
       .toArtifact({
@@ -160,7 +160,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     const IMPORT_SYSTEM_ROUTE_STRING = `import './${systemToSystemRoutesRelativePath}'`
 
     const contextRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toArtifact({
         artifactLabel: this.contextLabel,
@@ -179,7 +179,7 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Generate Internal Api
      */
     const internalApiDestinationPath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .getAbsoluteOsPath(this.application.appRoot)

@@ -8,6 +8,7 @@ type CmmaArtifactType =
   | 'create-typechecking'
   | 'update-typechecking'
   | 'route'
+  | 'validator'
   | 'index'
 
 export default CmmaArtifactType

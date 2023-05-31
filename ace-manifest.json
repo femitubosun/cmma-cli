@@ -245,6 +245,33 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-operation": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Operation",
+      "commandName": "cmma:make-operation",
+      "description": "Create a new CMMA Operation",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Operation to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "system",
+          "propertyName": "system",
+          "type": "string",
+          "description": "The name of the System this operation belongs to"
+        }
+      ]
+    },
     "cmma:make-system": {
       "settings": {
         "loadApp": false,
@@ -260,26 +287,6 @@
           "name": "name",
           "required": true,
           "description": "Name of the System to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
-    "cmma:make-update-options": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/UpdateOptions",
-      "commandName": "cmma:make-update-options",
-      "description": "Create a new CMMA Create Record TypeChecking",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the model this Update TypeChecking is for"
         }
       ],
       "aliases": [],

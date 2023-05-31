@@ -69,7 +69,7 @@ export default class CmmaNodePath {
    * @description Draw Path From
    * @author FATE
    */
-  public buildPathFromNullNode() {
+  public drawPath() {
     return this
   }
 

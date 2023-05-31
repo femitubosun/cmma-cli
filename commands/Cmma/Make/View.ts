@@ -1,7 +1,5 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
@@ -29,8 +27,7 @@ export default class View extends BaseCmmaArtifactCommand {
    * CMMA Configurations
    */
   protected commandShortCode = 'mk|viw'
-  protected boundaryObject: CmmaContext
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
+  protected PROJECT_CONFIG = this.projectConfiguration!
 
   protected contextLabel: string
   protected systemLabel: string

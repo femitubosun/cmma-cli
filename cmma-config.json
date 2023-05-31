@@ -32,7 +32,20 @@
     "mk|mdl|0|1|-1|1",
     "mk|typ-u|",
     "mk|typ-u|",
-    "mk|typ-u|"
+    "mk|typ-u|",
+    "mk|mod|0|1|0",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|",
+    "mk|ctr|0|1|0|0",
+    "mk|mod|0|1|1",
+    "mk|op|",
+    "mk|op|",
+    "mk|op|"
   ],
   "projectMap": {
     "contexts": {
@@ -50,7 +63,13 @@
               "migrations": ["book", "friends"],
               "routes": []
             },
-            "modules": {}
+            "modules": {
+              "Signup": {
+                "controllers": ["FetchUserDataController"],
+                "validators": []
+              },
+              "Verification": { "controllers": [], "validators": [] }
+            }
           },
           "Finance": {
             "systemArtifacts": {
