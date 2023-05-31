@@ -27,6 +27,26 @@
         }
       ]
     },
+    "cmma:config-create": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Config/Create",
+      "commandName": "cmma:config-create",
+      "description": "Create a CMMA Configuration file",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "empty",
+          "propertyName": "empty",
+          "type": "boolean",
+          "description": "Create Empty CMMA Config file",
+          "alias": "e"
+        }
+      ]
+    },
     "cmma:dummy": {
       "settings": {
         "loadApp": false,

@@ -80,20 +80,6 @@ export default class CmmaFileActions {
   }
 
   /**
-   * @description Create Migrations Path From Node Path
-   * @author FATE
-   * @param {} createMigrationsPathFromNodePathOptions
-   */
-  public static createMigrationPathFromNodePath(createMigrationsPathFromNodePathOptions: {
-    nodePath: CmmaNodeMap
-    configObject: CmmaConfiguration
-  }) {
-    const { nodePath, configObject } = createMigrationsPathFromNodePathOptions
-
-    return './app/' + configObject.defaultProjectRootDirInApp + '/' + nodePath.getRelativePath()
-  }
-
-  /**
    * @description Get an absolute Path from a Node Path
    * @param createAbsolutePathFromNodePathOptions
    * @protected
