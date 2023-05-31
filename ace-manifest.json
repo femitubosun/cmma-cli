@@ -265,6 +265,26 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-update-options": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/UpdateOptions",
+      "commandName": "cmma:make-update-options",
+      "description": "Create a new CMMA Create Record TypeChecking",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the model this Update TypeChecking is for"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:make-validator": {
       "settings": {
         "loadApp": false,
