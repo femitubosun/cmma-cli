@@ -30,7 +30,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
       return
     }
 
-    const file = this.generator
+    this.generator
       .addFile(this.artifactLabel, this.getArtifactTransformations())
       .stub(this.getArtifactStub())
       .useMustache()
@@ -39,7 +39,6 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
       .apply(this.getTemplateData())
 
     await this.generator.run()
-    return file
   }
 
   /**
@@ -86,7 +85,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected getArtifactDestinationNodePath() {
     return new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir(this.artifactGroupLabel)
