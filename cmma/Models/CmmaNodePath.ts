@@ -2,7 +2,7 @@ import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaNode from './CmmaNode'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaArtifactLabelObject from '../TypeChecking/CmmaArtifactLabelObject'
-import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaContext from './CmmaContext'
 import CmmaSystemActions from '../Actions/CmmaSystemActions'
@@ -68,7 +68,7 @@ export default class CmmaNodePath {
    * @author FATE
    * @param label
    */
-  public toSystemArtifactsDir(label: CmmaArtifactGroupLabel): CmmaNodePath {
+  public toSystemArtifactsDir(label: CmmaArtifactDir): CmmaNodePath {
     const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
@@ -281,7 +281,7 @@ export default class CmmaNodePath {
     const contextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
 
     contextLabels.forEach((contextLabel) => {
-      const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+      const contextMap = CmmaProjectMapActions.getContextMapByLabel({
         contextLabel,
         projectMap,
       })
@@ -309,7 +309,7 @@ export default class CmmaNodePath {
     const contextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
 
     contextLabels.forEach((contextLabel) => {
-      const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+      const contextMap = CmmaProjectMapActions.getContextMapByLabel({
         projectMap,
         contextLabel,
       })

@@ -5,8 +5,16 @@ import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
+import { EXITING } from '../../cmma/Helpers/SystemMessages'
 
 export default class Clean extends BaseCmmaCommand {
+  /*
+|--------------------------------------------------------------------------------
+| ACE Command Configuration
+|--------------------------------------------------------------------------------
+|
+*/
+
   public static commandName = 'cmma:clean'
   public static description =
     'Delete Default Context Directory and config file. This is a debug command, use with caution.'
@@ -15,11 +23,15 @@ export default class Clean extends BaseCmmaCommand {
     stayAlive: false,
   }
 
-  /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'cl'
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected commandShortCode = 'mk|act'
+  protected targetEntity = 'Project'
 
   // COMMAND FLAGS
   @flags.boolean({
@@ -50,12 +62,15 @@ export default class Clean extends BaseCmmaCommand {
       const verifyClean = await this.prompt.confirm('Are you sure you want to Clean CMMA?')
 
       if (!verifyClean) {
-        this.logger.info('Exiting...')
+        this.logger.info(EXITING)
+
+        await this.exit()
       }
     }
 
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
     console.log(this.PROJECT_CONFIG)
+
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
 
     const projectRootPath = CmmaFileActions.createAbsolutePathFromNodePath({
       applicationRoot: this.application.appRoot,

@@ -1,12 +1,3 @@
-/*
- * @adonisjs/lucid
- *
- * (c) Harminder Virk <virk@adonisjs.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import { flags } from '@adonisjs/core/build/standalone'
 import { BaseCmmaMigrationCommand } from '../../../cmma/BaseCommands/BaseCmmaMigrationCommand'
 import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
@@ -16,22 +7,34 @@ import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaM
  * in `down` direction.
  */
 export default class Migrate extends BaseCmmaMigrationCommand {
-  /**
-   * Ace Command Configuration
-   */
-
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:migration-rollback'
   public static description = 'Rollback migrations to a specific batch number'
   public static settings = {
     loadApp: true,
   }
 
-  /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'mig|run'
-  protected PROJECT_CONFIG = this.projectConfiguration!
+  /*
+ |--------------------------------------------------------------------------------
+ | CMMA Configuration
+ |--------------------------------------------------------------------------------
+ |
+ */
+  protected PROJECT_CONFIG = this.projectConfigurationFromFile!
+  protected commandShortCode = 'mig|rol'
+  protected targetEntity = ''
 
+  /*
+ |--------------------------------------------------------------------------------
+ | Lucid's Rollback Migration Command Properties and Flags
+ |--------------------------------------------------------------------------------
+ |
+ */
   private migrator: CmmaMigratorContract
 
   /**

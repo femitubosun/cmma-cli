@@ -6,11 +6,18 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import {
+  EXITING,
+  YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT,
+} from '../../../cmma/Helpers/SystemMessages'
 
 export default class Context extends BaseCmmaBoundaryCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-context'
   public static description = 'Create a new CMMA Context'
   public static settings = {
@@ -18,26 +25,28 @@ export default class Context extends BaseCmmaBoundaryCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the Context to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|con'
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-  private contextLabel: string
+  protected targetEntity: string = 'Context'
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
-
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.ensureConfigFileExistsCommandStep()
 
     /**
      * Check if Context is Already In Project
@@ -49,11 +58,11 @@ export default class Context extends BaseCmmaBoundaryCommand {
 
     if (
       CmmaProjectMapActions.isContextInProject({
-        projectMap,
+        projectMap: this.projectMap,
         contextLabel: this.contextLabel,
       })
     ) {
-      this.logger.warning('You have already registered this Context. Ignoring...')
+      this.logger.warning(`${YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT} ${EXITING}`)
       await this.exit()
     }
 
@@ -64,7 +73,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
     defaultContextObject.contextLabel = this.contextLabel
 
     CmmaProjectMapActions.addContextToProject({
-      projectMap,
+      projectMap: this.projectMap,
       contextLabel: this.contextLabel,
       context: defaultContextObject,
     })
@@ -124,7 +133,8 @@ export default class Context extends BaseCmmaBoundaryCommand {
      * Finish Command
      */
 
-    this.commandArgs = [CmmaProjectMapActions.listContextsInProject(projectMap).length - 1]
+    this.commandArgs = [CmmaProjectMapActions.listContextsInProject(this.projectMap).length - 1]
+
     this.finishCmmaCommand()
   }
 }

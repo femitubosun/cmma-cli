@@ -5,11 +5,18 @@ import CmmaProjectMapActions from '../../cmma/Actions/CmmaProjectMapActions'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaContextActions from '../../cmma/Actions/CmmaContextActions'
 import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
-import { INITIALIZING_ADONIS_PROJECT_FOR_CMMA } from '../../cmma/Helpers/SystemMessages'
+import {
+  INITIALIZING_ADONIS_PROJECT_FOR_CMMA,
+  YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT,
+} from '../../cmma/Helpers/SystemMessages'
+import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
 
 export default class Init extends BaseCmmaBoundaryCommand {
-  /**
-   * Ace Command Configuration
+  /*
+   |--------------------------------------------------------------------------------
+   | ACE Command Configuration
+   |--------------------------------------------------------------------------------
+   |
    */
   public static commandName = 'cmma:init'
   public static description = "Initialize Project for Crenet's Modular Monolith Architecture(CMMA)"
@@ -17,23 +24,35 @@ export default class Init extends BaseCmmaBoundaryCommand {
     loadApp: false,
     stayAlive: false,
   }
-  /**
-   * Initialize without creating Contexts
-   */
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments & Flags
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.boolean({ description: 'Initialize Empty CMMA Project', alias: 'e' })
   public empty: boolean
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'in'
-  protected PROJECT_CONFIG = this.projectConfiguration!
+  protected artifactLabel: string
+  protected targetEntity = 'Context'
 
-  public async run() {
-    await this.startCmmaCommand()
-
-    const projectMap = this.PROJECT_CONFIG.projectMap
-
+  /*
+  |--------------------------------------------------------------------------------
+  | Display Project Defaults to User Before Initializing
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected displayProjectDefaultsCommandStep() {
     /**
      * Display Project Defaults
      */
@@ -54,34 +73,38 @@ export default class Init extends BaseCmmaBoundaryCommand {
       .add(`Default System Directories:           ${this.PROJECT_CONFIG.defaultSystemArtifactDirs}`)
 
       .render()
+  }
+
+  public async run() {
+    await this.ensureConfigFileExistsCommandStep()
+
+    this.displayProjectDefaultsCommandStep()
 
     /**
      * Create RoutesFile
      */
-
-    const projectRoutesFileNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
+    const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
       .toArtifactWithExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
       })
+      .getAbsoluteOsPath(this.application.appRoot)
 
-    const projectRoutesFileFilePath = projectRoutesFileNodePath.getAbsoluteOsPath(
-      this.application.appRoot
-    )
+    CmmaFileActions.ensureAFileExists(projectRoutesFile)
 
-    CmmaFileActions.ensureAFileExists(projectRoutesFileFilePath)
+    this.logger.action('create').succeeded(projectRoutesFile)
 
-    this.logger.action('create').succeeded(projectRoutesFileFilePath)
-
-    const PROJECT_ROUTES_FILENAME = projectRoutesFileNodePath.toArtifactWithoutExtension({
-      artifactLabel: 'Project',
-      artifactType: 'route',
-    }).artifactLabel
+    const PROJECT_ROUTES_FILENAME = new CmmaNodePath(this.PROJECT_CONFIG)
+      .drawPath()
+      .toArtifactWithoutExtension({
+        artifactLabel: 'Project',
+        artifactType: 'route',
+      }).artifactLabel
 
     CmmaProjectMapActions.addArtifactToProject({
       artifact: PROJECT_ROUTES_FILENAME!,
-      projectMap,
+      projectMap: this.projectMap,
     })
 
     /**
@@ -128,10 +151,10 @@ export default class Init extends BaseCmmaBoundaryCommand {
         if (
           CmmaProjectMapActions.isContextInProject({
             contextLabel,
-            projectMap,
+            projectMap: this.projectMap,
           })
         ) {
-          this.logger.warning('You have already registered this Context. Ignoring...')
+          this.logger.warning(YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT)
           continue
         }
 
@@ -146,7 +169,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
         CmmaProjectMapActions.addContextToProject({
           contextLabel,
           context: defaultContextObject,
-          projectMap,
+          projectMap: this.projectMap,
         })
 
         this.logger.success(`Registered Project Context: ${contextLabel}`)
@@ -160,7 +183,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
      * 3. Generate
      */
 
-    for (let contextLabel of CmmaProjectMapActions.listContextsInProject(projectMap)) {
+    for (let contextLabel of CmmaProjectMapActions.listContextsInProject(this.projectMap)) {
       const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
         .drawPath()
         .toContext(contextLabel)
@@ -181,14 +204,14 @@ export default class Init extends BaseCmmaBoundaryCommand {
       }'`
 
       CmmaFileActions.appendToFile({
-        filePath: projectRoutesFileFilePath,
+        filePath: projectRoutesFile,
         text: contextImportString,
       })
     }
 
     await this.generator.run()
 
-    const projectContexts = CmmaProjectMapActions.listContextsInProject(projectMap)
+    const projectContexts = CmmaProjectMapActions.listContextsInProject(this.projectMap)
 
     for (let i = 0; i < projectContexts.length; i++) this.commandArgs.push(i)
 

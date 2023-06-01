@@ -40,7 +40,7 @@ export default class CmmaProjectMapActions {
    * @author FATE
    * @param getContextFromProjectMapOptions
    */
-  public static getContextObjectByLabel(getContextFromProjectMapOptions: {
+  public static getContextMapByLabel(getContextFromProjectMapOptions: {
     projectMap: CmmaProjectMap
     contextLabel: string
   }) {

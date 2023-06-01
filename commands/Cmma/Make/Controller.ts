@@ -1,18 +1,22 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import {
+  EXITING,
+  YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE,
+} from '../../../cmma/Helpers/SystemMessages'
 
 export default class Controller extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-controller'
   public static description = 'Create a new CMMA Context'
   public static settings = {
@@ -20,23 +24,27 @@ export default class Controller extends BaseCmmaArtifactCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the Context to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|ctr'
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'controllers'
+  protected targetEntity = 'Controller'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'controllers'
 
   protected getArtifactDestinationNodePath() {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
@@ -44,81 +52,20 @@ export default class Controller extends BaseCmmaArtifactCommand {
     nodePath
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupLabel)
+      .toSystemArtifactsDir(this.artifactGroupDirLabel)
       .toModule(this.moduleLabel)
 
     return nodePath
   }
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.ensureConfigFileExistsCommandStep()
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
+    await this.selectContextCommandStep()
 
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
+    await this.selectSystemCommandStep()
 
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this Module belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this Controller Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
-
-    const systemModules = CmmaSystemActions.listModulesInSystem(systemMap)
-
-    if (!systemModules.length) {
-      this.logger.error(
-        `There are no defined Modules in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-module'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.moduleLabel = await this.prompt.choice(
-      `What Module does this ${this.artifactGroupLabel} belong to`,
-      systemModules
-    )
-
-    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
-      moduleLabel: this.moduleLabel,
-      systemMap,
-    })
+    await this.selectModuleCommandStep()
 
     /**
      * Compute Name. Delete Prefix if included in argument
@@ -126,18 +73,15 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     this.artifactLabel = this.name
 
-    const precomputedName = CmmaConfigurationActions.normalizeProjectIdentifier({
-      configObject: this.PROJECT_CONFIG!,
-      identifier: this.name,
-    })
+    const controllerTransformations =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
+        artifactType: 'controller',
+        configObject: this.PROJECT_CONFIG,
+      })
 
-    this.computedNameWithoutSuffix = precomputedName.includes(this.defaultCmmaArtifactSuffix)
-      ? precomputedName.replace(this.defaultCmmaArtifactSuffix, '')
-      : precomputedName
-
-    this.computedNameWithSuffix = CmmaConfigurationActions.normalizeProjectIdentifier({
-      configObject: this.PROJECT_CONFIG!,
-      identifier: this.computedNameWithoutSuffix + this.defaultCmmaArtifactSuffix,
+    this.artifactLabel = CmmaConfigurationActions.transformLabel({
+      transformations: controllerTransformations,
+      label: this.artifactLabel,
     })
 
     /*
@@ -146,27 +90,25 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     if (
       CmmaModuleActions.isControllerInModule({
-        moduleMap,
-        controllerLabel: this.computedNameWithSuffix,
+        moduleMap: this.moduleMap,
+        controllerLabel: this.artifactLabel,
       })
     ) {
-      this.logger.warning(
-        `You have already registered Controller in this Module in System. Ignoring...`
-      )
+      this.logger.warning(`${YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE}. ${EXITING}`)
       await this.exit()
     }
 
     this.logger.info(
-      `Creating ${this.colors.underline(
-        this.computedNameWithSuffix
-      )} Artifact in ${this.colors.underline(this.moduleLabel)} Module in ${this.colors.underline(
-        this.systemLabel
-      )} System in ${this.colors.underline(this.contextLabel)} Context.`
+      `Creating ${this.colors.underline(this.artifactLabel)} Artifact in ${this.colors.underline(
+        this.moduleLabel
+      )} Module in ${this.colors.underline(this.systemLabel)} System in ${this.colors.underline(
+        this.contextLabel
+      )} Context.`
     )
 
     CmmaModuleActions.addModuleControllerToModule({
-      controller: this.computedNameWithSuffix,
-      moduleMap: moduleMap,
+      controller: this.artifactLabel,
+      moduleMap: this.moduleMap,
     })
 
     /**
@@ -176,14 +118,14 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     /**
      * Finish Command
-     * TODO Get index of member
+     * Todo ARgs
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-      CmmaModuleActions.listModuleControllers(moduleMap).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    //   CmmaModuleActions.listModuleControllers(moduleMap).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

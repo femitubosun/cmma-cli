@@ -8,7 +8,6 @@ import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import { EXITING, MODULE_NOT_FOUND_IN_PROJECT } from '../../../cmma/Helpers/SystemMessages'
-import CmmaModule from '../../../cmma/Models/CmmaModule'
 
 /*
 |--------------------------------------------------------------------------------
@@ -49,15 +48,13 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  protected commandShortCode = 'mk|op'
-  protected PROJECT_CONFIG = this.projectConfiguration!
 
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
+  protected PROJECT_CONFIG = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
+  protected commandShortCode = 'mk|op'
   protected artifactLabel: string
+  protected targetEntity = 'Operation'
   protected abstractArtifact: CmmaAbstractArtifact = ['controller', 'validator']
-  private moduleMap: CmmaModule
 
   /*
   |--------------------------------------------------------------------------------
@@ -66,11 +63,7 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   |
   */
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.ensureConfigFileExistsCommandStep()
 
     if (this.module) {
       this.module = CmmaConfigurationActions.normalizeProjectIdentifier({
@@ -103,88 +96,27 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
       this.systemLabel = moduleNodePath.systemLabel!
       this.moduleLabel = moduleNodePath.moduleLabel!
 
-      const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+      this.contextMap = CmmaProjectMapActions.getContextMapByLabel({
         contextLabel: this.contextLabel,
-        projectMap,
+        projectMap: this.projectMap,
       })
 
-      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
+      this.systemMap = CmmaContextActions.getContextSystemMapByLabel({
         systemLabel: this.systemLabel,
-        contextMap,
+        contextMap: this.contextMap,
       })
 
       this.moduleMap = CmmaSystemActions.getModuleMapByLabel({
         moduleLabel: this.moduleLabel,
-        systemMap,
+        systemMap: this.systemMap,
       })
     } else {
-      const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
+      await this.selectContextCommandStep()
 
-      if (!projectContextLabels.length) {
-        this.logger.error(
-          `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-            'node ace cmma:init'
-          )} first. Exiting...`
-        )
-        await this.exit()
-      }
+      await this.selectSystemCommandStep()
 
-      this.contextLabel = await this.prompt.choice(
-        'What Context does this Module belong to?',
-        projectContextLabels
-      )
-
-      const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-        contextLabel: this.contextLabel,
-        projectMap,
-      })
-
-      const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-      if (!contextSystemLabels.length) {
-        this.logger.error(
-          `There are no defined Systems in Context. Run ${this.colors.cyan(
-            'node ace cmma:make-system'
-          )} first. Exiting...`
-        )
-        await this.exit()
-      }
-
-      this.systemLabel = await this.prompt.choice(
-        'What System does this Operation Belong to?',
-        contextSystemLabels
-      )
-
-      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-        systemLabel: this.systemLabel,
-        contextMap,
-      })
-
-      const systemModules = CmmaSystemActions.listModulesInSystem(systemMap)
-
-      if (!systemModules.length) {
-        this.logger.error(
-          `There are no defined Modules in Context. Run ${this.colors.cyan(
-            'node ace cmma:make-module'
-          )} first. Exiting...`
-        )
-        await this.exit()
-      }
-
-      this.moduleLabel = await this.prompt.choice(
-        `What Module does this Operation belong to`,
-        systemModules
-      )
-
-      this.moduleMap = CmmaSystemActions.getModuleMapByLabel({
-        moduleLabel: this.moduleLabel,
-        systemMap,
-      })
+      await this.selectModuleCommandStep()
     }
-
-    /**
-     * Add Artifacts to Project Map
-     */
 
     this.artifactLabel = this.name
 

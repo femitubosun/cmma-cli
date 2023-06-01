@@ -35,7 +35,7 @@ export default class CmmaNodePathActions {
   }): Array<CmmaNodePath> {
     const { contextLabel, configObject } = listContextMigrationDirectoriesNodePathsOptions
 
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+    const contextMap = CmmaProjectMapActions.getContextMapByLabel({
       contextLabel,
       projectMap: configObject.projectMap,
     })

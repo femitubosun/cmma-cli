@@ -1,49 +1,62 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
+import { NOT_CONFIRMED_EXITING } from '../../../cmma/Helpers/SystemMessages'
+import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 
 export default class CreateOptions extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-create-options'
-  public static description = 'Create a new CMMA Create Record TypeChecking'
+  public static description = 'Create a new CMMA Create Record Options'
   public static settings = {
     loadApp: false,
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
-  @args.string({ description: 'Name of the model this Create TypeChecking is for' })
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
+  @args.string({ description: 'Name of the Model this Create Options is for' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|tyc'
-  protected PROJECT_CONFIG = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'model-options'
+  protected targetEntity = 'Create Options'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'typechecking'
 
-  /**
-   * Artifact Specifics
-   */
-
+  /*
+ |--------------------------------------------------------------------------------
+ | Set the template data for Moustache
+ |--------------------------------------------------------------------------------
+ |
+ */
   protected getTemplateData(): any {
     const interfaceImport = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir('typechecking')
+      .toSystemArtifactsDir(this.artifactGroupDirLabel)
       .toModelDir(this.artifactLabel)
       .toArtifactWithoutExtension({
         artifactLabel: `${this.artifactLabel}Interface`,
@@ -60,7 +73,13 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     }
   }
 
-  protected getArtifactStub(): string {
+  /*
+  |--------------------------------------------------------------------------------
+  | Get Artifact Template File
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected getTemplateFileDir(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
     const createRecordTemplate = 'create-record.txt'
 
@@ -78,7 +97,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   }
 
   public async run() {
-    await this.startCmmaCommand()
+    await this.ensureConfigFileExistsCommandStep()
 
     const modelTransformations = CmmaConfigurationActions.getArtifactGroupTransformation({
       artifactGroup: 'models',
@@ -117,7 +136,34 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
       )} in ${this.colors.underline(modelSystemPath.systemLabel!)} System?`
     )
 
-    this.logger.success(confirm ? 'Okay. Create' : 'Byeee')
+    if (!confirm) {
+      this.logger.info(NOT_CONFIRMED_EXITING)
+      await this.exit()
+    }
+
+    this.contextMap = CmmaProjectMapActions.getContextMapByLabel({
+      contextLabel: this.contextLabel,
+      projectMap: this.projectMap,
+    })
+
+    this.systemMap = CmmaContextActions.getContextSystemMapByLabel({
+      systemLabel: this.systemLabel,
+      contextMap: this.contextMap,
+    })
+
+    const artifact = CmmaConfigurationActions.transformLabel({
+      label: this.artifactLabel,
+      transformations: CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'create-typechecking',
+        configObject: this.PROJECT_CONFIG,
+      }),
+    })
+
+    CmmaSystemActions.addArtifactToArtifactGroup({
+      artifact,
+      artifactGroupLabel: 'typechecking',
+      systemMap: this.systemMap,
+    })
 
     await this.generate()
 
