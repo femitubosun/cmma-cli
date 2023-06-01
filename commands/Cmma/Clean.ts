@@ -6,15 +6,15 @@ import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
 import { EXITING } from '../../cmma/Helpers/SystemMessages'
+import CmmaProjectMap from '../../cmma/Models/CmmaProjectMap'
 
 export default class Clean extends BaseCmmaCommand {
   /*
-|--------------------------------------------------------------------------------
-| ACE Command Configuration
-|--------------------------------------------------------------------------------
-|
-*/
-
+ |--------------------------------------------------------------------------------
+ | ACE Command Configuration
+ |--------------------------------------------------------------------------------
+ |
+ */
   public static commandName = 'cmma:clean'
   public static description =
     'Delete Default Context Directory and config file. This is a debug command, use with caution.'
@@ -30,6 +30,7 @@ export default class Clean extends BaseCmmaCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap: CmmaProjectMap
   protected commandShortCode = 'mk|act'
   protected targetEntity = 'Project'
 
