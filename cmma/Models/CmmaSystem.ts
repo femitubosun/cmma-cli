@@ -5,6 +5,7 @@ import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystem
 type CmmaSystem = {
   modules: Record<string, CmmaModule>
   systemArtifacts: Record<CmmaDefaultSystemArtifactDirLabel, CmmaArtifactsGroup>
+  systemLabel: string
 }
 
 export default CmmaSystem

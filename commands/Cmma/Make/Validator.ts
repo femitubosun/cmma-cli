@@ -98,7 +98,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
       contextSystemLabels
     )
 
-    const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
       contextMap,
     })
@@ -119,7 +119,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
       systemModules
     )
 
-    const moduleMap = CmmaSystemActions.getModuleByLabel({
+    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
       moduleLabel: this.moduleLabel,
       systemMap,
     })
@@ -170,7 +170,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
 
     CmmaModuleActions.addModuleValidatorToModule({
       validator: this.computedNameWithSuffix,
-      module: moduleMap,
+      moduleMap: moduleMap,
     })
 
     /**

@@ -25,7 +25,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   /**
    * CMMA Configurations
    */
-  protected commandShortCode = 'mk|typ-c'
+  protected commandShortCode = 'mk|tyc'
   protected PROJECT_CONFIG = this.projectConfiguration!
 
   protected contextLabel: string
@@ -45,7 +45,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('typechecking')
       .toModelDir(this.artifactLabel)
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: `${this.artifactLabel}Interface`,
         artifactType: 'file',
         noExt: true,
@@ -93,7 +93,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     })
 
     const modelSystemPath = new CmmaNodePath(this.PROJECT_CONFIG).findArtifactInProject({
-      artifactType: 'models',
+      artifactGroup: 'models',
       artifactLabel: this.artifactLabel,
     })
 

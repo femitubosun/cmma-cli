@@ -103,6 +103,8 @@ export default class System extends BaseCmmaBoundaryCommand {
      */
     const defaultSystem = CmmaSystemActions.blankSystemMap
 
+    defaultSystem.systemLabel = this.systemLabel
+
     CmmaContextActions.addSystemToContext({
       systemLabel: this.systemLabel,
       contextMap,
@@ -133,7 +135,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: 'index',
         artifactType: 'file',
       })
@@ -150,7 +152,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       .drawPath()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: 'index',
         artifactType: 'file',
         noExt: true,
@@ -162,7 +164,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     const contextRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
       .toContext(this.contextLabel)
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: this.contextLabel,
         artifactType: 'route',
       })

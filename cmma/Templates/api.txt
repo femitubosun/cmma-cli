@@ -1,1 +1,1 @@
-export default class {{ systemLabel }}System {}
+export default class {{ filename }} {}

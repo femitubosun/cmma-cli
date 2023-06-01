@@ -9,11 +9,11 @@ export default class CmmaModuleActions {
    */
   public static addModuleControllerToModule(addModuleControllerToModuleOptions: {
     controller: CmmaArtifact
-    module: CmmaModule
+    moduleMap: CmmaModule
   }) {
-    const { controller, module } = addModuleControllerToModuleOptions
+    const { controller, moduleMap } = addModuleControllerToModuleOptions
 
-    module.controllers.push(controller)
+    moduleMap.controllers.push(controller)
   }
 
   /**
@@ -23,11 +23,11 @@ export default class CmmaModuleActions {
    */
   public static addModuleValidatorToModule(addModuleValidatorToModuleOptions: {
     validator: CmmaArtifact
-    module: CmmaModule
+    moduleMap: CmmaModule
   }) {
-    const { validator, module } = addModuleValidatorToModuleOptions
+    const { validator, moduleMap } = addModuleValidatorToModuleOptions
 
-    module.validators.push(validator)
+    moduleMap.validators.push(validator)
   }
 
   /**
@@ -82,7 +82,7 @@ export default class CmmaModuleActions {
    * @returns {CmmaModule}
    */
   public static get blankModuleMap(): CmmaModule {
-    return { controllers: [], validators: [] }
+    return { controllers: [], validators: [], moduleLabel: '' }
   }
 
   /**

@@ -1,12 +1,12 @@
 import UpdateRecordGeneric from 'App/Common/TypeChecking/GeneralPurpose/UpdateRecordGeneric'
-import {{ artifactLabel }}IdentifierOptions from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}{{ artifactDirLabel }}/{{ artifactLabel }}/{{ artifactLabel }}IdentifierOptions'
-import {{ artifactLabel }}Interface from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}{{ artifactDirLabel }}/{{ artifactLabel }}/{{ artifactLabel }}Interface'
+import {{ artifactLabel }}IdentifierOptions from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}/{{ artifactDirLabel }}/{{ artifactLabel }}/{{ artifactLabel }}IdentifierOptions'
+import {{ artifactLabel }}Interface from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}/{{ artifactDirLabel }}/{{ artifactLabel }}/{{ artifactLabel }}Interface'
 
 type Update{{ artifactLabel }}RecordPayload = Partial<{{ artifactLabel }}Interface>
 
-type Update{{ artifactLabel }}RecordOptions = UpdateRecordGeneric<
+type {{ filename }} = UpdateRecordGeneric<
   {{ artifactLabel }}IdentifierOptions,
   Update{{ artifactLabel }}RecordPayload
 >
 
-export default Update{{ artifactLabel }}RecordOptions
+export default {{ filename }}

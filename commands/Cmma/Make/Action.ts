@@ -81,7 +81,7 @@ export default class Action extends BaseCmmaArtifactCommand {
       contextSystemLabels
     )
 
-    const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
       contextMap,
     })

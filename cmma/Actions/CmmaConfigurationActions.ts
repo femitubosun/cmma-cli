@@ -32,124 +32,6 @@ export default class CmmaConfigurationActions {
   }
 
   /**
-   * @description Resolve Artifact's Label
-   * @author FATE
-   * @param {} resolveArtifactLabelOptions
-   */
-  public static normalizeArtifactLabel(resolveArtifactLabelOptions: {
-    artifactLabel: string
-    artifactType: CmmaArtifactType
-    configObject: CmmaConfiguration
-    noExt?: boolean
-  }) {
-    const { artifactLabel, noExt, artifactType, configObject } = resolveArtifactLabelOptions
-
-    const Resolve: Record<CmmaArtifactType, Function> = {
-      'index': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          transformations: {
-            extname: '.ts',
-            pattern: 'camelcase',
-          },
-          noExt,
-        }),
-      'file': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          transformations: {
-            extname: '.ts',
-            pattern: configObject.defaultCasePattern,
-          },
-          noExt,
-        }),
-      'view': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'views',
-            configObject,
-          }),
-          noExt,
-        }),
-      'validator': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'validators',
-            configObject,
-          }),
-          noExt,
-        }),
-      'model': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'models',
-            configObject,
-          }),
-          noExt,
-        }),
-      'migration': () =>
-        this.transformLabel({
-          label: artifactLabel,
-          noExt,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'migrations',
-            configObject,
-          }),
-        }),
-      'controller': () =>
-        this.transformLabel({
-          noExt,
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'controllers',
-            configObject,
-          }),
-        }),
-      'action': () =>
-        this.transformLabel({
-          noExt,
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'actions',
-            configObject,
-          }),
-        }),
-      'create-typechecking': () =>
-        this.transformLabel({
-          noExt,
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'create-typechecking',
-            configObject,
-          }),
-        }),
-      'update-typechecking': () =>
-        this.transformLabel({
-          noExt,
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'update-typechecking',
-            configObject,
-          }),
-        }),
-      'route': () =>
-        this.transformLabel({
-          noExt,
-          label: artifactLabel,
-          transformations: this.getArtifactGroupTransformation({
-            artifactGroup: 'routes',
-            configObject,
-          }),
-        }),
-    }
-
-    return Resolve[artifactType]()
-  }
-
-  /**
    * @description Transform an Artifact Label with Suffix, Prefix, Extension and Pattern
    * @author FATE
    * @param {TransformLabelOptions} transformLabelOptions
@@ -191,21 +73,32 @@ export default class CmmaConfigurationActions {
     return outputString
   }
 
-  public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
-    artifactGroup: CmmaArtifactGroupLabel
+  /**
+   * @description Get the string transformations for an artifact type
+   * @param getArtifactGroupTransformationOptions
+   * @author FATE
+   * @returns StringTransformations
+   */
+  public static getArtifactTypeTransformationWithExtension(getArtifactGroupTransformationOptions: {
+    artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
   }): StringTransformations {
-    const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
+    const { artifactType, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactGroupLabel, StringTransformations> = {
-      'actions': {
+    const transformations: Record<CmmaArtifactType, StringTransformations> = {
+      'index': {
+        extname: '.ts',
+        pattern: 'snakecase',
+      },
+
+      'action': {
         extname: '.ts',
         suffix: 'Actions',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      'controllers': {
+      'controller': {
         extname: '.ts',
         suffix: 'Controller',
         form: 'singular',
@@ -217,31 +110,20 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
-      'migrations': {
+      'migration': {
         extname: '.ts',
         pattern: 'snakecase',
       },
 
-      'models': {
+      'model': {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      'operations': {
-        extname: '.ts',
-        form: 'singular',
-        pattern: configObject.defaultCasePattern,
-      },
-
-      'routes': {
+      'route': {
         extname: '.ts',
         suffix: 'Routes',
-        pattern: configObject.defaultCasePattern,
-      },
-
-      'typechecking': {
-        extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
 
@@ -261,14 +143,191 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
-      'validators': {
+      'model-interface': {
+        extname: '.ts',
+        suffix: 'Interface',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'identifier-options': {
+        extname: '.ts',
+        suffix: 'IdentifierOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'validator': {
         extname: '.ts',
         suffix: 'RequestValidator',
         form: 'singular',
         pattern: configObject.defaultCasePattern,
       },
 
-      'views': {
+      'view': {
+        extname: '.edge',
+        pattern: 'dashcase',
+      },
+    }
+
+    return transformations[artifactType]
+  }
+
+  /**
+   * @description Get the string transformations for an artifact type without an extension
+   * @param getArtifactGroupTransformationOptions
+   * @author FATE
+   * @returns StringTransformations
+   */
+  public static getArtifactTypeTransformationWithoutExtension(getArtifactGroupTransformationOptions: {
+    artifactType: CmmaArtifactType
+    configObject: CmmaConfiguration
+  }): StringTransformations {
+    const { artifactType, configObject } = getArtifactGroupTransformationOptions
+
+    const transformations: Record<CmmaArtifactType, StringTransformations> = {
+      'index': {
+        pattern: 'snakecase',
+      },
+
+      'action': {
+        suffix: 'Actions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'controller': {
+        suffix: 'Controller',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'file': {
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'migration': {
+        pattern: 'snakecase',
+      },
+
+      'model': {
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'route': {
+        suffix: 'Routes',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'create-typechecking': {
+        prefix: 'Create',
+        suffix: 'RecordOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'update-typechecking': {
+        prefix: 'Update',
+        suffix: 'RecordOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'model-interface': {
+        suffix: 'Interface',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'identifier-options': {
+        suffix: 'IdentifierOptions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'validator': {
+        suffix: 'RequestValidator',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'view': {
+        pattern: 'dashcase',
+      },
+    }
+
+    return transformations[artifactType]
+  }
+
+  /**
+   * @description Get the string transformations for an artifact group
+   * @param getArtifactGroupTransformationOptions
+   * @author FATE
+   * @returns StringTransformations
+   */
+  public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
+    artifactGroup: CmmaArtifactGroupLabel
+    configObject: CmmaConfiguration
+  }): StringTransformations {
+    const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
+
+    const transformations: Record<CmmaArtifactGroupLabel, StringTransformations> = {
+      actions: {
+        extname: '.ts',
+        suffix: 'Actions',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      controllers: {
+        extname: '.ts',
+        suffix: 'Controller',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      file: {
+        extname: '.ts',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      migrations: {
+        extname: '.ts',
+        pattern: 'snakecase',
+      },
+
+      models: {
+        extname: '.ts',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      operations: {
+        extname: '.ts',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      routes: {
+        extname: '.ts',
+        suffix: 'Routes',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      typechecking: {
+        extname: '.ts',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      validators: {
+        extname: '.ts',
+        suffix: 'RequestValidator',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      views: {
         extname: '.edge',
         pattern: 'dashcase',
       },

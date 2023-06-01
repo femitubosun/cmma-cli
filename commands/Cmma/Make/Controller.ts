@@ -94,7 +94,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
       contextSystemLabels
     )
 
-    const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
       contextMap,
     })
@@ -115,7 +115,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
       systemModules
     )
 
-    const moduleMap = CmmaSystemActions.getModuleByLabel({
+    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
       moduleLabel: this.moduleLabel,
       systemMap,
     })
@@ -166,7 +166,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     CmmaModuleActions.addModuleControllerToModule({
       controller: this.computedNameWithSuffix,
-      module: moduleMap,
+      moduleMap: moduleMap,
     })
 
     /**

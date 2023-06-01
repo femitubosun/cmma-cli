@@ -96,7 +96,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
 
     const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
       })

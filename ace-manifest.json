@@ -225,6 +225,34 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-model-options": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/ModelOptions",
+      "commandName": "cmma:make-model-options",
+      "description": "Create a new CMMA Model Options",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model the Model Options to be Created belongs to"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "model",
+          "propertyName": "model",
+          "type": "string",
+          "description": "Name of the Model the Model Options to be Created belongs to",
+          "alias": "m"
+        }
+      ]
+    },
     "cmma:make-module": {
       "settings": {
         "loadApp": false,
@@ -265,10 +293,11 @@
       "aliases": [],
       "flags": [
         {
-          "name": "system",
-          "propertyName": "system",
+          "name": "module",
+          "propertyName": "module",
           "type": "string",
-          "description": "The name of the System this operation belongs to"
+          "description": "The name of the Module this operation belongs to",
+          "alias": "m"
         }
       ]
     },

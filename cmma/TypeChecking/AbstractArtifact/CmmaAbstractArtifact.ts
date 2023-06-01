@@ -1,4 +1,4 @@
-import CmmaAbstractArtifactMember from './CmmaAbstractArtifactMember'
+import CmmaArtifactType from '../CmmaArtifactType'
 
 /*
 |--------------------------------------------------------------------------------
@@ -6,6 +6,6 @@ import CmmaAbstractArtifactMember from './CmmaAbstractArtifactMember'
 |--------------------------------------------------------------------------------
 |
 */
-type CmmaAbstractArtifact = Array<CmmaAbstractArtifactMember>
+type CmmaAbstractArtifact = Array<CmmaArtifactType>
 
 export default CmmaAbstractArtifact

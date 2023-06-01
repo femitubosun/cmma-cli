@@ -7,11 +7,11 @@ export default class ArtifactNode {
 
   constructor(private artifact: CmmaArtifactLabelObject) {
     this.label = artifact.artifactLabel
-    this.artifactType = artifact.artifactType
+    this.artifactType = artifact.artifactGroup
     this.ext = ''
   }
 
   public get artifactGroupLabel() {
-    return this.artifact.artifactType
+    return this.artifact.artifactGroup
   }
 }
