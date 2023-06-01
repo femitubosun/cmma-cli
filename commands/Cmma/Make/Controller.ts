@@ -1,6 +1,5 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/CommandBase/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
@@ -31,7 +30,6 @@ export default class Controller extends BaseCmmaArtifactCommand {
    * CMMA Configurations
    */
   protected commandShortCode = 'mk|ctr'
-  protected boundaryObject: CmmaContext
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
 
   protected contextLabel: string
@@ -41,7 +39,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
   protected artifactGroupLabel: CmmaArtifactGroupLabel = 'controllers'
 
   protected getArtifactDestinationNodePath() {
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPathFromNullNode()
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
 
     nodePath
       .toContext(this.contextLabel)
@@ -96,7 +94,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
       contextSystemLabels
     )
 
-    const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
       contextMap,
     })
@@ -117,7 +115,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
       systemModules
     )
 
-    const moduleMap = CmmaSystemActions.getModuleByLabel({
+    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
       moduleLabel: this.moduleLabel,
       systemMap,
     })
@@ -168,7 +166,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     CmmaModuleActions.addModuleControllerToModule({
       controller: this.computedNameWithSuffix,
-      module: moduleMap,
+      moduleMap: moduleMap,
     })
 
     /**

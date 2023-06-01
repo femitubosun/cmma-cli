@@ -1,4 +1,4 @@
-import { BaseCmmaBoundaryCommand } from '../../../cmma/CommandBase/BaseCmmaBoundaryCommand'
+import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { args } from '@adonisjs/core/build/standalone'
@@ -74,7 +74,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -95,8 +95,8 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
-      .toArtifact({
+      .drawPath()
+      .toArtifactWithExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
       })

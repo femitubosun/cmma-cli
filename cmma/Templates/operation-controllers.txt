@@ -1,0 +1,68 @@
+import HttpStatusCodeEnum from 'App/Common/Helpers/HttpStatusCodeEnum'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { ERROR, SUCCESS, VALIDATION_ERROR, SOMETHING_WENT_WRONG } from 'App/Common/Helpers/Messages/SystemMessages'
+import {{ validatorLabel }} from 'App/{{ defaultDir }}/{{ contextLabel }}/{{ systemLabel }}/{{ artifactGroupDir }}/{{ moduleLabel }}/{{ validatorLabel }}'
+import Database from '@ioc:Adonis/Lucid/Database'
+
+export default class {{ filename }} {
+   /*
+   |--------------------------------------------------------------------------------
+   | Status Codes
+   |--------------------------------------------------------------------------------
+   |
+   */
+  private ok = HttpStatusCodeEnum.OK
+  private internalServerError = HttpStatusCodeEnum.INTERNAL_SERVER_ERROR
+  private unprocessableEntity = HttpStatusCodeEnum.UNPROCESSABLE_ENTITY
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Systems
+  |--------------------------------------------------------------------------------
+  |
+  */
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Handle Request
+   |--------------------------------------------------------------------------------
+   |
+   */
+  public async handle({ request, response }: HttpContextContract) {
+      const dbTransaction = await Database.transaction()
+
+      try {
+        try {
+              await request.validate({{ validatorLabel }})
+            } catch (ValidationError) {
+              return response.status(this.unprocessableEntity).send({
+                status_code: this.unprocessableEntity,
+                status: ERROR,
+                message: VALIDATION_ERROR,
+                results: ValidationError.messages,
+              })
+            }
+
+        await dbTransaction.commit()
+
+        return response.status(this.ok).send({
+          status_code: this.ok,
+          status: SUCCESS,
+          message: '',
+        })
+      } catch ({{ filename }}Error) {
+        console.log(
+          '🚀 ~ {{ filename }}Error.handle {{ filename }}Error ->',
+          {{ filename }}Error
+        )
+
+        await dbTransaction.rollback()
+
+        return response.status(this.internalServerError).send({
+          status_code: this.internalServerError,
+          status: ERROR,
+          message: SOMETHING_WENT_WRONG,
+        })
+      }
+    }
+}

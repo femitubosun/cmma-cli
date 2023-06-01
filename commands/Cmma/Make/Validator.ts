@@ -1,4 +1,4 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/CommandBase/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
@@ -44,7 +44,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG)
 
     nodePath
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir(this.artifactGroupLabel)
@@ -98,7 +98,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
       contextSystemLabels
     )
 
-    const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
       contextMap,
     })
@@ -119,7 +119,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
       systemModules
     )
 
-    const moduleMap = CmmaSystemActions.getModuleByLabel({
+    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
       moduleLabel: this.moduleLabel,
       systemMap,
     })
@@ -170,7 +170,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
 
     CmmaModuleActions.addModuleValidatorToModule({
       validator: this.computedNameWithSuffix,
-      module: moduleMap,
+      moduleMap: moduleMap,
     })
 
     /**

@@ -1,7 +1,7 @@
 import { flags } from '@adonisjs/core/build/standalone'
 import { MigrationListNode } from '@ioc:Adonis/Lucid/Migrator'
 import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
-import { BaseCmmaCommand } from '../../../cmma/CommandBase/BaseCmmaCommand'
+import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
 
 /**
  * The command is meant to migrate the database by execute migrations

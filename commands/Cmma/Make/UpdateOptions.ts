@@ -5,12 +5,12 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 
-export default class CreateOptions extends BaseCmmaArtifactCommand {
+export default class UpdateOptions extends BaseCmmaArtifactCommand {
   /**
    * Ace Command Configuration
    */
-  public static commandName = 'cmma:make-create-options'
-  public static description = 'Create a new CMMA Create Record TypeChecking'
+  public static commandName = 'cmma:make-update-options'
+  public static description = 'Create a new CMMA Update Record TypeChecking'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -19,20 +19,20 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   /**
    * Command Arguments
    */
-  @args.string({ description: 'Name of the model this Create TypeChecking is for' })
+  @args.string({ description: 'Name of the model this Update TypeChecking is for' })
   public name: string
 
   /**
    * CMMA Configurations
    */
-  protected commandShortCode = 'mk|tyc'
+  protected commandShortCode = 'mk|tyu'
   protected PROJECT_CONFIG = this.projectConfiguration!
 
   protected contextLabel: string
   protected systemLabel: string
   protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'create-typechecking'
+  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'update-typechecking'
 
   /**
    * Artifact Specifics
@@ -63,7 +63,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
   protected getArtifactStub(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const createRecordTemplate = 'create-record.txt'
+    const createRecordTemplate = 'update-record.txt'
 
     templatesDir.push(createRecordTemplate)
     return CmmaFileActions.joinPath(templatesDir)

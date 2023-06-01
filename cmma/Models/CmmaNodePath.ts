@@ -26,50 +26,10 @@ export default class CmmaNodePath {
   }
 
   /**
-   * @description Get Relative Path from Node Path
-   * @author FATE
-   */
-  public getRelativePath() {
-    return this.path.join('/')
-  }
-
-  /**
-   * @description Get Absolute OS Path
-   * @author FATE
-   * @param appRoot
-   */
-  public getAbsoluteOsPath(appRoot: string) {
-    return CmmaFileActions.joinPath([
-      appRoot,
-      'app',
-      this.cmmaConfiguration.defaultProjectRootDirInApp,
-      ...this.path,
-    ])
-  }
-
-  /**
-   * @description Get Migrations Folder Imports Style Path
-   * @author FATE
-   */
-  public getMigrationTypePath() {
-    return (
-      './app/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
-    )
-  }
-
-  /**
-   * @description Get import used in Artifacts
-   * @author FATE
-   */
-  public getArtifactImportTypePath() {
-    return 'App/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
-  }
-
-  /**
    * @description Draw Path From
    * @author FATE
    */
-  public buildPathFromNullNode() {
+  public drawPath() {
     return this
   }
 
@@ -150,25 +110,55 @@ export default class CmmaNodePath {
   }
 
   /**
-   * @description Add Artifact Path to Node Path
+   * @description Add Artifact Node with an extension to Node Path
    * @author FATE
-   * @param toArtifactOptions
+   * @param {} toArtifactWithExtensionOptions
    */
-  public toArtifact(toArtifactOptions: {
+  public toArtifactWithExtension(toArtifactWithExtensionOptions: {
     artifactLabel: string
     artifactType: CmmaArtifactType
-    noExt?: boolean
   }): CmmaNodePath {
-    const { artifactLabel, artifactType, noExt } = toArtifactOptions
+    const { artifactLabel, artifactType } = toArtifactWithExtensionOptions
 
-    const normalizedArtifactLabel = CmmaConfigurationActions.normalizeArtifactLabel({
-      artifactLabel,
-      artifactType,
-      configObject: this.cmmaConfiguration,
-      noExt,
+    const artifactTransformation =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
+        artifactType,
+        configObject: this.cmmaConfiguration,
+      })
+
+    const transformedArtifactLabel = CmmaConfigurationActions.transformLabel({
+      label: artifactLabel,
+      transformations: artifactTransformation,
     })
 
-    this.nodes.artifact = new CmmaNode(normalizedArtifactLabel)
+    this.nodes.artifact = new CmmaNode(transformedArtifactLabel)
+
+    return this
+  }
+
+  /**
+   * @description Add Artifact Node without an extension to Node Path
+   * @author FATE
+   * @param {} toArtifactWithoutExtensionOptions
+   */
+  public toArtifactWithoutExtension(toArtifactWithoutExtensionOptions: {
+    artifactLabel: string
+    artifactType: CmmaArtifactType
+  }) {
+    const { artifactLabel, artifactType } = toArtifactWithoutExtensionOptions
+
+    const artifactTransformation =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType,
+        configObject: this.cmmaConfiguration,
+      })
+
+    const transformedArtifactLabel = CmmaConfigurationActions.transformLabel({
+      label: artifactLabel,
+      transformations: artifactTransformation,
+    })
+
+    this.nodes.artifact = new CmmaNode(transformedArtifactLabel)
 
     return this
   }
@@ -208,6 +198,46 @@ export default class CmmaNodePath {
   }
 
   /**
+   * @description Get Relative Path from Node Path
+   * @author FATE
+   */
+  public getRelativePath() {
+    return this.path.join('/')
+  }
+
+  /**
+   * @description Get Absolute OS Path
+   * @author FATE
+   * @param appRoot
+   */
+  public getAbsoluteOsPath(appRoot: string) {
+    return CmmaFileActions.joinPath([
+      appRoot,
+      'app',
+      this.cmmaConfiguration.defaultProjectRootDirInApp,
+      ...this.path,
+    ])
+  }
+
+  /**
+   * @description Get Migrations Folder Imports Style Path
+   * @author FATE
+   */
+  public getMigrationTypePath() {
+    return (
+      './app/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
+    )
+  }
+
+  /**
+   * @description Get import used in Artifacts
+   * @author FATE
+   */
+  public getArtifactImportTypePath() {
+    return 'App/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
+  }
+
+  /**
    * @description Find An Artifact in a context
    * @param findArtifactInContextOptions
    */
@@ -220,7 +250,7 @@ export default class CmmaNodePath {
     const systemLabels = CmmaContextActions.listSystemsInContext(contextMap)
 
     for (let systemLabel of systemLabels) {
-      const systemMap = CmmaContextActions.getContextSystemObjectByLabel({
+      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
         systemLabel,
         contextMap,
       })
@@ -229,7 +259,7 @@ export default class CmmaNodePath {
         CmmaSystemActions.isArtifactInSystemArtifactGroup({
           systemMap,
           artifactLabel: artifactObject.artifactLabel,
-          artifactGroupLabel: artifactObject.artifactType,
+          artifactGroupLabel: artifactObject.artifactGroup,
         })
       ) {
         this.toSystem(systemLabel)
@@ -243,13 +273,14 @@ export default class CmmaNodePath {
   /**
    * @description Find an Artifact in a Project
    * @param artifactObject
+   * @author FATE
    */
   public findArtifactInProject(artifactObject: CmmaArtifactLabelObject): CmmaNodePath {
     const projectMap = this.cmmaConfiguration.projectMap
 
     const contextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
 
-    for (let contextLabel of contextLabels) {
+    contextLabels.forEach((contextLabel) => {
       const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
         contextLabel,
         projectMap,
@@ -260,16 +291,82 @@ export default class CmmaNodePath {
         artifactObject,
       })
 
-      if (this.length > 0) {
+      if (this.length) return this
+    })
+
+    return this
+  }
+
+  /**
+   * @description Find a Module In Project
+   * @author FATE
+   * @param moduleLabel
+   * @returns CmmaNodePath: instance
+   */
+  public findModuleInProject(moduleLabel: string) {
+    const projectMap = this.cmmaConfiguration.projectMap
+
+    const contextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
+
+    contextLabels.forEach((contextLabel) => {
+      const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+        projectMap,
+        contextLabel,
+      })
+
+      this.findModuleInContext({
+        contextMap,
+        moduleLabel,
+      })
+
+      if (this.length) return this
+    })
+
+    return this
+  }
+
+  /**
+   * @description Find a Module In Context
+   * @author FATE
+   * @param findModuleInContextOptions
+   * @returns CmmaNodePath: instance
+   */
+  public findModuleInContext(findModuleInContextOptions: {
+    contextMap: CmmaContext
+    moduleLabel: string
+  }) {
+    const { contextMap, moduleLabel } = findModuleInContextOptions
+
+    const systemLabels = CmmaContextActions.listSystemsInContext(contextMap)
+
+    systemLabels.forEach((systemLabel) => {
+      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
+        systemLabel,
+        contextMap,
+      })
+      if (
+        CmmaSystemActions.isModuleInSystem({
+          systemMap,
+          moduleLabel,
+        })
+      ) {
+        this.toContext(contextMap.contextLabel)
+        this.toSystem(systemMap.systemLabel)
+        this.toModule(moduleLabel)
+
         return this
       }
-    }
+    })
 
     return this
   }
 
   public get systemLabel() {
     return this.nodes.system?.label || undefined
+  }
+
+  public get moduleLabel() {
+    return this.nodes.module?.label || undefined
   }
 
   public get artifactLabel() {

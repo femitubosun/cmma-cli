@@ -1,4 +1,4 @@
-import { BaseCmmaBoundaryCommand } from '../../../cmma/CommandBase/BaseCmmaBoundaryCommand'
+import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
@@ -103,6 +103,8 @@ export default class System extends BaseCmmaBoundaryCommand {
      */
     const defaultSystem = CmmaSystemActions.blankSystemMap
 
+    defaultSystem.systemLabel = this.systemLabel
+
     CmmaContextActions.addSystemToContext({
       systemLabel: this.systemLabel,
       contextMap,
@@ -116,7 +118,7 @@ export default class System extends BaseCmmaBoundaryCommand {
       this.PROJECT_CONFIG
     )) {
       const artifactDirectoryFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-        .buildPathFromNullNode()
+        .drawPath()
         .toContext(this.contextLabel)
         .toSystem(this.systemLabel)
         .toSystemArtifactsDir(systemArtifactDirectoryLabel)
@@ -129,11 +131,11 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Generate System Routes File
      */
     const systemRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: 'index',
         artifactType: 'file',
       })
@@ -147,10 +149,10 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Import System Routes into Context Routes
      */
     const systemToSystemRoutesRelativePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: 'index',
         artifactType: 'file',
         noExt: true,
@@ -160,9 +162,9 @@ export default class System extends BaseCmmaBoundaryCommand {
     const IMPORT_SYSTEM_ROUTE_STRING = `import './${systemToSystemRoutesRelativePath}'`
 
     const contextRoutesFilePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
-      .toArtifact({
+      .toArtifactWithExtension({
         artifactLabel: this.contextLabel,
         artifactType: 'route',
       })
@@ -179,7 +181,7 @@ export default class System extends BaseCmmaBoundaryCommand {
      * Generate Internal Api
      */
     const internalApiDestinationPath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
       .getAbsoluteOsPath(this.application.appRoot)

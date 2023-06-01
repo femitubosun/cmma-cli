@@ -6,7 +6,7 @@ import {
   PROCEEDING_WILL_OVERWRITE_CONFIG_FILE_CONTINUE,
 } from '../../../cmma/Helpers/SystemMessages'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import { BaseCmmaCommand } from '../../../cmma/CommandBase/BaseCmmaCommand'
+import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
 
 export default class ConfigCreate extends BaseCmmaCommand {
   /**

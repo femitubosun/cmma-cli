@@ -1,4 +1,4 @@
-import { BaseCmmaMigrationCommand } from '../../../cmma/CommandBase/BaseCmmaMigrationCommand'
+import { BaseCmmaMigrationCommand } from '../../../cmma/BaseCommands/BaseCmmaMigrationCommand'
 import { flags } from '@adonisjs/core/build/standalone'
 import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
 import * as console from 'console'

@@ -8,7 +8,7 @@
  */
 
 import { flags } from '@adonisjs/core/build/standalone'
-import { BaseCmmaMigrationCommand } from '../../../cmma/CommandBase/BaseCmmaMigrationCommand'
+import { BaseCmmaMigrationCommand } from '../../../cmma/BaseCommands/BaseCmmaMigrationCommand'
 import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
 
 /**

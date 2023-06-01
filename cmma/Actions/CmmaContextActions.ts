@@ -42,7 +42,7 @@ export default class CmmaContextActions {
    * @author FATE
    * @param {} getContextSystemByLabel
    */
-  public static getContextSystemObjectByLabel(getContextSystemByLabel: {
+  public static getContextSystemMapByLabel(getContextSystemByLabel: {
     systemLabel: string
     contextMap: CmmaContext
   }) {

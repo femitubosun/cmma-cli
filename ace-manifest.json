@@ -225,6 +225,34 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-model-options": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/ModelOptions",
+      "commandName": "cmma:make-model-options",
+      "description": "Create a new CMMA Model Options",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model the Model Options to be Created belongs to"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "model",
+          "propertyName": "model",
+          "type": "string",
+          "description": "Name of the Model the Model Options to be Created belongs to",
+          "alias": "m"
+        }
+      ]
+    },
     "cmma:make-module": {
       "settings": {
         "loadApp": false,
@@ -245,6 +273,34 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-operation": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Operation",
+      "commandName": "cmma:make-operation",
+      "description": "Create a new CMMA Operation",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Operation to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "module",
+          "propertyName": "module",
+          "type": "string",
+          "description": "The name of the Module this operation belongs to",
+          "alias": "m"
+        }
+      ]
+    },
     "cmma:make-system": {
       "settings": {
         "loadApp": false,
@@ -260,6 +316,26 @@
           "name": "name",
           "required": true,
           "description": "Name of the System to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-update-options": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/UpdateOptions",
+      "commandName": "cmma:make-update-options",
+      "description": "Create a new CMMA Update Record TypeChecking",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the model this Update TypeChecking is for"
         }
       ],
       "aliases": [],

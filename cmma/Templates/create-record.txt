@@ -1,0 +1,8 @@
+import {{ artifactLabel }}Interface from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel}}/{{ artifactDirLabel }}/{{ artifactLabel }}/{{ artifactLabel }}Interface'
+import CreateNewRecordGeneric from 'App/Common/TypeChecking/GeneralPurpose/CreateNewRecordGeneric'
+
+type Create{{ artifactLabel }}RecordPayload = Pick<{{ modelInterfaceName }}, >
+
+type {{ filename }} = CreateNewRecordGeneric<Create{{ modelName }}RecordPayload>
+
+export default {{ filename }}

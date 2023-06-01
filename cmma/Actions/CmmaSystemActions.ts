@@ -166,7 +166,7 @@ export default class CmmaSystemActions {
    * @author FATE
    * @param {} getModuleByLabelOptions
    */
-  public static getModuleByLabel(getModuleByLabelOptions: {
+  public static getModuleMapByLabel(getModuleByLabelOptions: {
     moduleLabel: string
     systemMap: CmmaSystem
   }) {
@@ -202,7 +202,7 @@ export default class CmmaSystemActions {
 
     const moduleLabels = this.listModulesInSystem(system)
 
-    return this.getModuleByLabel({
+    return this.getModuleMapByLabel({
       moduleLabel: moduleLabels[moduleIndex],
       systemMap: system,
     })
@@ -363,6 +363,7 @@ export default class CmmaSystemActions {
         routes: [],
       },
       modules: {},
+      systemLabel: '',
     }
   }
 }

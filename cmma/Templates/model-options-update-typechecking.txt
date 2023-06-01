@@ -1,0 +1,14 @@
+import UpdateRecordGeneric from 'App/Common/TypeChecking/GeneralPurpose/UpdateRecordGeneric'
+import {{ identifierOptionsLabel }} from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}/{{ artifactDirLabel }}/{{ artifactLabel }}/{{ identifierOptionsLabel }}'
+import {{ modelInterfaceLabel }} from 'App/{{ defaultProjectDir }}/{{ contextLabel }}/{{ systemLabel }}/{{ artifactDirLabel }}/{{ artifactLabel }}/{{ modelInterfaceLabel }}'
+
+type Update{{ artifactLabel }}RecordPayload = Partial<{{ modelInterfaceLabel }}>
+
+type {{ filename }} = UpdateRecordGeneric<
+  {{ identifierOptionsLabel }},
+  Update{{ artifactLabel }}RecordPayload
+>
+
+export default {{ filename }}
+
+

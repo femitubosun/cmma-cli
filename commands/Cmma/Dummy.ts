@@ -1,5 +1,5 @@
 import { args } from '@adonisjs/core/build/standalone'
-import { BaseCmmaCommand } from '../../cmma/CommandBase/BaseCmmaCommand'
+import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 
 export default class Dummy extends BaseCmmaCommand {
   /**

@@ -18,7 +18,7 @@ export default class CmmaNodePathActions {
       whatIsSystemMigrationsDirectoryNodePathOptions
 
     return new CmmaNodePath(configObject)
-      .buildPathFromNullNode()
+      .drawPath()
       .toContext(contextLabel)
       .toSystem(systemLabel)
       .toSystemArtifactsDir('migrations')
