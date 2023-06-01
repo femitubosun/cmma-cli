@@ -74,7 +74,10 @@ export default class Init extends BaseCmmaBoundaryCommand {
 
     this.logger.action('create').succeeded(projectRoutesFileFilePath)
 
-    const PROJECT_ROUTES_FILENAME = projectRoutesFileNodePath.artifactLabel?.split('.')[0]
+    const PROJECT_ROUTES_FILENAME = projectRoutesFileNodePath.toArtifactWithoutExtension({
+      artifactLabel: 'Project',
+      artifactType: 'route',
+    }).artifactLabel
 
     CmmaProjectMapActions.addArtifactToProject({
       artifact: PROJECT_ROUTES_FILENAME!,

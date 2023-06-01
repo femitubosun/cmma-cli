@@ -163,10 +163,9 @@ export default class Module extends BaseCmmaBoundaryCommand {
      */
     const moduleRoutesPath = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
-      .toArtifactWithExtension({
+      .toArtifactWithoutExtension({
         artifactLabel: this.moduleLabel,
         artifactType: 'route',
-        noExt: true,
       })
       .getRelativePath()
 

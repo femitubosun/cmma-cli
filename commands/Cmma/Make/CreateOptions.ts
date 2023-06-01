@@ -32,7 +32,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   protected systemLabel: string
   protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'create-typechecking'
+  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'model-options'
 
   /**
    * Artifact Specifics
@@ -45,10 +45,9 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('typechecking')
       .toModelDir(this.artifactLabel)
-      .toArtifactWithExtension({
+      .toArtifactWithoutExtension({
         artifactLabel: `${this.artifactLabel}Interface`,
         artifactType: 'file',
-        noExt: true,
       })
 
     return {

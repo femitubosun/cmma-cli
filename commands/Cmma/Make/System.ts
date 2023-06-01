@@ -1,6 +1,5 @@
 import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
@@ -30,7 +29,6 @@ export default class System extends BaseCmmaBoundaryCommand {
    * CMMA Configurations
    */
   protected commandShortCode = 'mk|sys'
-  protected boundaryObject: CmmaContext
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
 
   private contextLabel: string
@@ -152,10 +150,9 @@ export default class System extends BaseCmmaBoundaryCommand {
       .drawPath()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifactWithExtension({
+      .toArtifactWithoutExtension({
         artifactLabel: 'index',
         artifactType: 'file',
-        noExt: true,
       })
       .getRelativePath()
 

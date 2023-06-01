@@ -6,6 +6,7 @@ type CmmaArtifactGroupLabel =
   | 'actions'
   | 'migrations'
   | 'operations'
+  | 'model-options'
   | 'file'
   | 'routes'
   | 'typechecking'
