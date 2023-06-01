@@ -3,7 +3,7 @@ import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternTy
 import { string } from '@ioc:Adonis/Core/Helpers'
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
-import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
 export default class CmmaConfigurationActions {
@@ -267,12 +267,12 @@ export default class CmmaConfigurationActions {
    * @returns StringTransformations
    */
   public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
-    artifactGroup: CmmaArtifactGroupLabel
+    artifactGroup: CmmaArtifactDir
     configObject: CmmaConfiguration
   }): StringTransformations {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactGroupLabel, StringTransformations> = {
+    const transformations: Record<CmmaArtifactDir, StringTransformations> = {
       actions: {
         extname: '.ts',
         suffix: 'Actions',
@@ -298,12 +298,6 @@ export default class CmmaConfigurationActions {
       },
 
       models: {
-        extname: '.ts',
-        form: 'singular',
-        pattern: configObject.defaultCasePattern,
-      },
-
-      operations: {
         extname: '.ts',
         form: 'singular',
         pattern: configObject.defaultCasePattern,

@@ -1,109 +1,68 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages'
 
 export default class Model extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
-  public static commandName = 'cmma:make-model'
-  public static description = 'Create a new CMMA Model'
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  public static commandName = 'cmma:make-action'
+  public static description = 'Create a new CMMA Action'
   public static settings = {
     loadApp: false,
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the Model to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'mk|mdl'
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
+  protected commandShortCode = 'mk|act'
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'models'
+  protected targetEntity = 'Model'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'models'
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
+    await this.ensureConfigFileExistsCommandStep()
 
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.selectContextCommandStep()
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
-
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this Model belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this Model Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
+    await this.selectSystemCommandStep()
 
     /**
      * Compute Name. Delete Prefix if included in argument
      */
-
     this.artifactLabel = this.name
 
-    const precomputedName = CmmaConfigurationActions.normalizeProjectIdentifier({
-      configObject: this.PROJECT_CONFIG!,
-      identifier: this.name,
-    })
+    const modelTransformations =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'model',
+        configObject: this.PROJECT_CONFIG,
+      })
 
-    this.computedNameWithoutSuffix = precomputedName.includes(this.defaultCmmaArtifactSuffix)
-      ? precomputedName.replace(this.defaultCmmaArtifactSuffix, '')
-      : precomputedName
-
-    this.computedNameWithSuffix = CmmaConfigurationActions.normalizeProjectIdentifier({
-      configObject: this.PROJECT_CONFIG!,
-      identifier: this.computedNameWithoutSuffix + this.defaultCmmaArtifactSuffix,
+    this.artifactLabel = CmmaConfigurationActions.transformLabel({
+      transformations: modelTransformations,
+      label: this.artifactLabel,
     })
 
     /*
@@ -112,17 +71,17 @@ export default class Model extends BaseCmmaArtifactCommand {
 
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        systemMap,
+        systemMap: this.systemMap,
         artifactGroupLabel: 'models',
-        artifactLabel: this.computedNameWithSuffix,
+        artifactLabel: this.artifactLabel,
       })
     ) {
-      this.logger.warning(`You have already registered Model in this System. Ignoring...`)
+      this.logger.warning(YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM)
       await this.exit()
     }
 
     this.logger.info(
-      `Creating ${this.colors.underline(this.computedNameWithSuffix)} ${
+      `Creating ${this.colors.underline(this.artifactLabel)} ${
         this.artifactLabel
       } Artifact in ${this.colors.underline(this.systemLabel)} System in ${this.colors.underline(
         this.contextLabel
@@ -130,28 +89,28 @@ export default class Model extends BaseCmmaArtifactCommand {
     )
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifact: this.computedNameWithSuffix,
+      artifact: this.artifactLabel,
       artifactGroupLabel: 'models',
-      systemMap,
+      systemMap: this.systemMap,
     })
 
     /**
-     * Generate Controller
+     * Generate Model
      */
     await this.generate()
 
     /**
      * Finish Command
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-      CmmaSystemActions.listSystemArtifactsByGroupLabel({
-        systemMap,
-        artifactGroupLabel: 'models',
-      }).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    //   CmmaSystemActions.listSystemArtifactsByGroupLabel({
+    //     systemMap,
+    //     artifactGroupLabel: 'models',
+    //   }).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

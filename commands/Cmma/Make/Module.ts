@@ -1,9 +1,6 @@
 import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
@@ -11,9 +8,12 @@ import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Module extends BaseCmmaBoundaryCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-module'
   public static description = 'Make a new CMMA CmmaModule'
   public static settings = {
@@ -21,96 +21,43 @@ export default class Module extends BaseCmmaBoundaryCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the System to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'mk|mod'
-  protected boundaryObject: CmmaContext
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
+  protected commandShortCode = 'mk|act'
+  protected artifactLabel: string
+  protected targetEntity = 'Module'
 
   public async run() {
-    await this.startCmmaCommand()
+    await this.ensureConfigFileExistsCommandStep()
+
+    await this.selectContextCommandStep()
+
+    await this.selectSystemCommandStep()
 
     /**
-     * Project Map Defined as Early As Possible
+     * Add Blank Module to System
      */
-    const projectMap = this.PROJECT_CONFIG.projectMap
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
-
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this Module belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this Module Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
-
-    /**
-     * Ensure Module isn't already in System
-     */
     this.moduleLabel = CmmaConfigurationActions.normalizeProjectIdentifier({
       identifier: this.name,
       configObject: this.PROJECT_CONFIG,
     })
 
-    if (
-      CmmaSystemActions.isModuleInSystem({
-        moduleLabel: this.moduleLabel,
-        systemMap,
-      })
-    ) {
-      this.logger.warning(
-        `You have already registered '${this.moduleLabel}' Module in '${this.contextLabel}' System. Ignoring...`
-      )
-      await this.exit()
-    }
-
-    /**
-     * Add Blank Module to System
-     */
     const defaultModule = CmmaModuleActions.blankModuleMap
 
     defaultModule.moduleLabel = this.moduleLabel
@@ -118,7 +65,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
     CmmaSystemActions.addModuleToSystem({
       module: defaultModule,
       moduleLabel: this.moduleLabel,
-      systemMap,
+      systemMap: this.systemMap,
     })
 
     /**
@@ -163,10 +110,9 @@ export default class Module extends BaseCmmaBoundaryCommand {
      */
     const moduleRoutesPath = new CmmaNodePath(this.PROJECT_CONFIG)
       .drawPath()
-      .toArtifactWithExtension({
+      .toArtifactWithoutExtension({
         artifactLabel: this.moduleLabel,
         artifactType: 'route',
-        noExt: true,
       })
       .getRelativePath()
 
@@ -193,11 +139,11 @@ export default class Module extends BaseCmmaBoundaryCommand {
     /**
      * Finish Command
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

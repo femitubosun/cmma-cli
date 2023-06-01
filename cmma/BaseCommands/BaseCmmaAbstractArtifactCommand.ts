@@ -1,6 +1,6 @@
 import { BaseCmmaArtifactCommand } from './BaseCmmaArtifactCommand'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
-import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaAbstractArtifact from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaFileActions from '../Actions/CmmaFileActions'
@@ -36,7 +36,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'operations'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'operations'
 
   /*
   |--------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @param artifactType
    * @returns StringTransformations
    */
-  protected getArtifactTemplateFile(artifactType: CmmaArtifactType) {
+  protected getArtifactTemplateFileDir(artifactType: CmmaArtifactType) {
     const artifactTemplateFilename = this.artifactTemplates[artifactType]
 
     const templateDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
@@ -140,7 +140,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   protected getAbstractArtifactTransformations(artifactType: CmmaArtifactType) {
     return CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
       artifactType,
-      configObject: this.projectConfiguration!,
+      configObject: this.projectConfigurationFromFile!,
     })
   }
 
@@ -215,7 +215,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
     this.abstractArtifact.forEach((artifact) => {
       this.generator
         .addFile(this.artifactLabel, this.getAbstractArtifactTransformations(artifact))
-        .stub(this.getArtifactTemplateFile(artifact))
+        .stub(this.getArtifactTemplateFileDir(artifact))
         .useMustache()
         .destinationDir(this.getArtifactDestinationDir(artifact))
         .appRoot(this.application.appRoot)

@@ -1,15 +1,18 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages'
 
 export default class View extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-view'
   public static description = 'Create a new CMMA View'
   public static settings = {
@@ -17,112 +20,67 @@ export default class View extends BaseCmmaArtifactCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+ |--------------------------------------------------------------------------------
+ | Command Arguments
+ |--------------------------------------------------------------------------------
+ |
+ */
   @args.string({ description: 'Name of the View to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|viw'
-  protected PROJECT_CONFIG = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'views'
+  protected targetEntity = 'View'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'views'
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
+    await this.ensureConfigFileExistsCommandStep()
 
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.selectContextCommandStep()
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
-
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this View belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this View Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
+    await this.selectSystemCommandStep()
 
     /**
-     * Compute Name. Delete Prefix if included in argument
+     * Transform View Label
      */
-    // TODO
     this.artifactLabel = this.name
 
     const viewTransformation = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: this.artifactGroupLabel,
+      artifactGroup: this.artifactGroupDirLabel,
       configObject: this.PROJECT_CONFIG,
     })
 
-    const viewName = CmmaConfigurationActions.transformLabel({
+    this.artifactLabel = CmmaConfigurationActions.transformLabel({
       label: this.name,
       transformations: viewTransformation,
       noExt: true,
     })
 
-    this.computedNameWithoutSuffix = viewName
-
-    this.computedNameWithSuffix = viewName
-
     /*
-     * Ensure the Action isn't already in module
+     * Ensure the View isn't already in System
      */
-
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        systemMap,
+        systemMap: this.systemMap,
         artifactGroupLabel: 'views',
-        artifactLabel: this.computedNameWithSuffix,
+        artifactLabel: this.artifactLabel,
       })
     ) {
-      this.logger.warning(`You have already registered View in this System. Ignoring...`)
+      this.logger.warning(YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM)
       await this.exit()
     }
 
     this.logger.info(
-      `Creating ${this.colors.underline(this.computedNameWithSuffix)} ${
+      `Creating ${this.colors.underline(this.artifactLabel)} ${
         this.artifactLabel
       } Artifact in ${this.colors.underline(this.systemLabel)} System in ${this.colors.underline(
         this.contextLabel
@@ -132,7 +90,7 @@ export default class View extends BaseCmmaArtifactCommand {
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.computedNameWithSuffix,
       artifactGroupLabel: 'views',
-      systemMap,
+      systemMap: this.systemMap,
     })
 
     /**
@@ -143,15 +101,15 @@ export default class View extends BaseCmmaArtifactCommand {
     /**
      * Finish Command
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-      CmmaSystemActions.listSystemArtifactsByGroupLabel({
-        systemMap,
-        artifactGroupLabel: 'views',
-      }).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    //   CmmaSystemActions.listSystemArtifactsByGroupLabel({
+    //     systemMap,
+    //     artifactGroupLabel: 'views',
+    //   }).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

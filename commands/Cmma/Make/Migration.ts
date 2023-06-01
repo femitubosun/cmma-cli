@@ -1,10 +1,7 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import { string } from '@ioc:Adonis/Core/Helpers'
@@ -12,20 +9,41 @@ import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaStringTransformations from 'cmma/TypeChecking/StringTransformations'
 
 export default class Migration extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
-  public static commandName = 'cmma:make-migration'
-  public static description = 'Create a new CMMA Migration'
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  public static commandName = 'cmma:make-action'
+  public static description = 'Create a new CMMA Action'
   public static settings = {
-    loadApp: true,
+    loadApp: false,
+    stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the View to be Created' })
   public name: string
+
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
+  protected commandShortCode = 'mk|mig'
+  protected artifactLabel: string
+  protected targetEntity = 'Migration'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'migrations'
+  private tableName: string
 
   /**
    * Choose a custom pre-defined connection. Otherwise, we use the
@@ -49,20 +67,6 @@ export default class Migration extends BaseCmmaArtifactCommand {
   public table: string
 
   /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'mk|mig'
-  protected boundaryObject: CmmaContext
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
-  protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'migrations'
-  private tableName: string
-
-  /**
    * Not a valid connection
    */
   private printNotAValidConnection(connection: string) {
@@ -71,7 +75,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
     )
   }
 
-  protected getArtifactStub(): string {
+  protected getTemplateFileDir(): string {
     const migrationTemplate = this.table ? 'migration-alter.txt' : 'migration-make.txt'
 
     const templateDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
@@ -112,54 +116,11 @@ export default class Migration extends BaseCmmaArtifactCommand {
   }
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.ensureConfigFileExistsCommandStep()
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
+    await this.selectContextCommandStep()
 
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this Migration belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this Migration Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
-
+    await this.selectSystemCommandStep()
     /**
      * Compute Name. Delete Prefix if included in argument
      */
@@ -183,7 +144,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: migrationName,
-        systemMap,
+        systemMap: this.systemMap,
         artifactGroupLabel: 'migrations',
       })
     ) {
@@ -196,7 +157,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: migrationName,
       artifactGroupLabel: 'migrations',
-      systemMap,
+      systemMap: this.systemMap,
     })
 
     const db = this.application.container.use('Adonis/Lucid/Database')
@@ -231,15 +192,15 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     await this.generate()
 
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-      CmmaSystemActions.listSystemArtifactsByGroupLabel({
-        systemMap,
-        artifactGroupLabel: 'migrations',
-      }).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    //   CmmaSystemActions.listSystemArtifactsByGroupLabel({
+    //     systemMap,
+    //     artifactGroupLabel: 'migrations',
+    //   }).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

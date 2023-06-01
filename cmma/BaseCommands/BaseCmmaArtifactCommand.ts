@@ -1,17 +1,11 @@
 import { BaseCmmaCommand } from './BaseCmmaCommand'
-import CmmaArtifactGroupLabel from '../TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaNodePath from '../Models/CmmaNodePath'
 
 export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
-  /**
-   * CMMA Configurations
-   */
-  protected abstract artifactGroupLabel: CmmaArtifactGroupLabel
-  protected abstract contextLabel: string
-  protected abstract systemLabel: string
-  protected abstract moduleLabel?: string
+  protected abstract artifactGroupDirLabel: CmmaArtifactDir
   protected abstract artifactLabel: string
   protected computedNameWithoutSuffix: string
   protected computedNameWithSuffix: string
@@ -32,7 +26,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
 
     this.generator
       .addFile(this.artifactLabel, this.getArtifactTransformations())
-      .stub(this.getArtifactStub())
+      .stub(this.getTemplateFileDir())
       .useMustache()
       .destinationDir(this.getArtifactDestinationFilePath())
       .appRoot(this.application.appRoot)
@@ -47,7 +41,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected getArtifactTransformations() {
     return CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: this.artifactGroupLabel,
+      artifactGroup: this.artifactGroupDirLabel,
       configObject: this.PROJECT_CONFIG,
     })
   }
@@ -57,9 +51,9 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    * @protected
    * @author FATE
    */
-  protected getArtifactStub() {
+  protected getTemplateFileDir() {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const artifactGroupTemplateFileName = `${this.artifactGroupLabel}.txt`
+    const artifactGroupTemplateFileName = `${this.artifactGroupDirLabel}.txt`
 
     templatesDir.push(artifactGroupTemplateFileName)
 
@@ -73,8 +67,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected getTemplateData(): any {
     return {
-      computedNameWithSuffix: this.computedNameWithSuffix,
-      computedNameWithoutSuffix: this.computedNameWithoutSuffix,
+      artifactLabel: this.artifactLabel,
     }
   }
 
@@ -88,7 +81,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
       .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupLabel)
+      .toSystemArtifactsDir(this.artifactGroupDirLabel)
   }
 
   /**
@@ -109,7 +102,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
     return (
       CmmaConfigurationActions.getArtifactGroupTransformation({
         configObject: this.PROJECT_CONFIG,
-        artifactGroup: this.artifactGroupLabel,
+        artifactGroup: this.artifactGroupDirLabel,
       }).suffix || ''
     )
   }

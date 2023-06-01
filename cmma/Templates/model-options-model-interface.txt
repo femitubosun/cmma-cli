@@ -1,3 +1,11 @@
-export default interface {{ filename }}{
+import { DateTime } from 'luxon'
 
+export default interface {{ filename }}{
+  id: number
+
+  identifier: string
+
+  createdAt: DateTime
+
+  updatedAt: DateTime
 }

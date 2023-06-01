@@ -1,19 +1,18 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactGroupLabel from '../../../cmma/TypeChecking/CmmaArtifactGroupLabel'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Validator extends BaseCmmaArtifactCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-validator'
   public static description = 'Create a new CMMA Validator'
   public static settings = {
@@ -21,25 +20,34 @@ export default class Validator extends BaseCmmaArtifactCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+ |--------------------------------------------------------------------------------
+ | Command Arguments
+ |--------------------------------------------------------------------------------
+ |
+ */
   @args.string({ description: 'Name of the Validator to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|val'
-  protected boundaryObject: CmmaContext
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
   protected artifactLabel: string
-  protected artifactGroupLabel: CmmaArtifactGroupLabel = 'validators'
+  protected targetEntity = 'Validator'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'validators'
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Get the Destination Node Path
+  |--------------------------------------------------------------------------------
+  |
+  */
   protected getArtifactDestinationNodePath() {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG)
 
@@ -47,82 +55,20 @@ export default class Validator extends BaseCmmaArtifactCommand {
       .drawPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupLabel)
+      .toSystemArtifactsDir(this.artifactGroupDirLabel)
       .toModule(this.moduleLabel)
 
     return nodePath
   }
 
   public async run() {
-    await this.startCmmaCommand()
-    /**
-     * Project Map Defined as Early As Possible
-     */
+    await this.ensureConfigFileExistsCommandStep()
 
-    const projectMap = this.PROJECT_CONFIG.projectMap
+    await this.selectContextCommandStep()
 
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
+    await this.selectSystemCommandStep()
 
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this Validator belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
-      contextLabel: this.contextLabel,
-      projectMap,
-    })
-
-    const contextSystemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    if (!contextSystemLabels.length) {
-      this.logger.error(
-        `There are no defined Systems in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-system'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.systemLabel = await this.prompt.choice(
-      'What System does this Validator Belong to?',
-      contextSystemLabels
-    )
-
-    const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-      systemLabel: this.systemLabel,
-      contextMap,
-    })
-
-    const systemModules = CmmaSystemActions.listModulesInSystem(systemMap)
-
-    if (!systemModules.length) {
-      this.logger.error(
-        `There are no defined Modules in Context. Run ${this.colors.cyan(
-          'node ace cmma:make-module'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.moduleLabel = await this.prompt.choice(
-      `What Module does this Validator belong to`,
-      systemModules
-    )
-
-    const moduleMap = CmmaSystemActions.getModuleMapByLabel({
-      moduleLabel: this.moduleLabel,
-      systemMap,
-    })
+    await this.selectModuleCommandStep()
 
     /**
      * Compute Name. Delete Prefix if included in argument
@@ -150,7 +96,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
 
     if (
       CmmaModuleActions.isValidatorInModule({
-        moduleMap,
+        moduleMap: this.moduleMap,
         validatorLabel: this.computedNameWithSuffix,
       })
     ) {
@@ -170,7 +116,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
 
     CmmaModuleActions.addModuleValidatorToModule({
       validator: this.computedNameWithSuffix,
-      moduleMap: moduleMap,
+      moduleMap: this.moduleMap,
     })
 
     /**
@@ -181,12 +127,12 @@ export default class Validator extends BaseCmmaArtifactCommand {
     /**
      * Finish Command
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-      CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-      CmmaModuleActions.listModuleValidators(moduleMap).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
+    //   CmmaModuleActions.listModuleValidators(moduleMap).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

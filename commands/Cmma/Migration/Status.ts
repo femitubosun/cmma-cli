@@ -16,7 +16,7 @@ export default class Status extends BaseCmmaCommand {
 
   private migrator: CmmaMigratorContract
 
-  protected PROJECT_CONFIG = this.projectConfiguration!
+  protected PROJECT_CONFIG = this.projectConfigurationFromFile!
   protected commandShortCode = 'mig|sta'
 
   /**

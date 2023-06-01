@@ -1,13 +1,14 @@
 import { BaseCmmaAbstractArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaAbstractArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaAbstractArtifact from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
-import CmmaSystem from '../../../cmma/Models/CmmaSystem'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import { EXITING } from '../../../cmma/Helpers/SystemMessages'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
+import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 
 /*
 |--------------------------------------------------------------------------------
@@ -19,20 +20,21 @@ import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 */
 export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   /*
-|--------------------------------------------------------------------------------
-| Ace Command Configuration
-|--------------------------------------------------------------------------------
-|
-*/
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-model-options'
   public static description = 'Create a new CMMA Model Options'
   public static settings = {
     loadApp: false,
     stayAlive: false,
   }
+
   /*
   |--------------------------------------------------------------------------------
-  | Command Flags and Arguments
+  | Command Arguments
   |--------------------------------------------------------------------------------
   |
   */
@@ -45,20 +47,25 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|mop'
-  protected PROJECT_CONFIG = this.projectConfiguration!
-
-  protected contextLabel: string
-  protected systemLabel: string
-  protected moduleLabel: string
   protected artifactLabel: string
+  protected targetEntity = 'Model Options'
+  protected artifactGroupDirLabel: CmmaArtifactDir = 'model-options'
+
   protected abstractArtifact: CmmaAbstractArtifact = [
     'create-typechecking',
     'update-typechecking',
     'model-interface',
     'identifier-options',
   ]
-  private systemMap: CmmaSystem
 
   public async run() {
     await this.startCmmaCommand()
@@ -98,7 +105,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     this.contextLabel = modelNodePath.contextLabel!
     this.systemLabel = modelNodePath.systemLabel!
 
-    const contextMap = CmmaProjectMapActions.getContextObjectByLabel({
+    const contextMap = CmmaProjectMapActions.getContextMapByLabel({
       contextLabel: this.contextLabel,
       projectMap,
     })

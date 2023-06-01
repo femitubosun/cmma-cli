@@ -1,18 +1,19 @@
 import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaContext from '../../../cmma/Models/CmmaContext'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class System extends BaseCmmaBoundaryCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:make-system'
   public static description = 'Make a new CMMA System'
   public static settings = {
@@ -20,21 +21,25 @@ export default class System extends BaseCmmaBoundaryCommand {
     stayAlive: false,
   }
 
-  /**
-   * Command Arguments
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @args.string({ description: 'Name of the System to be Created' })
   public name: string
 
-  /**
-   * CMMA Configurations
+  /*
+   |--------------------------------------------------------------------------------
+   | CMMA Configuration
+   |--------------------------------------------------------------------------------
+   |
    */
+  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
+  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|sys'
-  protected boundaryObject: CmmaContext
-  protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfiguration!
-
-  private contextLabel: string
-  private systemLabel: string
+  protected targetEntity: string
 
   private getInternalApiStub() {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
@@ -50,33 +55,9 @@ export default class System extends BaseCmmaBoundaryCommand {
   }
 
   public async run() {
-    await this.startCmmaCommand()
+    await this.ensureConfigFileExistsCommandStep()
 
-    /**
-     * Project Map Defined as Early As Possible
-     */
-    const projectMap = this.PROJECT_CONFIG.projectMap
-
-    /**
-     * Ensure Target Exist
-     */
-    const projectContextLabels = CmmaProjectMapActions.listContextsInProject(projectMap)
-
-    if (!projectContextLabels.length) {
-      this.logger.error(
-        `There are no defined Contexts in this Project. Run ${this.colors.cyan(
-          'node ace cmma:init'
-        )} first. Exiting...`
-      )
-      await this.exit()
-    }
-
-    this.contextLabel = await this.prompt.choice(
-      'What Context does this System belong to?',
-      projectContextLabels
-    )
-
-    const contextMap = projectMap.contexts[this.contextLabel]
+    await this.selectContextCommandStep()
 
     /**
      * Ensure the System isn't already in Project
@@ -89,7 +70,7 @@ export default class System extends BaseCmmaBoundaryCommand {
     if (
       CmmaContextActions.isSystemInContext({
         systemLabel: this.systemLabel,
-        contextMap,
+        contextMap: this.contextMap,
       })
     ) {
       this.logger.warning(
@@ -107,7 +88,7 @@ export default class System extends BaseCmmaBoundaryCommand {
 
     CmmaContextActions.addSystemToContext({
       systemLabel: this.systemLabel,
-      contextMap,
+      contextMap: this.contextMap,
       system: defaultSystem,
     })
 
@@ -152,10 +133,9 @@ export default class System extends BaseCmmaBoundaryCommand {
       .drawPath()
       .toSystem(this.systemLabel)
       .toSystemArtifactsDir('routes')
-      .toArtifactWithExtension({
+      .toArtifactWithoutExtension({
         artifactLabel: 'index',
         artifactType: 'file',
-        noExt: true,
       })
       .getRelativePath()
 
@@ -202,10 +182,10 @@ export default class System extends BaseCmmaBoundaryCommand {
     /**
      * Finish Command
      */
-    this.commandArgs = [
-      CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-      CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    ]
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
+    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

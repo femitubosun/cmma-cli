@@ -4,13 +4,15 @@ import { CmmaMigratorContract } from '../TypeChecking/Migration/CmmaMigratorCont
 import { getDDLMethod } from '../Helpers/LucidCommandsUtils'
 import { prettyPrint } from '../Helpers/PrettyPrint'
 import { BaseCmmaCommand } from './BaseCmmaCommand'
-
-
+import CmmaProjectMap from '../Models/CmmaProjectMap'
 
 /**
  * Base class to CMMA migrations and print logs
  */
 export abstract class BaseCmmaMigrationCommand extends BaseCmmaCommand {
+  protected PROJECT_CONFIG = this.projectConfigurationFromFile!
+  protected projectMap: CmmaProjectMap
+
   /**
    * Should print one-liner compact output
    */

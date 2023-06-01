@@ -1,25 +1,35 @@
 import { BaseCmmaMigrationCommand } from '../../../cmma/BaseCommands/BaseCmmaMigrationCommand'
 import { flags } from '@adonisjs/core/build/standalone'
 import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
-import * as console from 'console'
 
 export default class Run extends BaseCmmaMigrationCommand {
-  /**
-   * Ace Command Configuration
-   */
-
+  /*
+  |--------------------------------------------------------------------------------
+  | ACE Command Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   public static commandName = 'cmma:migration-run'
   public static description = 'Migrate database by running pending CMMA Migrations'
   public static settings = {
     loadApp: true,
   }
 
-  /**
-   * CMMA Configurations
-   */
+  /*
+ |--------------------------------------------------------------------------------
+ | CMMA Configuration
+ |--------------------------------------------------------------------------------
+ |
+ */
   protected commandShortCode = 'mig|run'
-  protected PROJECT_CONFIG = this.projectConfiguration!
+  protected targetEntity = ''
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Lucid's Run Migration Command Properties and Flags
+  |--------------------------------------------------------------------------------
+  |
+  */
   private migrator: CmmaMigratorContract
 
   /**
@@ -135,6 +145,8 @@ export default class Run extends BaseCmmaMigrationCommand {
     } else {
       await this.runAsSubCommand()
     }
+
+    await this.finishCmmaCommand()
   }
 
   /**
