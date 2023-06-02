@@ -1,5 +1,0 @@
-import './UserManagement/Routes/index'
-import './Finance/Routes/index'
-import './Analytics/Routes/index'
-import './FireAlarm/Routes/index'
-import './Inventory/Routes/index'

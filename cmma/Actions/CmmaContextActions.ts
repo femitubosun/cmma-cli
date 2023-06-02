@@ -117,7 +117,6 @@ export default class CmmaContextActions {
   /**
    * @description
    * @author FATE
-   * @param
    */
   public static get blankContext(): CmmaContext {
     return {

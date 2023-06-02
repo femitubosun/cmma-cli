@@ -36,7 +36,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
   /*
   |--------------------------------------------------------------------------------
-  | Update Project Map
+  | Update Project Contexts
   |--------------------------------------------------------------------------------
   |
   */
@@ -91,6 +91,9 @@ export default class ConfigUpdate extends BaseCmmaCommand {
     this.logger.info(`${contextsInMapNotOnDisk.length} Context(s) pruned from the Project Map`)
   }
 
+  /**
+   * Update Project Systems
+   */
   public updateProjectSystems() {
     const contextLables = CmmaProjectMapActions.listContextsInProject(this.projectMap)
 
@@ -136,7 +139,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       const systemsInProjectButNotOnDisk = differenceOfArrays(updatedSystems, systemsOnDisk)
 
       this.logger.info(
-        `${systemsOnDiskButNotInProject.length} System(s) found in Project Map But not on Disk Context: ${systemsOnDiskButNotInProject} ${PRUNING}`
+        `${systemsInProjectButNotOnDisk.length} System(s) found in Project Map, but not on Disk Context: ${systemsInProjectButNotOnDisk} ${PRUNING}`
       )
 
       systemsInProjectButNotOnDisk.forEach((systemLabel) => {
@@ -149,6 +152,11 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       this.logger.info(`${systemsInProjectButNotOnDisk.length} System(s) pruned from Project Map`)
     }
   }
+
+  /**
+   * Update Project Modules
+   */
+  public updateProjectModules() {}
 
   /*
   |--------------------------------------------------------------------------------
