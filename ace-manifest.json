@@ -104,7 +104,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Model",
+      "commandPath": "./commands/Cmma/Make/Migration",
       "commandName": "cmma:make-action",
       "description": "Create a new CMMA Action",
       "args": [
@@ -113,11 +113,30 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the Model to be Created"
+          "description": "Name of the View to be Created"
         }
       ],
       "aliases": [],
-      "flags": []
+      "flags": [
+        {
+          "name": "connection",
+          "propertyName": "connection",
+          "type": "string",
+          "description": "The connection flag is used to lookup the directory for the migration file"
+        },
+        {
+          "name": "create",
+          "propertyName": "create",
+          "type": "string",
+          "description": "Define the table name for creating a new table"
+        },
+        {
+          "name": "table",
+          "propertyName": "table",
+          "type": "string",
+          "description": "Define the table name for altering an existing table"
+        }
+      ]
     },
     "cmma:make-context": {
       "settings": {
@@ -174,6 +193,26 @@
           "name": "name",
           "required": true,
           "description": "Name of the Model this Create Options is for"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-model": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Model",
+      "commandName": "cmma:make-model",
+      "description": "Create a new CMMA Model",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model to be Created"
         }
       ],
       "aliases": [],
