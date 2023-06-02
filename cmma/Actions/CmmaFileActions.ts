@@ -10,6 +10,7 @@ import prettier from 'prettier'
 import { join } from 'path'
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
+import FileHound from 'filehound'
 
 export default class CmmaFileActions {
   /**
@@ -141,5 +142,36 @@ export default class CmmaFileActions {
       filePath: configFilePath,
       parser: 'json',
     })
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param dirPath
+   */
+  public static async listFilesInDir(dirPath: string) {
+    return FileHound.create().path(dirPath).depth(0).find()
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param {} listFilesInDirWithExtensionOptions
+   */
+  public static listFilesInDirWithExtension(listFilesInDirWithExtensionOptions: {
+    dirPath: string
+    extension: string
+  }) {
+    const { dirPath, extension } = listFilesInDirWithExtensionOptions
+    return FileHound.create().path(dirPath).ext(extension).depth(0).find()
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param path
+   */
+  public static listSubDirsInDir(path) {
+    return FileHound.create().path(path).directory().depth(1).find()
   }
 }
