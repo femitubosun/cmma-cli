@@ -155,7 +155,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: migrationName,
-      artifactGroupLabel: 'migrations',
+      artifactsDir: 'migrations',
       systemMap: this.systemMap,
     })
 

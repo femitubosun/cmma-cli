@@ -160,7 +160,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact,
-      artifactGroupLabel: 'typechecking',
+      artifactsDir: 'typechecking',
       systemMap: this.systemMap,
     })
 

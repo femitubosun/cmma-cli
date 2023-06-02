@@ -211,25 +211,25 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     }
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactGroupLabel: 'typechecking',
+      artifactsDir: 'typechecking',
       artifact: createOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactGroupLabel: 'typechecking',
+      artifactsDir: 'typechecking',
       artifact: updateOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactGroupLabel: 'typechecking',
+      artifactsDir: 'typechecking',
       artifact: identifierOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactGroupLabel: 'typechecking',
+      artifactsDir: 'typechecking',
       artifact: modelInterfaceLabel,
       systemMap: this.systemMap,
     })

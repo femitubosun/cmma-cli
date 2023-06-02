@@ -46,12 +46,12 @@ export default class CmmaSystemActions {
    * @param {} listSystemArtifactsByGroupLabelOptions
    */
   public static listSystemArtifactsByGroupLabel(listSystemArtifactsByGroupLabelOptions: {
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactDir: CmmaDefaultSystemArtifactDirLabel
     systemMap: CmmaSystem
   }): CmmaArtifactsGroup {
-    const { systemMap, artifactGroupLabel } = listSystemArtifactsByGroupLabelOptions
+    const { systemMap, artifactDir } = listSystemArtifactsByGroupLabelOptions
 
-    return systemMap.systemArtifacts[artifactGroupLabel]
+    return systemMap.systemArtifacts[artifactDir]
   }
 
   /**
@@ -61,13 +61,13 @@ export default class CmmaSystemActions {
    */
   public static addArtifactToArtifactGroup(addArtifactToArtifactGroupOptions: {
     artifact: CmmaArtifact
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactsDir: CmmaDefaultSystemArtifactDirLabel
     systemMap: CmmaSystem
   }) {
-    const { artifact, artifactGroupLabel, systemMap } = addArtifactToArtifactGroupOptions
+    const { artifact, artifactsDir, systemMap } = addArtifactToArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactsDir,
       systemMap,
     })
 
@@ -87,7 +87,7 @@ export default class CmmaSystemActions {
     const { artifactLabel, artifactGroupLabel, system } = getArtifactObjectFromArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactGroupLabel,
       systemMap: system,
     })
 
@@ -110,7 +110,7 @@ export default class CmmaSystemActions {
       getArtifactObjectFromArtifactGroupByIndexOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactGroupLabel,
       systemMap: system,
     })
 
@@ -131,7 +131,7 @@ export default class CmmaSystemActions {
       deleteArtifactObjectFromArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactGroupLabel,
       systemMap: system,
     })
 
@@ -154,7 +154,7 @@ export default class CmmaSystemActions {
       deleteArtifactObjectFromArtifactGroupByIndexOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactGroupLabel,
       systemMap: system,
     })
 
@@ -305,7 +305,7 @@ export default class CmmaSystemActions {
     const { systemMap, artifactLabel, artifactGroupLabel } = isSystemArtifactInSystemOptions
 
     return this.listSystemArtifactsByGroupLabel({
-      artifactGroupLabel,
+      artifactDir: artifactGroupLabel,
       systemMap,
     }).includes(artifactLabel)
   }

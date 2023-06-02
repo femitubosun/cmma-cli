@@ -88,7 +88,7 @@ export default class View extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.computedNameWithSuffix,
-      artifactGroupLabel: 'views',
+      artifactsDir: 'views',
       systemMap: this.systemMap,
     })
 

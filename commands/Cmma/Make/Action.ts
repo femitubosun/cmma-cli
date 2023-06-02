@@ -92,7 +92,7 @@ export default class Action extends BaseCmmaArtifactCommand {
      */
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactGroupLabel: 'actions',
+      artifactsDir: 'actions',
       systemMap: this.systemMap,
     })
 
