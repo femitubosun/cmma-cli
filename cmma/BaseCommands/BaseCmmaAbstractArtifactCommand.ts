@@ -36,7 +36,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |
   */
 
-  protected artifactGroupDirLabel
+  protected artifactType
 
   /*
   |--------------------------------------------------------------------------------

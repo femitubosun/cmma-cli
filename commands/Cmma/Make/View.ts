@@ -2,9 +2,9 @@ import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArti
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
+import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 
 export default class View extends BaseCmmaArtifactCommand {
   /*
@@ -39,7 +39,7 @@ export default class View extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|viw'
   protected artifactLabel: string
   protected targetEntity = 'View'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'views'
+  protected artifactType: CmmaArtifactDirs = 'views'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -54,7 +54,7 @@ export default class View extends BaseCmmaArtifactCommand {
     this.artifactLabel = this.name
 
     const viewTransformation = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: this.artifactGroupDirLabel,
+      artifactGroup: this.artifactType,
       configObject: this.PROJECT_CONFIG,
     })
 

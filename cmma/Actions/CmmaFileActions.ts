@@ -10,7 +10,7 @@ import {
 } from 'fs-extra'
 import prettier from 'prettier'
 import { extname, join } from 'path'
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
 import differenceOfArrays from '../Helpers/Utils/symettericDifferenceOfArrays'
 

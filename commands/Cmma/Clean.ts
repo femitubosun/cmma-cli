@@ -4,8 +4,8 @@ import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationAction
 import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
-import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
-import { EXITING } from '../../cmma/Helpers/SystemMessages'
+import CmmaConfiguration from '../../cmma/Models/CmmaConfiguration'
+import { EXITING } from '../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaProjectMap from '../../cmma/Models/CmmaProjectMap'
 
 export default class Clean extends BaseCmmaCommand {
@@ -71,7 +71,7 @@ export default class Clean extends BaseCmmaCommand {
 
     console.log(this.PROJECT_CONFIG)
 
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPath()
 
     const projectRootPath = CmmaFileActions.createAbsolutePathFromNodePath({
       applicationRoot: this.application.appRoot,

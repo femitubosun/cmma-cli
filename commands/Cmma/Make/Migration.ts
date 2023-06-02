@@ -1,7 +1,7 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import { string } from '@ioc:Adonis/Core/Helpers'
@@ -41,7 +41,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|mig'
   protected artifactLabel: string
   protected targetEntity = 'Migration'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'migrations'
+  protected artifactType: CmmaArtifactDirs = 'migrations'
   private tableName: string
 
   /**

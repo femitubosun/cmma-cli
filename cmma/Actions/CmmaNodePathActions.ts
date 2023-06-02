@@ -1,4 +1,4 @@
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
 import CmmaContextActions from './CmmaContextActions'
 import CmmaProjectMapActions from './CmmaProjectMapActions'
@@ -18,10 +18,10 @@ export default class CmmaNodePathActions {
       whatIsSystemMigrationsDirectoryNodePathOptions
 
     return new CmmaNodePath(configObject)
-      .drawPath()
+      .buildPath()
       .toContext(contextLabel)
       .toSystem(systemLabel)
-      .toSystemArtifactsDir('migrations')
+      .toArtifactsDir('migrations')
   }
 
   /**

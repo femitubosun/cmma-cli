@@ -1,6 +1,6 @@
 import { BaseCommand } from '@adonisjs/core/build/standalone'
 import CmmaFileActions from '../Actions/CmmaFileActions'
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaProjectMap from '../Models/CmmaProjectMap'
 import CmmaSystem from '../Models/CmmaSystem'
 import CmmaContext from '../Models/CmmaContext'
@@ -16,7 +16,7 @@ import {
   NO_DEFINED_CONTEXTS_IN_PROJECT,
   NO_DEFINED_MODULES_IN_SYSTEM,
   NO_DEFINED_SYSTEMS_IN_CONTEXT,
-} from '../Helpers/SystemMessages'
+} from '../Helpers/SystemMessages/SystemMessages'
 import CmmaContextActions from '../Actions/CmmaContextActions'
 import CmmaSystemActions from '../Actions/CmmaSystemActions'
 

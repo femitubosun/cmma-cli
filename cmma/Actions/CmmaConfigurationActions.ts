@@ -1,9 +1,9 @@
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
-import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
 export default class CmmaConfigurationActions {
@@ -267,12 +267,12 @@ export default class CmmaConfigurationActions {
    * @returns StringTransformations
    */
   public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
-    artifactGroup: CmmaArtifactDir
+    artifactGroup: CmmaArtifactDirs
     configObject: CmmaConfiguration
   }): StringTransformations {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactDir, StringTransformations> = {
+    const transformations: Record<CmmaArtifactDirs, StringTransformations> = {
       actions: {
         extname: '.ts',
         suffix: 'Actions',

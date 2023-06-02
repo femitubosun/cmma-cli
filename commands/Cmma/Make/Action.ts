@@ -1,13 +1,13 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 
 export default class Action extends BaseCmmaArtifactCommand {
   /*
@@ -42,7 +42,7 @@ export default class Action extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|act'
   protected artifactLabel: string
   protected targetEntity = 'Action'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'actions'
+  protected artifactType: CmmaArtifactDirs = 'actions'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()

@@ -1,9 +1,9 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 
 export default class Validator extends BaseCmmaArtifactCommand {
@@ -39,7 +39,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|val'
   protected artifactLabel: string
   protected targetEntity = 'Validator'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'validators'
+  protected artifactType: CmmaArtifactDirs = 'validators'
 
   /*
   |--------------------------------------------------------------------------------
@@ -51,10 +51,10 @@ export default class Validator extends BaseCmmaArtifactCommand {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG)
 
     nodePath
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupDirLabel)
+      .toArtifactsDir(this.artifactType)
       .toModule(this.moduleLabel)
 
     return nodePath

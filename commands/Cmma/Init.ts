@@ -8,8 +8,8 @@ import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import {
   INITIALIZING_ADONIS_PROJECT_FOR_CMMA,
   YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT,
-} from '../../cmma/Helpers/SystemMessages'
-import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
+} from '../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaConfiguration from '../../cmma/Models/CmmaConfiguration'
 
 export default class Init extends BaseCmmaBoundaryCommand {
   /*
@@ -84,7 +84,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
      * Create RoutesFile
      */
     const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toArtifactWithExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
@@ -96,7 +96,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
     this.logger.action('create').succeeded(projectRoutesFile)
 
     const PROJECT_ROUTES_FILENAME = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toArtifactWithoutExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
@@ -185,7 +185,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
 
     for (let contextLabel of CmmaProjectMapActions.listContextsInProject(this.projectMap)) {
       const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
-        .drawPath()
+        .buildPath()
         .toContext(contextLabel)
         .getAbsoluteOsPath(this.application.appRoot)
 

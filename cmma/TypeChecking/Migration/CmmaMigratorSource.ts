@@ -1,7 +1,7 @@
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { ConnectionConfig, FileNode } from '@ioc:Adonis/Lucid/Database'
 import { sourceFiles } from '../../Helpers/LucidCommandsUtils'
-import CmmaConfiguration from '../CmmaConfiguration'
+import CmmaConfiguration from '../../Models/CmmaConfiguration'
 import CmmaNodePathActions from '../../Actions/CmmaNodePathActions'
 
 /**

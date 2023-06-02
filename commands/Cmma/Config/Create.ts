@@ -4,7 +4,7 @@ import {
   CONFIGURATION_FILE_EXISTS,
   EXITING,
   PROCEEDING_WILL_OVERWRITE_CONFIG_FILE_CONTINUE,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaProjectMap from 'cmma/Models/CmmaProjectMap'

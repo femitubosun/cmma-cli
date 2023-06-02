@@ -7,7 +7,7 @@ export default class CmmaArtifactActions {
    * @returns {CmmaArtifact}
    *
    */
-  public static getBlankArtifactMap(): CmmaArtifact {
+  public static get blankArtifact(): CmmaArtifact {
     return ''
   }
 

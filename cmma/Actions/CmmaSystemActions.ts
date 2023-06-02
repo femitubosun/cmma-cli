@@ -238,11 +238,11 @@ export default class CmmaSystemActions {
    */
   public static deleteModuleByLabel(deleteModuleByLabelOptions: {
     moduleLabel: string
-    system: CmmaSystem
+    systemMap: CmmaSystem
   }) {
-    const { moduleLabel, system } = deleteModuleByLabelOptions
+    const { moduleLabel, systemMap } = deleteModuleByLabelOptions
 
-    delete system.modules[moduleLabel]
+    delete systemMap.modules[moduleLabel]
   }
 
   /**
@@ -274,7 +274,7 @@ export default class CmmaSystemActions {
 
     return this.deleteModuleByLabel({
       moduleLabel: moduleLabels[moduleIndex],
-      system,
+      systemMap: system,
     })
   }
 

@@ -3,11 +3,11 @@ import { args } from '@adonisjs/core/build/standalone'
 import CmmaAbstractArtifact from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import { EXITING } from '../../../cmma/Helpers/SystemMessages'
+import { EXITING } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 
 /*
 |--------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
 
     const modelNodePath = new CmmaNodePath(this.PROJECT_CONFIG).findArtifactInProject({
       artifactLabel: this.artifactLabel,
-      artifactGroup: 'models',
+      artifactType: 'models',
     })
 
     if (!modelNodePath.length) {
@@ -239,10 +239,10 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
      */
 
     const typecheckingDestinationNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir('typechecking')
+      .toArtifactsDir('typechecking')
       .toModelDir(this.artifactLabel)
 
     const typecheckingDestinationDir = typecheckingDestinationNodePath.getAbsoluteOsPath(

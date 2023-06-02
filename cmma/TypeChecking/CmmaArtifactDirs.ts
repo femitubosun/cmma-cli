@@ -1,4 +1,4 @@
-type CmmaArtifactDir =
+type CmmaArtifactDirs =
   | 'views'
   | 'controllers'
   | 'validators'
@@ -9,4 +9,4 @@ type CmmaArtifactDir =
   | 'routes'
   | 'typechecking'
 
-export default CmmaArtifactDir
+export default CmmaArtifactDirs
