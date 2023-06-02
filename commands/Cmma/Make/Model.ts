@@ -13,8 +13,8 @@ export default class Model extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-action'
-  public static description = 'Create a new CMMA Action'
+  public static commandName = 'cmma:make-model'
+  public static description = 'Create a new CMMA Model'
   public static settings = {
     loadApp: false,
     stayAlive: false,
