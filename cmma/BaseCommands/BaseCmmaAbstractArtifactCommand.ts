@@ -1,6 +1,5 @@
 import { BaseCmmaArtifactCommand } from './BaseCmmaArtifactCommand'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
-import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaAbstractArtifact from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaFileActions from '../Actions/CmmaFileActions'
@@ -36,7 +35,8 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'operations'
+
+  protected artifactGroupDirLabel
 
   /*
   |--------------------------------------------------------------------------------

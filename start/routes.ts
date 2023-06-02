@@ -24,3 +24,4 @@ Route.get('/', async ({ view }) => {
   return view.render('welcome')
 })
 import 'App/Systems/ProjectRoutes'
+import 'App/Systems/ProjectRoutes'

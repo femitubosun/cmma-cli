@@ -41,7 +41,6 @@ export default class Context extends BaseCmmaBoundaryCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|con'
   protected targetEntity: string = 'Context'
 

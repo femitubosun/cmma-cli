@@ -40,7 +40,6 @@ export default class Controller extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|ctr'
   protected artifactLabel: string
   protected targetEntity = 'Controller'

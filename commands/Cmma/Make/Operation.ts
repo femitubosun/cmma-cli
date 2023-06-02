@@ -50,7 +50,6 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   */
 
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|op'
   protected artifactLabel: string
   protected targetEntity = 'Operation'

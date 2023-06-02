@@ -54,7 +54,7 @@ export abstract class BaseCmmaCommand extends BaseCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  protected abstract projectMap: CmmaProjectMap
+  protected projectMap: CmmaProjectMap
 
   /*
   |--------------------------------------------------------------------------------
@@ -191,6 +191,8 @@ export abstract class BaseCmmaCommand extends BaseCommand {
       )
       await this.exit()
     }
+
+    this.projectMap = this.PROJECT_CONFIG.projectMap
   }
 
   /*

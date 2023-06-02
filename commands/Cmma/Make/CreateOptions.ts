@@ -39,7 +39,6 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|tyc'
   protected artifactLabel: string
   protected targetEntity = 'Create Options'

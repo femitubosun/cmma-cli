@@ -8,7 +8,6 @@ import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
 
 /*
 |--------------------------------------------------------------------------------
@@ -54,11 +53,9 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|mop'
   protected artifactLabel: string
   protected targetEntity = 'Model Options'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'model-options'
 
   protected abstractArtifact: CmmaAbstractArtifact = [
     'create-typechecking',

@@ -7,10 +7,11 @@ import {
   writeFileSync,
 } from 'fs-extra'
 import prettier from 'prettier'
-import { join } from 'path'
+import { join, basename } from 'path'
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
 import FileHound from 'filehound'
+import differenceOfArrays from '../Helpers/Utils/symettericDifferenceOfArrays'
 
 export default class CmmaFileActions {
   /**
@@ -172,6 +173,28 @@ export default class CmmaFileActions {
    * @param path
    */
   public static listSubDirsInDir(path) {
-    return FileHound.create().path(path).directory().depth(1).find()
+    return FileHound.create()
+      .path(path)
+      .directory()
+      .depth(1)
+      .findSync()
+      .map((directory) => basename(directory))
+  }
+
+  /**
+   * @description List the difference between to Directories
+   * @author FATE
+   * @param {} listSubDirDifferenceBetweenDirsOptions
+   */
+  public static listSubDirDifferenceBetweenDirs(listSubDirDifferenceBetweenDirsOptions: {
+    possiblyGreaterDirPath: string
+    possiblyLesserDirPath: string
+  }) {
+    const { possiblyGreaterDirPath, possiblyLesserDirPath } = listSubDirDifferenceBetweenDirsOptions
+
+    const possiblyGreaterSubDirs = this.listSubDirsInDir(possiblyGreaterDirPath)
+    const possiblyLesserSubDirs = this.listSubDirsInDir(possiblyLesserDirPath)
+
+    return differenceOfArrays(possiblyGreaterSubDirs, possiblyLesserSubDirs)
   }
 }

@@ -39,7 +39,6 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|tyU'
   protected artifactLabel: string
   protected targetEntity = 'Update Options'

@@ -38,7 +38,6 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|mig'
   protected artifactLabel: string
   protected targetEntity = 'Migration'

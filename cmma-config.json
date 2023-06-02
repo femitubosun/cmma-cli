@@ -1,0 +1,139 @@
+{
+  "defaultProjectRootDirInApp": "Systems",
+  "defaultSystemInternalApiSuffix": "System",
+  "defaultCasePattern": "pascalcase",
+  "defaultSystemArtifactDirs": [
+    "actions",
+    "controllers",
+    "migrations",
+    "models",
+    "routes",
+    "typechecking",
+    "validators",
+    "views"
+  ],
+  "defaultModuleDirIn": ["controllers", "validators"],
+  "logs": [
+    "cr|",
+    "in|0",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "mk|sys|",
+    "mk|sys|",
+    "mk|sys|",
+    "up|",
+    "up|",
+    "mk|sys|",
+    "mk|sys|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|"
+  ],
+  "projectMap": {
+    "contexts": {
+      "Client": {
+        "contextLabel": "Client",
+        "systems": {
+          "Analytics": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "Analytics"
+          },
+          "Finance": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "Finance"
+          },
+          "FireAlarm": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "FireAlarm"
+          },
+          "Inventory": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "Inventory"
+          },
+          "UserManagement": {
+            "systemArtifacts": {
+              "actions": [],
+              "controllers": [],
+              "validators": [],
+              "views": [],
+              "typechecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "UserManagement"
+          }
+        }
+      }
+    },
+    "artifacts": ["ProjectRoutes"]
+  }
+}

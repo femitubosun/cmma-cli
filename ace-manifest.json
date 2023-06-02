@@ -47,6 +47,18 @@
         }
       ]
     },
+    "cmma:config-update": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Config/Update",
+      "commandName": "cmma:config-update",
+      "description": "Update CMMA Configuration file with the current Folder Structure",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:dummy": {
       "settings": {
         "loadApp": false,
@@ -92,7 +104,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Action",
+      "commandPath": "./commands/Cmma/Make/Model",
       "commandName": "cmma:make-action",
       "description": "Create a new CMMA Action",
       "args": [
@@ -101,7 +113,7 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the Action to be Created"
+          "description": "Name of the Model to be Created"
         }
       ],
       "aliases": [],
@@ -154,72 +166,14 @@
       },
       "commandPath": "./commands/Cmma/Make/CreateOptions",
       "commandName": "cmma:make-create-options",
-      "description": "Create a new CMMA Create Record TypeChecking",
+      "description": "Create a new CMMA Create Record Options",
       "args": [
         {
           "type": "string",
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the model this Create TypeChecking is for"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
-    "cmma:make-migration": {
-      "settings": {
-        "loadApp": true
-      },
-      "commandPath": "./commands/Cmma/Make/Migration",
-      "commandName": "cmma:make-migration",
-      "description": "Create a new CMMA Migration",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the View to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": [
-        {
-          "name": "connection",
-          "propertyName": "connection",
-          "type": "string",
-          "description": "The connection flag is used to lookup the directory for the migration file"
-        },
-        {
-          "name": "create",
-          "propertyName": "create",
-          "type": "string",
-          "description": "Define the table name for creating a new table"
-        },
-        {
-          "name": "table",
-          "propertyName": "table",
-          "type": "string",
-          "description": "Define the table name for altering an existing table"
-        }
-      ]
-    },
-    "cmma:make-model": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/Model",
-      "commandName": "cmma:make-model",
-      "description": "Create a new CMMA Model",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the Model to be Created"
+          "description": "Name of the Model this Create Options is for"
         }
       ],
       "aliases": [],
@@ -243,15 +197,7 @@
         }
       ],
       "aliases": [],
-      "flags": [
-        {
-          "name": "model",
-          "propertyName": "model",
-          "type": "string",
-          "description": "Name of the Model the Model Options to be Created belongs to",
-          "alias": "m"
-        }
-      ]
+      "flags": []
     },
     "cmma:make-module": {
       "settings": {
@@ -335,7 +281,7 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the model this Update TypeChecking is for"
+          "description": "Name of the Model this Update TypeChecking is for"
         }
       ],
       "aliases": [],

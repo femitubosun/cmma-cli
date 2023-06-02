@@ -36,7 +36,6 @@ export default class View extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|viw'
   protected artifactLabel: string
   protected targetEntity = 'View'
