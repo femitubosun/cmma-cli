@@ -3,14 +3,15 @@ import {
   ensureFileSync,
   outputFileSync,
   pathExistsSync,
+  readdirSync,
   readFileSync,
+  statSync,
   writeFileSync,
 } from 'fs-extra'
 import prettier from 'prettier'
-import { join, basename } from 'path'
+import { extname, join } from 'path'
 import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
-import FileHound from 'filehound'
 import differenceOfArrays from '../Helpers/Utils/symettericDifferenceOfArrays'
 
 export default class CmmaFileActions {
@@ -150,8 +151,13 @@ export default class CmmaFileActions {
    * @author FATE
    * @param dirPath
    */
-  public static async listFilesInDir(dirPath: string) {
-    return FileHound.create().path(dirPath).depth(0).find()
+  public static listFilesInDir(dirPath: string) {
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const stat = statSync(dirPath + '/' + file)
+      return stat.isFile()
+    })
   }
 
   /**
@@ -164,21 +170,33 @@ export default class CmmaFileActions {
     extension: string
   }) {
     const { dirPath, extension } = listFilesInDirWithExtensionOptions
-    return FileHound.create().path(dirPath).ext(extension).depth(0).find()
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const fileExtension = extname(file)
+      return fileExtension === extension
+    })
   }
 
   /**
    * @description
    * @author FATE
-   * @param path
+   * @param dirPath
    */
-  public static listSubDirsInDir(path) {
-    return FileHound.create()
-      .path(path)
-      .directory()
-      .depth(1)
-      .findSync()
-      .map((directory) => basename(directory))
+  public static listSubDirsInDir(dirPath: string) {
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const stat = statSync(dirPath + '/' + file)
+      return stat.isDirectory()
+    })
+
+    // return FileHound.create()
+    //   .path(path)
+    //   .directory()
+    //   .depth(1)
+    //   .findSync()
+    //   .map((directory) => basename(directory))
   }
 
   /**

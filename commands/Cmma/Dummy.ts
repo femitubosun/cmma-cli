@@ -24,10 +24,9 @@ export default class Dummy extends BaseCmmaCommand {
   protected commandShortCode: string
 
   public async run() {
-    const jsonFiles = await CmmaFileActions.listFilesInDirWithExtension({
-      dirPath: this.application.appRoot,
-      extension: '.json',
-    })
+    const jsonFiles = CmmaFileActions.listFilesInDir(
+      CmmaFileActions.joinPath(CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot))
+    )
 
     console.log(jsonFiles)
 
