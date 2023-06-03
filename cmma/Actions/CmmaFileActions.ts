@@ -165,7 +165,7 @@ export default class CmmaFileActions {
    * @author FATE
    * @param dirPath
    */
-  public static listFilesInDirWithoutExtension(dirPath: string) {
+  public static listFilesInDirWithoutTheirExtensions(dirPath: string) {
     const files = readdirSync(dirPath)
 
     const filesWithExtensions = files.filter((file) => {
@@ -217,6 +217,17 @@ export default class CmmaFileActions {
    */
   public static listContextsOnDisk(projectRootDir: string) {
     return this.listSubDirsInDir(projectRootDir)
+  }
+
+  /**
+   * @description List the Routes Files in System Route Dir
+   * @author FATE
+   * @param dirPath
+   */
+  public static listRoutesInSystemRoutesDir(dirPath: string) {
+    const filesInRoutesDir = this.listFilesInDirWithoutTheirExtensions(dirPath)
+
+    return filesInRoutesDir.filter((file) => file !== 'index')
   }
 
   /**
