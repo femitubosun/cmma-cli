@@ -8,6 +8,8 @@ import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 
 /*
 |--------------------------------------------------------------------------------
@@ -56,6 +58,8 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected commandShortCode = 'mk|mop'
   protected artifactLabel: string
   protected targetEntity = 'Model Options'
+  protected artifactType: CmmaArtifactType = 'file'
+  protected artifactGroupDir: CmmaArtifactDirs = 'typechecking'
 
   protected abstractArtifact: CmmaAbstractArtifact = [
     'create-typechecking',
@@ -76,7 +80,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
 
     const modelNodePath = new CmmaNodePath(this.PROJECT_CONFIG).findArtifactInProject({
       artifactLabel: this.artifactLabel,
-      artifactType: 'models',
+      artifactType: 'model',
     })
 
     if (!modelNodePath.length) {
@@ -130,7 +134,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: createOptionsLabel,
-        artifactGroupLabel: 'typechecking',
+        artifactDir: 'typechecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -153,7 +157,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: updateOptionsLabel,
-        artifactGroupLabel: 'typechecking',
+        artifactDir: 'typechecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -176,7 +180,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: identifierOptionsLabel,
-        artifactGroupLabel: 'typechecking',
+        artifactDir: 'typechecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -201,7 +205,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: modelInterfaceLabel,
-        artifactGroupLabel: 'typechecking',
+        artifactDir: 'typechecking',
         systemMap: this.systemMap,
       })
     ) {

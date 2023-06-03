@@ -5,6 +5,7 @@ import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Validator extends BaseCmmaArtifactCommand {
   /*
@@ -39,7 +40,8 @@ export default class Validator extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|val'
   protected artifactLabel: string
   protected targetEntity = 'Validator'
-  protected artifactType: CmmaArtifactDirs = 'validators'
+  protected artifactGroupDir: CmmaArtifactDirs = 'validators'
+  protected artifactType: CmmaArtifactType = 'validator'
 
   /*
   |--------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ export default class Validator extends BaseCmmaArtifactCommand {
       .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir(this.artifactType)
+      .toArtifactsDir(this.artifactGroupDir)
       .toModule(this.moduleLabel)
 
     return nodePath

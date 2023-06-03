@@ -8,6 +8,7 @@ import { NOT_CONFIRMED_EXITING } from '../../../cmma/Helpers/SystemMessages/Syst
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class CreateOptions extends BaseCmmaArtifactCommand {
   /*
@@ -42,7 +43,8 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|tyc'
   protected artifactLabel: string
   protected targetEntity = 'Create Options'
-  protected artifactType: CmmaArtifactDirs = 'typechecking'
+  protected artifactGroupDir: CmmaArtifactDirs = 'typechecking'
+  protected artifactType: CmmaArtifactType = 'create-typechecking'
 
   /*
  |--------------------------------------------------------------------------------
@@ -55,7 +57,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
       .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir(this.artifactType)
+      .toArtifactsDir(this.artifactGroupDir)
       .toModelDir(this.artifactLabel)
       .toArtifactWithoutExtension({
         artifactLabel: `${this.artifactLabel}Interface`,
@@ -110,7 +112,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     })
 
     const modelSystemPath = new CmmaNodePath(this.PROJECT_CONFIG).findArtifactInProject({
-      artifactType: 'models',
+      artifactType: 'model',
       artifactLabel: this.artifactLabel,
     })
 

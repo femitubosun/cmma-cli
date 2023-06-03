@@ -11,6 +11,8 @@ import {
   EXITING,
   MODULE_NOT_FOUND_IN_PROJECT,
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 
 /*
 |--------------------------------------------------------------------------------
@@ -54,6 +56,8 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
 
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
   protected commandShortCode = 'mk|op'
+  protected artifactType: CmmaArtifactType = 'file'
+  protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
   protected artifactLabel: string
   protected targetEntity = 'Operation'
   protected abstractArtifact: CmmaAbstractArtifact = ['controller', 'validator']

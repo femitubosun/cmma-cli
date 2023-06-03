@@ -87,7 +87,6 @@ export default class ConfigUpdate extends BaseCmmaCommand {
     )
 
     // Contexts in Project Map that are not on disk
-
     projectContexts = CmmaProjectMapActions.listContextsInProject(this.projectMap)
 
     const contextsOnMapNotOnDisk = differenceOfArrays(projectContexts, directoryContexts)

@@ -9,6 +9,7 @@ import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE,
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Controller extends BaseCmmaArtifactCommand {
   /*
@@ -43,7 +44,8 @@ export default class Controller extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|ctr'
   protected artifactLabel: string
   protected targetEntity = 'Controller'
-  protected artifactType: CmmaArtifactDirs = 'controllers'
+  protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
+  protected artifactType: CmmaArtifactType = 'controller'
 
   protected getArtifactDestinationNodePath() {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPath()
@@ -51,7 +53,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
     nodePath
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir(this.artifactType)
+      .toArtifactsDir(this.artifactGroupDir)
       .toModule(this.moduleLabel)
 
     return nodePath

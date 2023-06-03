@@ -299,13 +299,13 @@ export default class CmmaSystemActions {
    */
   public static isArtifactInSystemArtifactGroup(isSystemArtifactInSystemOptions: {
     artifactLabel: string
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactDir: CmmaDefaultSystemArtifactDirLabel
     systemMap: CmmaSystem
   }) {
-    const { systemMap, artifactLabel, artifactGroupLabel } = isSystemArtifactInSystemOptions
+    const { systemMap, artifactLabel, artifactDir } = isSystemArtifactInSystemOptions
 
     return this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactGroupLabel,
+      artifactDir: artifactDir,
       systemMap,
     }).includes(artifactLabel)
   }

@@ -7,6 +7,7 @@ import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaStringTransformations from 'cmma/TypeChecking/StringTransformations'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Migration extends BaseCmmaArtifactCommand {
   /*
@@ -41,7 +42,8 @@ export default class Migration extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|mig'
   protected artifactLabel: string
   protected targetEntity = 'Migration'
-  protected artifactType: CmmaArtifactDirs = 'migrations'
+  protected artifactType: CmmaArtifactType = 'migration'
+  protected artifactGroupDir: CmmaArtifactDirs = 'migrations'
   private tableName: string
 
   /**
@@ -126,15 +128,15 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     this.artifactLabel = this.name
 
-    const migrationLabelTransformation = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: 'migrations',
-      configObject: this.PROJECT_CONFIG,
-    })
+    const migrationLabelTransformation =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'migration',
+        configObject: this.PROJECT_CONFIG,
+      })
 
     let migrationName = CmmaConfigurationActions.transformLabel({
       label: this.artifactLabel,
       transformations: migrationLabelTransformation,
-      noExt: true,
     })
 
     /**
@@ -144,7 +146,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: migrationName,
         systemMap: this.systemMap,
-        artifactGroupLabel: 'migrations',
+        artifactDir: 'migrations',
       })
     ) {
       migrationName = migrationName + '+'

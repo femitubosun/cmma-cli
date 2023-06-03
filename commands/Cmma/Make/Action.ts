@@ -8,6 +8,7 @@ import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM,
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Action extends BaseCmmaArtifactCommand {
   /*
@@ -42,7 +43,8 @@ export default class Action extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|act'
   protected artifactLabel: string
   protected targetEntity = 'Action'
-  protected artifactType: CmmaArtifactDirs = 'actions'
+  protected artifactGroupDir: CmmaArtifactDirs = 'actions'
+  protected artifactType: CmmaArtifactType = 'action'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -74,7 +76,7 @@ export default class Action extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactGroupLabel: 'actions',
+        artifactDir: 'actions',
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {

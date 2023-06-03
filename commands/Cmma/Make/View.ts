@@ -5,6 +5,7 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class View extends BaseCmmaArtifactCommand {
   /*
@@ -39,7 +40,8 @@ export default class View extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|viw'
   protected artifactLabel: string
   protected targetEntity = 'View'
-  protected artifactType: CmmaArtifactDirs = 'views'
+  protected artifactType: CmmaArtifactType = 'view'
+  protected artifactGroupDir: CmmaArtifactDirs = 'views'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -53,15 +55,15 @@ export default class View extends BaseCmmaArtifactCommand {
      */
     this.artifactLabel = this.name
 
-    const viewTransformation = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: this.artifactType,
-      configObject: this.PROJECT_CONFIG,
-    })
+    const viewTransformation =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: this.artifactType,
+        configObject: this.PROJECT_CONFIG,
+      })
 
     this.artifactLabel = CmmaConfigurationActions.transformLabel({
       label: this.name,
       transformations: viewTransformation,
-      noExt: true,
     })
 
     /*
@@ -70,7 +72,7 @@ export default class View extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactGroupLabel: 'views',
+        artifactDir: 'views',
         artifactLabel: this.artifactLabel,
       })
     ) {
