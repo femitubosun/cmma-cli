@@ -1,3 +1,10 @@
+/*
+|--------------------------------------------------------------------------------
+| CMMA General Messages
+|--------------------------------------------------------------------------------
+|
+*/
+
 export const CONFIGURATION_FILE_EXISTS = 'Configuration file (cmma-config.json) exists'
 export const PROCEEDING_WILL_OVERWRITE_CONFIG_FILE_CONTINUE =
   'Proceeding will overwrite existing configuration file. Continue?'
@@ -6,6 +13,12 @@ export const EXITING = 'Exiting...'
 export const INITIALIZING_ADONIS_PROJECT_FOR_CMMA =
   "Initializing Adonis Project for Crenet's Modular Monolith Architecture (C.M.M.A)"
 export const NOT_CONFIRMED_EXITING = 'Not Confirmed. Exiting....'
+export const PRUNING_PROJECT_MAP = 'Pruning Project Map....'
+export const UPDATING_PROJECT_MAP = 'Updating Project Map....'
+export const UPDATING_PROJECT_CONTEXTS = 'Updating Project Contexts....'
+export const UPDATING_PROJECT_SYSTEM = 'Updating Project Systems....'
+export const UPDATING_PROJECT_MODULES = 'Updating Project Modules....'
+export const UPDATING_PROJECT_ARTIFACTS = 'Updating Project Artifacts....'
 
 /*
 |--------------------------------------------------------------------------------
@@ -57,7 +70,4 @@ export const YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE =
 export const YOU_HAVE_ALREADY_REGISTERED_VALIDATOR_IN_MODULE =
   'You have already registered this System in the Context'
 export const MODULE_NOT_FOUND_IN_PROJECT = 'Module was not found in the Project'
-export const ADD_NEW_CONTEXTS_TO_PROJECT_PROMPT = 'Add new Context(s) to Project?'
-export const PRUNE_CONTEXT_PROMPT = 'Prune Context From Project Map?'
-export const PRUNING_PROJECT_MAP = 'Pruning Project Map....'
-export const UPDATING_PROJECT_MAP = 'Updating Project Map....'
+export const PROJECT_DOES_NOT_EXIST_IN_ROOT = 'Project does not exist in defined root'

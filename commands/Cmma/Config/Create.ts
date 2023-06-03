@@ -7,7 +7,7 @@ import {
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
-import CmmaProjectMap from 'cmma/Models/CmmaProjectMap'
+import CmmaProjectMap from '../../../cmma/Models/CmmaProjectMap'
 
 export default class ConfigCreate extends BaseCmmaCommand {
   /*

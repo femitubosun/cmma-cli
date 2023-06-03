@@ -29,19 +29,19 @@ export default class CmmaFileActions {
   /**
    * @description Ensure a file exists
    * @author FATE
-   * @param path
+   * @param filePath
    */
-  public static ensureAFileExists(path: string) {
-    ensureFileSync(path)
+  public static ensureAFileExists(filePath: string) {
+    ensureFileSync(filePath)
   }
 
   /**
    * @description Ensure a directory Exists
    * @author FATE
-   * @param {} path
+   * @param {} dirPath
    */
-  public static ensureADirectoryExits(path: string) {
-    ensureDirSync(path)
+  public static ensureADirectoryExits(dirPath: string) {
+    ensureDirSync(dirPath)
   }
 
   /**
@@ -117,10 +117,10 @@ export default class CmmaFileActions {
   /**
    * @description Get CMMA Configuration from File Path
    * @author FATE
-   * @param path
+   * @param filePath
    */
-  public static getConfigurationObjectFromFilePath(path: string): CmmaConfiguration {
-    return JSON.parse(readFileSync(path).toString())
+  public static getConfigurationObjectFromFilePath(filePath: string): CmmaConfiguration {
+    return JSON.parse(readFileSync(filePath).toString())
   }
 
   public static getCmmaTemplatesDir(appRoot: string) {
@@ -163,6 +163,24 @@ export default class CmmaFileActions {
   /**
    * @description
    * @author FATE
+   * @param dirPath
+   */
+  public static listFilesInDirWithoutExtension(dirPath: string) {
+    const files = readdirSync(dirPath)
+
+    const filesWithExtensions = files.filter((file) => {
+      const stat = statSync(dirPath + '/' + file)
+      return stat.isFile()
+    })
+
+    return filesWithExtensions.map((file) => {
+      return file.split('.')[0]
+    })
+  }
+
+  /**
+   * @description
+   * @author FATE
    * @param {} listFilesInDirWithExtensionOptions
    */
   public static listFilesInDirWithExtension(listFilesInDirWithExtensionOptions: {
@@ -190,13 +208,15 @@ export default class CmmaFileActions {
       const stat = statSync(dirPath + '/' + file)
       return stat.isDirectory()
     })
+  }
 
-    // return FileHound.create()
-    //   .path(path)
-    //   .directory()
-    //   .depth(1)
-    //   .findSync()
-    //   .map((directory) => basename(directory))
+  /**
+   * @description List the Contexts Defined in Project's Root Directory
+   * @author FATE
+   * @param {} projectRootDir
+   */
+  public static listContextsOnDisk(projectRootDir: string) {
+    return this.listSubDirsInDir(projectRootDir)
   }
 
   /**
