@@ -4,8 +4,8 @@ import CmmaConfigurationActions from '../../cmma/Actions/CmmaConfigurationAction
 import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaNodePath from '../../cmma/Models/CmmaNodePath'
 import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
-import CmmaConfiguration from '../../cmma/TypeChecking/CmmaConfiguration'
-import { EXITING } from '../../cmma/Helpers/SystemMessages'
+import CmmaConfiguration from '../../cmma/Models/CmmaConfiguration'
+import { EXITING } from '../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaProjectMap from '../../cmma/Models/CmmaProjectMap'
 
 export default class Clean extends BaseCmmaCommand {
@@ -71,7 +71,8 @@ export default class Clean extends BaseCmmaCommand {
 
     console.log(this.PROJECT_CONFIG)
 
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
+    // Remove Project Files
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPath()
 
     const projectRootPath = CmmaFileActions.createAbsolutePathFromNodePath({
       applicationRoot: this.application.appRoot,
@@ -83,6 +84,16 @@ export default class Clean extends BaseCmmaCommand {
 
     removeSync(projectRootPath)
     this.logger.action('delete').succeeded(projectRootPath)
+
+    // Clean Adonis Route
+
+    const adonisRoute = CmmaFileActions.joinPath([this.application.appRoot, 'start', 'routes.ts'])
+
+    removeSync(adonisRoute)
+
+    CmmaFileActions.ensureAFileExists(adonisRoute)
+
+    this.logger.action('update').succeeded(adonisRoute)
 
     if (!this.excludeConfig) {
       removeSync(this.CONFIG_FILE_PATH)

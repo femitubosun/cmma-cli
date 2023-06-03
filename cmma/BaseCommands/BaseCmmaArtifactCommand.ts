@@ -1,11 +1,13 @@
 import { BaseCmmaCommand } from './BaseCmmaCommand'
-import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaNodePath from '../Models/CmmaNodePath'
+import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 
 export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
-  protected abstract artifactGroupDirLabel: CmmaArtifactDir
+  protected abstract artifactType: CmmaArtifactType
+  protected abstract artifactGroupDir: CmmaArtifactDirs
   protected abstract artifactLabel: string
   protected computedNameWithoutSuffix: string
   protected computedNameWithSuffix: string
@@ -40,8 +42,8 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    * @protected
    */
   protected getArtifactTransformations() {
-    return CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: this.artifactGroupDirLabel,
+    return CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
+      artifactType: this.artifactType,
       configObject: this.PROJECT_CONFIG,
     })
   }
@@ -53,7 +55,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected getTemplateFileDir() {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const artifactGroupTemplateFileName = `${this.artifactGroupDirLabel}.txt`
+    const artifactGroupTemplateFileName = `${this.artifactType}.txt`
 
     templatesDir.push(artifactGroupTemplateFileName)
 
@@ -78,10 +80,10 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected getArtifactDestinationNodePath() {
     return new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupDirLabel)
+      .toArtifactsDir(this.artifactGroupDir)
   }
 
   /**
@@ -100,9 +102,9 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    */
   protected get defaultCmmaArtifactSuffix() {
     return (
-      CmmaConfigurationActions.getArtifactGroupTransformation({
+      CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
         configObject: this.PROJECT_CONFIG,
-        artifactGroup: this.artifactGroupDirLabel,
+        artifactType: this.artifactType,
       }).suffix || ''
     )
   }

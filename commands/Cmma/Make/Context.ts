@@ -1,5 +1,5 @@
 import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { args } from '@adonisjs/core/build/standalone'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
@@ -9,7 +9,7 @@ import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 
 export default class Context extends BaseCmmaBoundaryCommand {
   /*
@@ -41,7 +41,6 @@ export default class Context extends BaseCmmaBoundaryCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|con'
   protected targetEntity: string = 'Context'
 
@@ -83,15 +82,15 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .getAbsoluteOsPath(this.application.appRoot)
 
     this.generator
       .addFile(
         this.contextLabel,
-        CmmaConfigurationActions.getArtifactGroupTransformation({
-          artifactGroup: 'routes',
+        CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
+          artifactType: 'route',
           configObject: this.PROJECT_CONFIG,
         })
       )
@@ -104,7 +103,7 @@ export default class Context extends BaseCmmaBoundaryCommand {
      */
 
     const projectRoutesFile = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toArtifactWithExtension({
         artifactLabel: 'Project',
         artifactType: 'route',
@@ -113,11 +112,10 @@ export default class Context extends BaseCmmaBoundaryCommand {
 
     const contextRoutesFileName = CmmaConfigurationActions.transformLabel({
       label: this.contextLabel,
-      transformations: CmmaConfigurationActions.getArtifactGroupTransformation({
-        artifactGroup: 'routes',
+      transformations: CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'route',
         configObject: this.PROJECT_CONFIG,
       }),
-      noExt: true,
     })
 
     const importContextString = `import './${this.contextLabel}/${contextRoutesFileName}'`

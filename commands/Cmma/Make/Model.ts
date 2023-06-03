@@ -1,10 +1,11 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
-import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Model extends BaseCmmaArtifactCommand {
   /*
@@ -13,8 +14,8 @@ export default class Model extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-action'
-  public static description = 'Create a new CMMA Action'
+  public static commandName = 'cmma:make-model'
+  public static description = 'Create a new CMMA Model'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -36,11 +37,11 @@ export default class Model extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|act'
   protected artifactLabel: string
   protected targetEntity = 'Model'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'models'
+  protected artifactGroupDir: CmmaArtifactDirs = 'models'
+  protected artifactType: CmmaArtifactType = 'model'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -72,7 +73,7 @@ export default class Model extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactGroupLabel: 'models',
+        artifactDir: 'models',
         artifactLabel: this.artifactLabel,
       })
     ) {
@@ -90,7 +91,7 @@ export default class Model extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactGroupLabel: 'models',
+      artifactsDir: 'models',
       systemMap: this.systemMap,
     })
 

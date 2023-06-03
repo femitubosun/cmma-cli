@@ -7,7 +7,12 @@ import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
-import { EXITING, MODULE_NOT_FOUND_IN_PROJECT } from '../../../cmma/Helpers/SystemMessages'
+import {
+  EXITING,
+  MODULE_NOT_FOUND_IN_PROJECT,
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 
 /*
 |--------------------------------------------------------------------------------
@@ -50,8 +55,9 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   */
 
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|op'
+  protected artifactType: CmmaArtifactType = 'file'
+  protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
   protected artifactLabel: string
   protected targetEntity = 'Operation'
   protected abstractArtifact: CmmaAbstractArtifact = ['controller', 'validator']
@@ -177,10 +183,10 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
      * Set Destination Directories
      */
     const validationDestinationNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir('validators')
+      .toArtifactsDir('validators')
       .toModule(this.moduleLabel)
 
     const validatorDestinationDir = validationDestinationNodePath.getAbsoluteOsPath(
@@ -193,10 +199,10 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
     })
 
     const controllerDirNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir('controllers')
+      .toArtifactsDir('controllers')
       .toModule(this.moduleLabel)
       .getAbsoluteOsPath(this.application.appRoot)
 
@@ -213,7 +219,7 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
      * Building Validator import string data
      */
     const validatorFileNodePath = validationDestinationNodePath
-      .toSystemArtifactsDir('validators')
+      .toArtifactsDir('validators')
       .toArtifactWithoutExtension({
         artifactLabel: this.artifactLabel,
         artifactType: 'validator',

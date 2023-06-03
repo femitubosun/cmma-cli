@@ -2,7 +2,7 @@ import {{ modelInterfaceLabel }} from 'App/{{ defaultProjectDir }}/{{ contextLab
 import CreateNewRecordGeneric from 'App/Common/TypeChecking/GeneralPurpose/CreateNewRecordGeneric'
 
 
-type Create{{ artifactLabel }}RecordPayload = Pick<{{ modelInterfaceLabel }}, >
+type Create{{ artifactLabel }}RecordPayload = Pick<{{ modelInterfaceLabel }}, ''>
 
 type {{ filename }} = CreateNewRecordGeneric<Create{{ artifactLabel }}RecordPayload>
 

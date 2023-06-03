@@ -1,14 +1,15 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Controller extends BaseCmmaArtifactCommand {
   /*
@@ -40,19 +41,19 @@ export default class Controller extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|ctr'
   protected artifactLabel: string
   protected targetEntity = 'Controller'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'controllers'
+  protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
+  protected artifactType: CmmaArtifactType = 'controller'
 
   protected getArtifactDestinationNodePath() {
-    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).drawPath()
+    const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPath()
 
     nodePath
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupDirLabel)
+      .toArtifactsDir(this.artifactGroupDir)
       .toModule(this.moduleLabel)
 
     return nodePath

@@ -4,14 +4,18 @@ import {
   CONFIGURATION_FILE_EXISTS,
   EXITING,
   PROCEEDING_WILL_OVERWRITE_CONFIG_FILE_CONTINUE,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
+import CmmaProjectMap from 'cmma/Models/CmmaProjectMap'
 
 export default class ConfigCreate extends BaseCmmaCommand {
-  /**
-   * Ace Command Configuration
-   */
+  /*
+ |--------------------------------------------------------------------------------
+ | ACE Command Configuration
+ |--------------------------------------------------------------------------------
+ |
+ */
   public static commandName = 'cmma:config-create'
   public static description = 'Create a CMMA Configuration file'
   public static settings = {
@@ -19,15 +23,32 @@ export default class ConfigCreate extends BaseCmmaCommand {
     stayAlive: false,
   }
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Command Flags and Arguments
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.boolean({ description: 'Create Empty CMMA Config file', alias: 'e' })
   public empty: boolean
 
-  /**
-   * CMMA Configurations
-   */
-  protected commandShortCode = 'cr'
+  /*
+  |--------------------------------------------------------------------------------
+  | CMMA Configuration
+  |--------------------------------------------------------------------------------
+  |
+  */
   protected PROJECT_CONFIG = CmmaConfigurationActions.defaultCmmaConfiguration
+  protected commandShortCode = 'cr'
+  protected projectMap: CmmaProjectMap
+  protected targetEntity: string
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Run Command
+  |--------------------------------------------------------------------------------
+  |
+  */
   public async run() {
     if (this.projectConfigFileExists) {
       this.logger.warning(CONFIGURATION_FILE_EXISTS)

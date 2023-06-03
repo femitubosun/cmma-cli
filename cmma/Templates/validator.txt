@@ -1,7 +1,7 @@
 import { CustomMessages, schema } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class {{ computedNameWithSuffix }} {
+export default class {{ filename }} {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({

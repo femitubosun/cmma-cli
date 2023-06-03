@@ -61,7 +61,7 @@ export default class CmmaContextActions {
   }
 
   /**
-   * @description Delete  a Context System By Index
+   * @description Delete a Context System By Index
    * @author FATE
    * @param {} getSystemByIndexOptions
    */
@@ -84,12 +84,12 @@ export default class CmmaContextActions {
    * @param {} getContextSystemByLabel
    */
   public static deleteContextSystemByLabel(getContextSystemByLabel: {
-    systemLabel: number
-    context: CmmaContext
+    systemLabel: string
+    contextMap: CmmaContext
   }) {
-    const { systemLabel, context } = getContextSystemByLabel
+    const { systemLabel, contextMap } = getContextSystemByLabel
 
-    delete context.systems[systemLabel]
+    delete contextMap.systems[systemLabel]
   }
 
   /**
@@ -117,7 +117,6 @@ export default class CmmaContextActions {
   /**
    * @description
    * @author FATE
-   * @param
    */
   public static get blankContext(): CmmaContext {
     return {

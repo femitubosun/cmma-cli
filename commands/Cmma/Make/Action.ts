@@ -1,13 +1,14 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM,
-} from '../../../cmma/Helpers/SystemMessages'
+} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Action extends BaseCmmaArtifactCommand {
   /*
@@ -39,11 +40,11 @@ export default class Action extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|act'
   protected artifactLabel: string
   protected targetEntity = 'Action'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'actions'
+  protected artifactGroupDir: CmmaArtifactDirs = 'actions'
+  protected artifactType: CmmaArtifactType = 'action'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -75,7 +76,7 @@ export default class Action extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactGroupLabel: 'actions',
+        artifactDir: 'actions',
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {
@@ -93,7 +94,7 @@ export default class Action extends BaseCmmaArtifactCommand {
      */
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactGroupLabel: 'actions',
+      artifactsDir: 'actions',
       systemMap: this.systemMap,
     })
 

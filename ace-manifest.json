@@ -47,6 +47,18 @@
         }
       ]
     },
+    "cmma:config-update": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Config/Update",
+      "commandName": "cmma:config-update",
+      "description": "Update CMMA Configuration file with the current Folder Structure",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:dummy": {
       "settings": {
         "loadApp": false,
@@ -154,14 +166,14 @@
       },
       "commandPath": "./commands/Cmma/Make/CreateOptions",
       "commandName": "cmma:make-create-options",
-      "description": "Create a new CMMA Create Record TypeChecking",
+      "description": "Create a new CMMA Create Record Options",
       "args": [
         {
           "type": "string",
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the model this Create TypeChecking is for"
+          "description": "Name of the Model this Create Options is for"
         }
       ],
       "aliases": [],
@@ -169,7 +181,8 @@
     },
     "cmma:make-migration": {
       "settings": {
-        "loadApp": true
+        "loadApp": true,
+        "stayAlive": false
       },
       "commandPath": "./commands/Cmma/Make/Migration",
       "commandName": "cmma:make-migration",
@@ -180,7 +193,7 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the View to be Created"
+          "description": "Name of the Migration to be Created"
         }
       ],
       "aliases": [],
@@ -243,15 +256,7 @@
         }
       ],
       "aliases": [],
-      "flags": [
-        {
-          "name": "model",
-          "propertyName": "model",
-          "type": "string",
-          "description": "Name of the Model the Model Options to be Created belongs to",
-          "alias": "m"
-        }
-      ]
+      "flags": []
     },
     "cmma:make-module": {
       "settings": {
@@ -335,7 +340,7 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the model this Update TypeChecking is for"
+          "description": "Name of the Model this Update TypeChecking is for"
         }
       ],
       "aliases": [],

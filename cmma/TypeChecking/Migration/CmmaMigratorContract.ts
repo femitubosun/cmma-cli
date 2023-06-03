@@ -16,7 +16,7 @@ import {
   TransactionClientContract,
 } from '@ioc:Adonis/Lucid/Database'
 import { CmmaMigratorSource } from './CmmaMigratorSource'
-import CmmaConfiguration from '../CmmaConfiguration'
+import CmmaConfiguration from '../../Models/CmmaConfiguration'
 
 /**
  * Migrator exposes the API to execute migrations using the schema files

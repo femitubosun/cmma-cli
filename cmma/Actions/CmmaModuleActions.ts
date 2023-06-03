@@ -1,5 +1,6 @@
 import CmmaModule from '../Models/CmmaModule'
 import CmmaArtifact from '../Models/CmmaArtifact'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 
 export default class CmmaModuleActions {
   /**
@@ -28,6 +29,21 @@ export default class CmmaModuleActions {
     const { validator, moduleMap } = addModuleValidatorToModuleOptions
 
     moduleMap.validators.push(validator)
+  }
+
+  /**
+   * @description Add Artifact to Module
+   * @author FATE
+   * @param {} addArtifactToModuleOptions
+   */
+  public static addArtifactToModule(addArtifactToModuleOptions: {
+    artifact: string
+    artifactDirLabel: CmmaArtifactDirs
+    moduleMap: CmmaModule
+  }) {
+    const { artifact, artifactDirLabel, moduleMap } = addArtifactToModuleOptions
+
+    moduleMap[artifactDirLabel].push(artifact)
   }
 
   /**

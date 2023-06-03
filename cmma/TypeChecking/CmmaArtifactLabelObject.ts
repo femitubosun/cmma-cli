@@ -1,7 +1,7 @@
-import CmmaDefaultSystemArtifactDirLabel from './CmmaDefaultSystemArtifactDirLabel'
+import CmmaArtifactType from './CmmaArtifactType'
 
 type CmmaArtifactLabelObject = {
   artifactLabel: string
-  artifactGroup: CmmaDefaultSystemArtifactDirLabel
+  artifactType: CmmaArtifactType
 }
 export default CmmaArtifactLabelObject

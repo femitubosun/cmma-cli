@@ -3,13 +3,16 @@ import {
   ensureFileSync,
   outputFileSync,
   pathExistsSync,
+  readdirSync,
   readFileSync,
+  statSync,
   writeFileSync,
 } from 'fs-extra'
 import prettier from 'prettier'
-import { join } from 'path'
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import { extname, join } from 'path'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
+import differenceOfArrays from '../Helpers/Utils/symettericDifferenceOfArrays'
 
 export default class CmmaFileActions {
   /**
@@ -141,5 +144,75 @@ export default class CmmaFileActions {
       filePath: configFilePath,
       parser: 'json',
     })
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param dirPath
+   */
+  public static listFilesInDir(dirPath: string) {
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const stat = statSync(dirPath + '/' + file)
+      return stat.isFile()
+    })
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param {} listFilesInDirWithExtensionOptions
+   */
+  public static listFilesInDirWithExtension(listFilesInDirWithExtensionOptions: {
+    dirPath: string
+    extension: string
+  }) {
+    const { dirPath, extension } = listFilesInDirWithExtensionOptions
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const fileExtension = extname(file)
+      return fileExtension === extension
+    })
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param dirPath
+   */
+  public static listSubDirsInDir(dirPath: string) {
+    const files = readdirSync(dirPath)
+
+    return files.filter((file) => {
+      const stat = statSync(dirPath + '/' + file)
+      return stat.isDirectory()
+    })
+
+    // return FileHound.create()
+    //   .path(path)
+    //   .directory()
+    //   .depth(1)
+    //   .findSync()
+    //   .map((directory) => basename(directory))
+  }
+
+  /**
+   * @description List the difference between to Directories
+   * @author FATE
+   * @param {} listSubDirDifferenceBetweenDirsOptions
+   */
+  public static listSubDirDifferenceBetweenDirs(listSubDirDifferenceBetweenDirsOptions: {
+    possiblyGreaterDirPath: string
+    possiblyLesserDirPath: string
+  }) {
+    const { possiblyGreaterDirPath, possiblyLesserDirPath } = listSubDirDifferenceBetweenDirsOptions
+
+    const possiblyGreaterSubDirs = this.listSubDirsInDir(possiblyGreaterDirPath)
+    const possiblyLesserSubDirs = this.listSubDirsInDir(possiblyLesserDirPath)
+
+    return differenceOfArrays(possiblyGreaterSubDirs, possiblyLesserSubDirs)
   }
 }

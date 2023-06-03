@@ -1,10 +1,11 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Validator extends BaseCmmaArtifactCommand {
   /*
@@ -36,11 +37,11 @@ export default class Validator extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|val'
   protected artifactLabel: string
   protected targetEntity = 'Validator'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'validators'
+  protected artifactGroupDir: CmmaArtifactDirs = 'validators'
+  protected artifactType: CmmaArtifactType = 'validator'
 
   /*
   |--------------------------------------------------------------------------------
@@ -52,10 +53,10 @@ export default class Validator extends BaseCmmaArtifactCommand {
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG)
 
     nodePath
-      .drawPath()
+      .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toSystemArtifactsDir(this.artifactGroupDirLabel)
+      .toArtifactsDir(this.artifactGroupDir)
       .toModule(this.moduleLabel)
 
     return nodePath

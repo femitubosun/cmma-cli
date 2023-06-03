@@ -1,8 +1,8 @@
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from './CmmaConfiguration'
 import CmmaNode from './CmmaNode'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaArtifactLabelObject from '../TypeChecking/CmmaArtifactLabelObject'
-import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaContext from './CmmaContext'
 import CmmaSystemActions from '../Actions/CmmaSystemActions'
@@ -29,7 +29,7 @@ export default class CmmaNodePath {
    * @description Draw Path From
    * @author FATE
    */
-  public drawPath() {
+  public buildPath() {
     return this
   }
 
@@ -68,7 +68,7 @@ export default class CmmaNodePath {
    * @author FATE
    * @param label
    */
-  public toSystemArtifactsDir(label: CmmaArtifactDir): CmmaNodePath {
+  public toArtifactsDir(label: CmmaArtifactDirs): CmmaNodePath {
     const nodeLabel = CmmaConfigurationActions.resolveIdentifierToCasePattern({
       identifier: label,
       casePattern: this.cmmaConfiguration.defaultCasePattern,
@@ -259,7 +259,9 @@ export default class CmmaNodePath {
         CmmaSystemActions.isArtifactInSystemArtifactGroup({
           systemMap,
           artifactLabel: artifactObject.artifactLabel,
-          artifactGroupLabel: artifactObject.artifactGroup,
+          artifactDir: CmmaConfigurationActions.getDefaultArtifactTypeDir(
+            artifactObject.artifactType
+          ),
         })
       ) {
         this.toSystem(systemLabel)

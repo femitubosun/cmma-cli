@@ -1,10 +1,11 @@
-import CmmaConfiguration from '../TypeChecking/CmmaConfiguration'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
-import CmmaArtifactDir from '../TypeChecking/CmmaArtifactDir'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
+import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 
 export default class CmmaConfigurationActions {
   /**
@@ -261,18 +262,44 @@ export default class CmmaConfigurationActions {
   }
 
   /**
+   * @description Get an Artifact's Default Directory
+   * @author FATE
+   * @param {} artifactType
+   */
+  public static getDefaultArtifactTypeDir(artifactType: CmmaArtifactType) {
+    // NOTE: Default Dir for file & index are set to action for no reason at all.
+    const defaultDir: Record<CmmaArtifactType, CmmaDefaultSystemArtifactDirLabel> = {
+      'create-typechecking': 'typechecking',
+      'identifier-options': 'typechecking',
+      'model-interface': 'typechecking',
+      'update-typechecking': 'typechecking',
+      'action': 'actions',
+      'controller': 'controllers',
+      'file': 'actions',
+      'index': 'actions',
+      'migration': 'migrations',
+      'model': 'models',
+      'route': 'routes',
+      'validator': 'validators',
+      'view': 'views',
+    }
+
+    return defaultDir[artifactType]
+  }
+
+  /**
    * @description Get the string transformations for an artifact group
    * @param getArtifactGroupTransformationOptions
    * @author FATE
    * @returns StringTransformations
    */
   public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
-    artifactGroup: CmmaArtifactDir
+    artifactGroup: CmmaArtifactDirs
     configObject: CmmaConfiguration
   }): StringTransformations {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactDir, StringTransformations> = {
+    const transformations: Record<CmmaArtifactDirs, StringTransformations> = {
       actions: {
         extname: '.ts',
         suffix: 'Actions',
@@ -438,12 +465,10 @@ export default class CmmaConfigurationActions {
       defaultCasePattern: 'pascalcase',
       defaultSystemArtifactDirs: [
         'actions',
-        'controllers',
         'migrations',
         'models',
         'routes',
         'typechecking',
-        'validators',
         'views',
       ],
       defaultModuleDirIn: ['controllers', 'validators'],

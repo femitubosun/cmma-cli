@@ -1,12 +1,13 @@
 import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/TypeChecking/CmmaConfiguration'
-import CmmaArtifactDir from '../../../cmma/TypeChecking/CmmaArtifactDir'
+import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaStringTransformations from 'cmma/TypeChecking/StringTransformations'
+import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class Migration extends BaseCmmaArtifactCommand {
   /*
@@ -15,10 +16,10 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-action'
-  public static description = 'Create a new CMMA Action'
+  public static commandName = 'cmma:make-migration'
+  public static description = 'Create a new CMMA Migration'
   public static settings = {
-    loadApp: false,
+    loadApp: true,
     stayAlive: false,
   }
 
@@ -28,7 +29,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the View to be Created' })
+  @args.string({ description: 'Name of the Migration to be Created' })
   public name: string
 
   /*
@@ -38,37 +39,49 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected projectMap = this.PROJECT_CONFIG.projectMap
   protected commandShortCode = 'mk|mig'
   protected artifactLabel: string
   protected targetEntity = 'Migration'
-  protected artifactGroupDirLabel: CmmaArtifactDir = 'migrations'
+  protected artifactType: CmmaArtifactType = 'migration'
+  protected artifactGroupDir: CmmaArtifactDirs = 'migrations'
   private tableName: string
 
-  /**
-   * Choose a custom pre-defined connection. Otherwise, we use the
-   * default connection
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Choose a custom pre-defined connection. Otherwise, we use the
+  | default connection
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({
     description: 'The connection flag is used to lookup the directory for the migration file',
   })
   public connection: string
 
-  /**
-   * Custom table name for creating a new table
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Custom Table Name for creating a table
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({ description: 'Define the table name for creating a new table' })
   public create: string
 
-  /**
-   * Custom table name for altering an existing table
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Custom Table name for altering existing table
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({ description: 'Define the table name for altering an existing table' })
   public table: string
 
-  /**
-   * Not a valid connection
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Not a valid Connection
+  |--------------------------------------------------------------------------------
+  |
+  */
   private printNotAValidConnection(connection: string) {
     this.logger.error(
       `"${connection}" is not a valid connection name. Double check "config/database" file`
@@ -127,15 +140,15 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     this.artifactLabel = this.name
 
-    const migrationLabelTransformation = CmmaConfigurationActions.getArtifactGroupTransformation({
-      artifactGroup: 'migrations',
-      configObject: this.PROJECT_CONFIG,
-    })
+    const migrationLabelTransformation =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'migration',
+        configObject: this.PROJECT_CONFIG,
+      })
 
     let migrationName = CmmaConfigurationActions.transformLabel({
       label: this.artifactLabel,
       transformations: migrationLabelTransformation,
-      noExt: true,
     })
 
     /**
@@ -145,7 +158,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: migrationName,
         systemMap: this.systemMap,
-        artifactGroupLabel: 'migrations',
+        artifactDir: 'migrations',
       })
     ) {
       migrationName = migrationName + '+'
@@ -156,7 +169,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: migrationName,
-      artifactGroupLabel: 'migrations',
+      artifactsDir: 'migrations',
       systemMap: this.systemMap,
     })
 

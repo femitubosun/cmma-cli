@@ -57,3 +57,7 @@ export const YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE =
 export const YOU_HAVE_ALREADY_REGISTERED_VALIDATOR_IN_MODULE =
   'You have already registered this System in the Context'
 export const MODULE_NOT_FOUND_IN_PROJECT = 'Module was not found in the Project'
+export const ADD_NEW_CONTEXTS_TO_PROJECT_PROMPT = 'Add new Context(s) to Project?'
+export const PRUNE_CONTEXT_PROMPT = 'Prune Context From Project Map?'
+export const PRUNING_PROJECT_MAP = 'Pruning Project Map....'
+export const UPDATING_PROJECT_MAP = 'Updating Project Map....'

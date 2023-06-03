@@ -1,6 +1,7 @@
 import { args } from '@adonisjs/core/build/standalone'
 import { BaseCmmaCommand } from '../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaProjectMap from '../../cmma/Models/CmmaProjectMap'
+import CmmaFileActions from '../../cmma/Actions/CmmaFileActions'
 
 export default class Dummy extends BaseCmmaCommand {
   /**
@@ -13,6 +14,9 @@ export default class Dummy extends BaseCmmaCommand {
     stayAlive: false,
   }
 
+  protected projectMap: CmmaProjectMap
+  protected targetEntity: string
+
   @args.string({ description: 'Name of the Dummy to be Dummied' })
   public name: string
 
@@ -20,14 +24,12 @@ export default class Dummy extends BaseCmmaCommand {
   protected commandShortCode: string
 
   public async run() {
-    /**
-     *  ENSURE Config file Exists
-     */
-    await this.ensureConfigFileExistsCommandStep()
+    const jsonFiles = CmmaFileActions.listFilesInDir(
+      CmmaFileActions.joinPath(CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot))
+    )
 
-    this.logger.info('Dummy Success')
+    console.log(jsonFiles)
+
+    this.logger.info(`${this.name} success`)
   }
-
-  protected projectMap: CmmaProjectMap
-  protected targetEntity: string
 }
