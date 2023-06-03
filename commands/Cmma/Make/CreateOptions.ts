@@ -82,7 +82,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   */
   protected getTemplateFileDir(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const createRecordTemplate = 'create-record.txt'
+    const createRecordTemplate = 'create-options.txt'
 
     templatesDir.push(createRecordTemplate)
     return CmmaFileActions.joinPath(templatesDir)

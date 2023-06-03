@@ -104,7 +104,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Migration",
+      "commandPath": "./commands/Cmma/Make/Action",
       "commandName": "cmma:make-action",
       "description": "Create a new CMMA Action",
       "args": [
@@ -113,30 +113,11 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the View to be Created"
+          "description": "Name of the Action to be Created"
         }
       ],
       "aliases": [],
-      "flags": [
-        {
-          "name": "connection",
-          "propertyName": "connection",
-          "type": "string",
-          "description": "The connection flag is used to lookup the directory for the migration file"
-        },
-        {
-          "name": "create",
-          "propertyName": "create",
-          "type": "string",
-          "description": "Define the table name for creating a new table"
-        },
-        {
-          "name": "table",
-          "propertyName": "table",
-          "type": "string",
-          "description": "Define the table name for altering an existing table"
-        }
-      ]
+      "flags": []
     },
     "cmma:make-context": {
       "settings": {
@@ -197,6 +178,45 @@
       ],
       "aliases": [],
       "flags": []
+    },
+    "cmma:make-migration": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Migration",
+      "commandName": "cmma:make-migration",
+      "description": "Create a new CMMA Migration",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Migration to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "connection",
+          "propertyName": "connection",
+          "type": "string",
+          "description": "The connection flag is used to lookup the directory for the migration file"
+        },
+        {
+          "name": "create",
+          "propertyName": "create",
+          "type": "string",
+          "description": "Define the table name for creating a new table"
+        },
+        {
+          "name": "table",
+          "propertyName": "table",
+          "type": "string",
+          "description": "Define the table name for altering an existing table"
+        }
+      ]
     },
     "cmma:make-model": {
       "settings": {

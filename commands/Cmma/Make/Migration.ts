@@ -16,10 +16,10 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-action'
-  public static description = 'Create a new CMMA Action'
+  public static commandName = 'cmma:make-migration'
+  public static description = 'Create a new CMMA Migration'
   public static settings = {
-    loadApp: false,
+    loadApp: true,
     stayAlive: false,
   }
 
@@ -29,7 +29,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the View to be Created' })
+  @args.string({ description: 'Name of the Migration to be Created' })
   public name: string
 
   /*
@@ -46,30 +46,42 @@ export default class Migration extends BaseCmmaArtifactCommand {
   protected artifactGroupDir: CmmaArtifactDirs = 'migrations'
   private tableName: string
 
-  /**
-   * Choose a custom pre-defined connection. Otherwise, we use the
-   * default connection
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Choose a custom pre-defined connection. Otherwise, we use the
+  | default connection
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({
     description: 'The connection flag is used to lookup the directory for the migration file',
   })
   public connection: string
 
-  /**
-   * Custom table name for creating a new table
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Custom Table Name for creating a table
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({ description: 'Define the table name for creating a new table' })
   public create: string
 
-  /**
-   * Custom table name for altering an existing table
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Custom Table name for altering existing table
+  |--------------------------------------------------------------------------------
+  |
+  */
   @flags.string({ description: 'Define the table name for altering an existing table' })
   public table: string
 
-  /**
-   * Not a valid connection
-   */
+  /*
+  |--------------------------------------------------------------------------------
+  | Not a valid Connection
+  |--------------------------------------------------------------------------------
+  |
+  */
   private printNotAValidConnection(connection: string) {
     this.logger.error(
       `"${connection}" is not a valid connection name. Double check "config/database" file`

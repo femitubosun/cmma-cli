@@ -116,7 +116,7 @@ export default class Init extends BaseCmmaBoundaryCommand {
       'routes.ts',
     ])
 
-    const projectImportString = `import 'App/Systems/${PROJECT_ROUTES_FILENAME}'`
+    const projectImportString = `import 'App/${this.PROJECT_CONFIG.defaultProjectRootDirInApp}/${PROJECT_ROUTES_FILENAME}'`
 
     CmmaFileActions.appendToFile({
       filePath: adonisRoutesPath,

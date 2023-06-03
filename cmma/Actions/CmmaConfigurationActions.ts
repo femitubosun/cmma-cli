@@ -5,6 +5,7 @@ import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
+import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 
 export default class CmmaConfigurationActions {
   /**
@@ -261,6 +262,32 @@ export default class CmmaConfigurationActions {
   }
 
   /**
+   * @description Get an Artifact's Default Directory
+   * @author FATE
+   * @param {} artifactType
+   */
+  public static getDefaultArtifactTypeDir(artifactType: CmmaArtifactType) {
+    // NOTE: Default Dir for file & index are set to action for no reason at all.
+    const defaultDir: Record<CmmaArtifactType, CmmaDefaultSystemArtifactDirLabel> = {
+      'create-typechecking': 'typechecking',
+      'identifier-options': 'typechecking',
+      'model-interface': 'typechecking',
+      'update-typechecking': 'typechecking',
+      'action': 'actions',
+      'controller': 'controllers',
+      'file': 'actions',
+      'index': 'actions',
+      'migration': 'migrations',
+      'model': 'models',
+      'route': 'routes',
+      'validator': 'validators',
+      'view': 'views',
+    }
+
+    return defaultDir[artifactType]
+  }
+
+  /**
    * @description Get the string transformations for an artifact group
    * @param getArtifactGroupTransformationOptions
    * @author FATE
@@ -438,12 +465,10 @@ export default class CmmaConfigurationActions {
       defaultCasePattern: 'pascalcase',
       defaultSystemArtifactDirs: [
         'actions',
-        'controllers',
         'migrations',
         'models',
         'routes',
         'typechecking',
-        'validators',
         'views',
       ],
       defaultModuleDirIn: ['controllers', 'validators'],

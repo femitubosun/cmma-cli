@@ -71,6 +71,7 @@ export default class Clean extends BaseCmmaCommand {
 
     console.log(this.PROJECT_CONFIG)
 
+    // Remove Project Files
     const nodePath = new CmmaNodePath(this.PROJECT_CONFIG).buildPath()
 
     const projectRootPath = CmmaFileActions.createAbsolutePathFromNodePath({
@@ -83,6 +84,16 @@ export default class Clean extends BaseCmmaCommand {
 
     removeSync(projectRootPath)
     this.logger.action('delete').succeeded(projectRootPath)
+
+    // Clean Adonis Route
+
+    const adonisRoute = CmmaFileActions.joinPath([this.application.appRoot, 'start', 'routes.ts'])
+
+    removeSync(adonisRoute)
+
+    CmmaFileActions.ensureAFileExists(adonisRoute)
+
+    this.logger.action('update').succeeded(adonisRoute)
 
     if (!this.excludeConfig) {
       removeSync(this.CONFIG_FILE_PATH)

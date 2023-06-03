@@ -259,7 +259,9 @@ export default class CmmaNodePath {
         CmmaSystemActions.isArtifactInSystemArtifactGroup({
           systemMap,
           artifactLabel: artifactObject.artifactLabel,
-          artifactDir: artifactObject.artifactType,
+          artifactDir: CmmaConfigurationActions.getDefaultArtifactTypeDir(
+            artifactObject.artifactType
+          ),
         })
       ) {
         this.toSystem(systemLabel)
