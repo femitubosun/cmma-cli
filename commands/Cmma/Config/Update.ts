@@ -4,6 +4,7 @@ import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import differenceOfArrays from '../../../cmma/Helpers/Utils/symettericDifferenceOfArrays'
 import {
+  ARTIFACT,
   CONTEXT,
   MODULE,
   PRUNING_PROJECT_MAP,
@@ -23,6 +24,7 @@ import {
 } from '../../../cmma/Helpers/SystemMessages/SystemMessageFunction'
 import CmmaArtifactActions from '../../../cmma/Actions/CmmaArtifactActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
+import CmmaModule from '../../../cmma/Models/CmmaModule'
 
 export default class ConfigUpdate extends BaseCmmaCommand {
   /*
@@ -57,6 +59,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
   |
   */
   private updateProjectContexts() {
+    // TODO Refactor
     this.addProjectContextsOnDiskToProjectMap()
     this.pruneLooseProjectContextsFromProjectMap()
   }
@@ -283,11 +286,13 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
     const diskContextsLabel = CmmaFileActions.listSubDirsInDir(this.projectRootPath)
 
+    // TODO A
     diskContextsLabel.forEach((diskContextLabel) => {
       return this.updateContextModules(diskContextLabel)
     })
   }
 
+  // TODO ADD CONTEXTMAP TO PARAM
   private updateContextModules(diskContextLabel: string) {
     const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPath()
@@ -458,105 +463,256 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
   /*
   |--------------------------------------------------------------------------------
-  | Update Project Artifacts
+  | Update Project Module Artifacts
   |--------------------------------------------------------------------------------
   |
   */
 
-  private updateProjectArtifacts() {
-    this.logger.info('Updating Project Artifacts')
-    const contextLabels = CmmaProjectMapActions.listContextsInProject(this.projectMap)
+  private updateProjectModuleArtifacts() {
+    if (!CmmaFileActions.doesPathExist(this.projectRootPath)) {
+      return
+    }
 
-    contextLabels.forEach((contextLabel) => {
+    const diskContextsLabel = CmmaFileActions.listSubDirsInDir(this.projectRootPath)
+
+    diskContextsLabel.forEach((diskContextLabel) => {
       const contextMap = CmmaProjectMapActions.getContextMapByLabel({
-        contextLabel,
         projectMap: this.projectMap,
+        contextLabel: diskContextLabel,
       })
-
-      this.updateContextArtifacts(contextMap)
-    })
-  }
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Update Context Artifacts
-  |--------------------------------------------------------------------------------
-  |
-  */
-  private updateContextArtifacts(contextMap: CmmaContext) {
-    const systemLabels = CmmaContextActions.listSystemsInContext(contextMap)
-
-    systemLabels.forEach((systemLabel) => {
-      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
-        systemLabel,
-        contextMap,
-      })
-
-      this.updateSystemArtifacts({
-        systemMap,
+      return this.updateContextModuleArtifacts({
+        diskContextLabel,
         contextMap,
       })
     })
   }
 
-  /*
-  |--------------------------------------------------------------------------------
-  | Update System Artifacts
-  |--------------------------------------------------------------------------------
-  |
-  */
-  private updateSystemArtifacts(updateSystemArtifactsOptions: {
+  private updateContextModuleArtifacts(updateContextModuleArtifactsOptions: {
+    diskContextLabel: string
     contextMap: CmmaContext
-    systemMap: CmmaSystem
   }) {
-    const { contextMap, systemMap } = updateSystemArtifactsOptions
+    const { diskContextLabel, contextMap } = updateContextModuleArtifactsOptions
 
-    const defaultArtifactsDir = CmmaConfigurationActions.whatIsDefaultSystemArtifactDirs(
+    const contextDir = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(contextDir)) return
+
+    const diskSystemLabels = CmmaFileActions.listSubDirsInDir(contextDir)
+
+    diskSystemLabels.forEach((diskSystemLabel) => {
+      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
+        contextMap,
+        systemLabel: diskSystemLabel,
+      })
+
+      this.updateSystemModuleArtifacts({
+        systemMap,
+        diskSystemLabel,
+        diskContextLabel,
+      })
+    })
+  }
+
+  private updateSystemModuleArtifacts(updateSystemModuleArtifactsOptions: {
+    systemMap: CmmaSystem
+    diskSystemLabel: string
+    diskContextLabel: string
+  }) {
+    const { systemMap, diskSystemLabel, diskContextLabel } = updateSystemModuleArtifactsOptions
+
+    const diskSystemRoutesDir = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .toSystem(diskSystemLabel)
+      .toArtifactsDir('routes')
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(diskSystemRoutesDir)) return
+
+    const routesOnDisk = CmmaFileActions.listRoutesInSystemRoutesDir(diskSystemRoutesDir)
+    const projectRoutesSuffix =
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+        artifactType: 'route',
+        configObject: this.PROJECT_CONFIG,
+      })
+
+    const modulesOnDisk = routesOnDisk.map((routeLabel) => {
+      return routeLabel.replace(projectRoutesSuffix.suffix!, '')
+    })
+
+    modulesOnDisk.forEach((diskModuleLabel) => {
+      const moduleMap = CmmaSystemActions.getModuleMapByLabel({
+        moduleLabel: diskModuleLabel,
+        systemMap,
+      })
+
+      this.addModuleArtifactOnDiskToProjectMap({
+        moduleMap,
+        diskContextLabel,
+        diskModuleLabel,
+        diskSystemLabel,
+      })
+
+      this.pruneLooseModuleArtifactFromProjectMap({
+        moduleMap,
+        diskContextLabel,
+        diskModuleLabel,
+        diskSystemLabel,
+      })
+    })
+  }
+
+  private addModuleArtifactOnDiskToProjectMap(addModuleArtifactOnDiskToProjectMapOptions: {
+    diskModuleLabel: string
+    diskSystemLabel: string
+    moduleMap: CmmaModule
+    diskContextLabel: string
+  }) {
+    const { diskModuleLabel, diskSystemLabel, moduleMap, diskContextLabel } =
+      addModuleArtifactOnDiskToProjectMapOptions
+
+    for (let moduleInDir of CmmaConfigurationActions.whatIsDefaultCreateModuleDirIn(
       this.PROJECT_CONFIG
-    )
-
-    for (let artifactsDir of defaultArtifactsDir) {
-      const systemArtifactsDir = new CmmaNodePath(this.PROJECT_CONFIG)
+    )) {
+      const moduleArtifactsDirOnDiskDir = new CmmaNodePath(this.PROJECT_CONFIG)
         .buildPath()
-        .toContext(contextMap.contextLabel)
-        .toSystem(systemMap.systemLabel)
-        .toArtifactsDir(artifactsDir)
+        .toContext(diskContextLabel)
+        .toSystem(diskSystemLabel)
+        .toArtifactsDir(moduleInDir)
+        .toModelDir(diskModuleLabel)
         .getAbsoluteOsPath(this.application.appRoot)
 
-      const artifactsOnDisk = CmmaFileActions.listFilesInDir(systemArtifactsDir)
-      const artifactsOnMap = CmmaSystemActions.listSystemArtifactsByGroupLabel({
-        systemMap,
-        artifactDir: artifactsDir,
+      if (!CmmaFileActions.doesPathExist(moduleArtifactsDirOnDiskDir)) return
+
+      const filesInArtifactDir = CmmaFileActions.listAllFilesInADirIncludingSubDirectories(
+        moduleArtifactsDirOnDiskDir
+      )
+
+      const moduleArtifactsOnDisk = filesInArtifactDir
+        .map((file) => file.split('.')[0])
+        .filter((filename) => filename !== 'index')
+      const moduleArtifactsOnMap = CmmaModuleActions.listModuleArtifactsByDirLabel({
+        artifactDir: moduleInDir,
+        moduleMap,
       })
 
-      const artifactsOnDiskButNotOnMap = differenceOfArrays(artifactsOnDisk, artifactsOnMap)
-
-      this.logger.info(
-        `${FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
-          entityLabel: artifactsDir,
-          entityCount: artifactsOnDiskButNotOnMap.length,
-        })}: ${artifactsOnDiskButNotOnMap} ${UPDATING_PROJECT_MAP}`
+      const artifactsOnDiskButNotOnMap = differenceOfArrays(
+        moduleArtifactsOnDisk,
+        moduleArtifactsOnMap
       )
+
+      if (artifactsOnDiskButNotOnMap.length) {
+        this.logger.info(
+          FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
+            entityLabel: ARTIFACT,
+            entityCount: artifactsOnDiskButNotOnMap.length,
+          })
+        )
+      }
 
       artifactsOnDiskButNotOnMap.forEach((artifactLabel) => {
         let artifact = CmmaArtifactActions.blankArtifact
         artifact = artifactLabel
 
-        CmmaSystemActions.addArtifactToArtifactGroup({
+        CmmaModuleActions.addArtifactToModule({
           artifact,
-          systemMap,
-          artifactsDir: artifactsDir,
+          artifactDirLabel: moduleInDir,
+          moduleMap,
         })
       })
 
-      this.logger.success(
-        `${ENTITY_ADDED_TO_PROJECT_MAP({
-          entityLabel: artifactsDir,
-          entityCount: artifactsOnDiskButNotOnMap.length,
-        })}`
-      )
+      if (artifactsOnDiskButNotOnMap.length) {
+        this.logger.info(
+          this.colors.cyan(
+            ENTITY_ADDED_TO_PROJECT_MAP({
+              entityLabel: ARTIFACT,
+              entityCount: artifactsOnDiskButNotOnMap.length,
+            })
+          )
+        )
+      }
     }
   }
+
+  private pruneLooseModuleArtifactFromProjectMap(pruneLooseModuleArtifactFromProjectMap: {
+    diskModuleLabel
+    diskSystemLabel
+    moduleMap
+    diskContextLabel
+  }) {
+    const { diskModuleLabel, diskSystemLabel, moduleMap, diskContextLabel } =
+      pruneLooseModuleArtifactFromProjectMap
+
+    for (let moduleInDir of CmmaConfigurationActions.whatIsDefaultCreateModuleDirIn(
+      this.PROJECT_CONFIG
+    )) {
+      const moduleArtifactsDirOnDiskDir = new CmmaNodePath(this.PROJECT_CONFIG)
+        .buildPath()
+        .toContext(diskContextLabel)
+        .toSystem(diskSystemLabel)
+        .toArtifactsDir(moduleInDir)
+        .toModelDir(diskModuleLabel)
+        .getAbsoluteOsPath(this.application.appRoot)
+
+      if (!CmmaFileActions.doesPathExist(moduleArtifactsDirOnDiskDir)) return
+
+      const moduleArtifactsOnMap = CmmaModuleActions.listModuleArtifactsByDirLabel({
+        artifactDir: moduleInDir,
+        moduleMap,
+      })
+
+      const filesInArtifactDir = CmmaFileActions.listAllFilesInADirIncludingSubDirectories(
+        moduleArtifactsDirOnDiskDir
+      )
+
+      const moduleArtifactsOnDisk = filesInArtifactDir
+        .map((file) => file.split('.')[0])
+        .filter((filename) => filename !== 'index')
+
+      const artifactsOnMapButNotOnDisk = differenceOfArrays(
+        moduleArtifactsOnDisk,
+        moduleArtifactsOnMap
+      )
+
+      if (artifactsOnMapButNotOnDisk.length) {
+        this.logger.info(
+          FOUND_NUMBER_OF_ENTITY_ON_MAP_BUT_NOT_ON_DISK({
+            entityLabel: ARTIFACT,
+            entityCount: artifactsOnMapButNotOnDisk.length,
+          })
+        )
+      }
+
+      artifactsOnMapButNotOnDisk.forEach((artifactLabel) => {
+        CmmaModuleActions.deleteModuleArtifactFromArtifactDir({
+          artifactDir: moduleInDir,
+          moduleMap,
+          artifactLabel,
+        })
+      })
+
+      if (artifactsOnMapButNotOnDisk.length) {
+        this.logger.info(
+          this.colors.cyan(
+            ENTITY_PRUNED_FROM_PROJECT_MAP({
+              entityLabel: ARTIFACT,
+              entityCount: artifactsOnMapButNotOnDisk.length,
+            })
+          )
+        )
+      }
+    }
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Update Project System Artifacts
+  |--------------------------------------------------------------------------------
+  |
+  */
 
   /*
   |--------------------------------------------------------------------------------
@@ -576,6 +732,8 @@ export default class ConfigUpdate extends BaseCmmaCommand {
     this.updateProjectSystems()
 
     this.updateProjectModules()
+
+    this.updateProjectModuleArtifacts()
 
     //
     // this.updateProjectArtifacts()

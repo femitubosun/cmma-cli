@@ -65,6 +65,20 @@ export default class CmmaModuleActions {
   }
 
   /**
+   * @description
+   * @author FATE
+   * @param {} listModuleArtifactsByTypeOptions
+   */
+  public static listModuleArtifactsByDirLabel(listModuleArtifactsByTypeOptions: {
+    moduleMap: CmmaModule
+    artifactDir: CmmaArtifactDirs
+  }) {
+    const { moduleMap, artifactDir } = listModuleArtifactsByTypeOptions
+
+    return moduleMap[artifactDir]
+  }
+
+  /**
    * @description Check if controller is in module
    * @author FATE
    * @param {} isControllerInModuleOptions
@@ -90,6 +104,43 @@ export default class CmmaModuleActions {
     const { validatorLabel, moduleMap } = isValidatorInModuleOptions
 
     return this.listModuleValidators(moduleMap).includes(validatorLabel)
+  }
+
+  /**
+   * @description Check if a Module Artifact is in an Artifact Dir
+   * @author FATE
+   * @param {} isModuleArtifactInArtifactDirOptions
+   */
+  public static isModuleArtifactInArtifactDir(isModuleArtifactInArtifactDirOptions: {
+    artifactLabel: CmmaArtifact
+    artifactDir: CmmaArtifactDirs
+    moduleMap: CmmaModule
+  }) {
+    const { artifactDir, artifactLabel, moduleMap } = isModuleArtifactInArtifactDirOptions
+
+    return this.listModuleArtifactsByDirLabel({ artifactDir, moduleMap }).includes(artifactLabel)
+  }
+
+  /**
+   * @description Delete a Module Artifact from Artifact Dir
+   * @author FATE
+   * @param {} deleteModuleArtifactFromArtifactDirOptions
+   */
+  public static deleteModuleArtifactFromArtifactDir(deleteModuleArtifactFromArtifactDirOptions: {
+    artifactLabel: CmmaArtifact
+    artifactDir: CmmaArtifactDirs
+    moduleMap: CmmaModule
+  }) {
+    const { artifactDir, artifactLabel, moduleMap } = deleteModuleArtifactFromArtifactDirOptions
+
+    const artifactsInDir = this.listModuleArtifactsByDirLabel({
+      moduleMap,
+      artifactDir,
+    })
+
+    const artifactIndex = artifactsInDir.indexOf(artifactLabel)
+
+    artifactsInDir.splice(artifactIndex, 1)
   }
 
   /**
