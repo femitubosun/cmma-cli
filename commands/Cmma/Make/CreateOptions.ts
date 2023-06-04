@@ -43,7 +43,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|tyc'
   protected artifactLabel: string
   protected targetEntity = 'Create Options'
-  protected artifactGroupDir: CmmaArtifactDirs = 'typechecking'
+  protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
   protected artifactType: CmmaArtifactType = 'create-typechecking'
 
   /*
@@ -92,7 +92,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     return new CmmaNodePath(this.PROJECT_CONFIG)
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir('typechecking')
+      .toArtifactsDir('typeChecking')
       .toModelDir(this.artifactLabel)
       .getAbsoluteOsPath(this.application.appRoot)
   }
@@ -162,7 +162,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact,
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       systemMap: this.systemMap,
     })
 

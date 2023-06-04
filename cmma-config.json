@@ -1,0 +1,55 @@
+{
+  "defaultProjectRootDirInApp": "Systems",
+  "defaultSystemInternalApiSuffix": "System",
+  "defaultCasePattern": "pascalcase",
+  "defaultSystemArtifactDirs": [
+    "actions",
+    "migrations",
+    "models",
+    "routes",
+    "typeChecking",
+    "views"
+  ],
+  "defaultModuleDirIn": ["controllers", "validators"],
+  "logs": [
+    "cr|",
+    "in|0",
+    "mk|sys|",
+    "mk|act|",
+    "mk|tyc|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "up|",
+    "mk|mop|"
+  ],
+  "projectMap": {
+    "contexts": {
+      "Client": {
+        "contextLabel": "Client",
+        "systems": {
+          "UserManagement": {
+            "systemArtifacts": {
+              "actions": [],
+              "views": [],
+              "typeChecking": [
+                "CreateUserRecordOptions",
+                "UpdateUserRecordOptions",
+                "UserIdentifierOptions",
+                "UserInterface"
+              ],
+              "models": ["User"],
+              "migrations": [],
+              "routes": []
+            },
+            "modules": {},
+            "systemLabel": "UserManagement"
+          }
+        }
+      }
+    },
+    "artifacts": ["ProjectRoutes"]
+  }
+}

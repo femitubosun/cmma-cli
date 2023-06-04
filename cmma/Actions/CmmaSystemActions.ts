@@ -134,9 +134,9 @@ export default class CmmaSystemActions {
       systemMap: systemMap,
     })
 
-    const buffer = artifactGroup.filter((artifact) => artifact !== artifactLabel)
+    const artifactIndex = artifactGroup.indexOf(artifactLabel)
 
-    Object.assign(artifactGroup, buffer)
+    artifactGroup.splice(artifactIndex, 1)
   }
 
   /**
@@ -319,7 +319,7 @@ export default class CmmaSystemActions {
       systemArtifacts: {
         actions: [],
         views: [],
-        typechecking: [],
+        typeChecking: [],
         models: [],
         migrations: [],
         routes: [],
