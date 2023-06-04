@@ -75,7 +75,7 @@ export default class Controller extends BaseCmmaArtifactCommand {
     this.artifactLabel = this.name
 
     const controllerTransformations =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
+      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
         artifactType: 'controller',
         configObject: this.PROJECT_CONFIG,
       })

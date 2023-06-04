@@ -59,7 +59,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected artifactLabel: string
   protected targetEntity = 'Model Options'
   protected artifactType: CmmaArtifactType = 'file'
-  protected artifactGroupDir: CmmaArtifactDirs = 'typechecking'
+  protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
 
   protected abstractArtifact: CmmaAbstractArtifact = [
     'create-typechecking',
@@ -134,7 +134,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: createOptionsLabel,
-        artifactDir: 'typechecking',
+        artifactDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -157,7 +157,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: updateOptionsLabel,
-        artifactDir: 'typechecking',
+        artifactDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -180,7 +180,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: identifierOptionsLabel,
-        artifactDir: 'typechecking',
+        artifactDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -205,7 +205,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: modelInterfaceLabel,
-        artifactDir: 'typechecking',
+        artifactDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -215,25 +215,25 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     }
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       artifact: createOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       artifact: updateOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       artifact: identifierOptionsLabel,
       systemMap: this.systemMap,
     })
 
     CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       artifact: modelInterfaceLabel,
       systemMap: this.systemMap,
     })
@@ -246,7 +246,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
       .buildPath()
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir('typechecking')
+      .toArtifactsDir('typeChecking')
       .toModelDir(this.artifactLabel)
 
     const typecheckingDestinationDir = typecheckingDestinationNodePath.getAbsoluteOsPath(

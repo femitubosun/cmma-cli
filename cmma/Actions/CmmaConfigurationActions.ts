@@ -5,7 +5,6 @@ import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
-import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 
 export default class CmmaConfigurationActions {
   /**
@@ -268,11 +267,11 @@ export default class CmmaConfigurationActions {
    */
   public static getDefaultArtifactTypeDir(artifactType: CmmaArtifactType) {
     // NOTE: Default Dir for file & index are set to action for no reason at all.
-    const defaultDir: Record<CmmaArtifactType, CmmaDefaultSystemArtifactDirLabel> = {
-      'create-typechecking': 'typechecking',
-      'identifier-options': 'typechecking',
-      'model-interface': 'typechecking',
-      'update-typechecking': 'typechecking',
+    const defaultDir: Record<CmmaArtifactType, CmmaArtifactDirs> = {
+      'create-typechecking': 'typeChecking',
+      'identifier-options': 'typeChecking',
+      'model-interface': 'typeChecking',
+      'update-typechecking': 'typeChecking',
       'action': 'actions',
       'controller': 'controllers',
       'file': 'actions',
@@ -336,7 +335,7 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
-      typechecking: {
+      typeChecking: {
         extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
@@ -468,7 +467,7 @@ export default class CmmaConfigurationActions {
         'migrations',
         'models',
         'routes',
-        'typechecking',
+        'typeChecking',
         'views',
       ],
       defaultModuleDirIn: ['controllers', 'validators'],

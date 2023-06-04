@@ -1,8 +1,8 @@
 import CmmaSystem from '../Models/CmmaSystem'
 import CmmaModule from '../Models/CmmaModule'
 import CmmaArtifact from '../Models/CmmaArtifact'
-import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 import CmmaArtifactsGroup from '../Models/CmmaArtifactsGroup'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 
 export default class CmmaSystemActions {
   /**
@@ -46,7 +46,7 @@ export default class CmmaSystemActions {
    * @param {} listSystemArtifactsByGroupLabelOptions
    */
   public static listSystemArtifactsByGroupLabel(listSystemArtifactsByGroupLabelOptions: {
-    artifactDir: CmmaDefaultSystemArtifactDirLabel
+    artifactDir: CmmaArtifactDirs
     systemMap: CmmaSystem
   }): CmmaArtifactsGroup {
     const { systemMap, artifactDir } = listSystemArtifactsByGroupLabelOptions
@@ -61,7 +61,7 @@ export default class CmmaSystemActions {
    */
   public static addArtifactToArtifactGroup(addArtifactToArtifactGroupOptions: {
     artifact: CmmaArtifact
-    artifactsDir: CmmaDefaultSystemArtifactDirLabel
+    artifactsDir: CmmaArtifactDirs
     systemMap: CmmaSystem
   }) {
     const { artifact, artifactsDir, systemMap } = addArtifactToArtifactGroupOptions
@@ -81,7 +81,7 @@ export default class CmmaSystemActions {
    */
   public static getArtifactObjectFromArtifactGroupByLabel(getArtifactObjectFromArtifactGroupOptions: {
     artifactLabel: string
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactGroupLabel: CmmaArtifactDirs
     system: CmmaSystem
   }): CmmaArtifact {
     const { artifactLabel, artifactGroupLabel, system } = getArtifactObjectFromArtifactGroupOptions
@@ -103,7 +103,7 @@ export default class CmmaSystemActions {
    */
   public static getArtifactObjectFromArtifactGroupByIndex(getArtifactObjectFromArtifactGroupByIndexOptions: {
     artifactIndex: number
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactGroupLabel: CmmaArtifactDirs
     system: CmmaSystem
   }): CmmaArtifact {
     const { artifactIndex, artifactGroupLabel, system } =
@@ -124,20 +124,19 @@ export default class CmmaSystemActions {
    */
   public static deleteArtifactObjectFromArtifactGroupByLabel(deleteArtifactObjectFromArtifactGroupOptions: {
     artifactLabel: string
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
-    system: CmmaSystem
+    artifactDir: CmmaArtifactDirs
+    systemMap: CmmaSystem
   }) {
-    const { artifactLabel, artifactGroupLabel, system } =
-      deleteArtifactObjectFromArtifactGroupOptions
+    const { artifactLabel, artifactDir, systemMap } = deleteArtifactObjectFromArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactGroupLabel,
-      systemMap: system,
+      artifactDir: artifactDir,
+      systemMap: systemMap,
     })
 
-    const buffer = artifactGroup.filter((artifact) => artifact !== artifactLabel)
+    const artifactIndex = artifactGroup.indexOf(artifactLabel)
 
-    Object.assign(artifactGroup, buffer)
+    artifactGroup.splice(artifactIndex, 1)
   }
 
   /**
@@ -147,7 +146,7 @@ export default class CmmaSystemActions {
    */
   public static deleteArtifactObjectFromArtifactGroupByIndex(deleteArtifactObjectFromArtifactGroupByIndexOptions: {
     artifactIndex: number
-    artifactGroupLabel: CmmaDefaultSystemArtifactDirLabel
+    artifactGroupLabel: CmmaArtifactDirs
     system: CmmaSystem
   }) {
     const { artifactIndex, artifactGroupLabel, system } =
@@ -251,7 +250,7 @@ export default class CmmaSystemActions {
    * @param {} deleteSystemArtifactByLabelOptions
    */
   public static deleteSystemArtifactByLabel(deleteSystemArtifactByLabelOptions: {
-    systemArtifactLabel: CmmaDefaultSystemArtifactDirLabel
+    systemArtifactLabel: CmmaArtifactDirs
     system: CmmaSystem
   }) {
     const { systemArtifactLabel, system } = deleteSystemArtifactByLabelOptions
@@ -299,7 +298,7 @@ export default class CmmaSystemActions {
    */
   public static isArtifactInSystemArtifactGroup(isSystemArtifactInSystemOptions: {
     artifactLabel: string
-    artifactDir: CmmaDefaultSystemArtifactDirLabel
+    artifactDir: CmmaArtifactDirs
     systemMap: CmmaSystem
   }) {
     const { systemMap, artifactLabel, artifactDir } = isSystemArtifactInSystemOptions
@@ -311,41 +310,6 @@ export default class CmmaSystemActions {
   }
 
   /**
-   * @description What is node path from Project Map
-   * @author FATE
-   * @param {} whatIsNodeMapFromMeOptions
-   */
-  public static whatIsNodePathFromMe(whatIsNodeMapFromMeOptions: {
-    systemLabel?: string
-    moduleLabel?: string
-    artifactGroupLabel?: CmmaDefaultSystemArtifactDirLabel
-    artifactLabel?: string
-  }) {
-    const { systemLabel, moduleLabel, artifactGroupLabel, artifactLabel } =
-      whatIsNodeMapFromMeOptions
-
-    const nodeMap: Array<string> = []
-
-    if (systemLabel) {
-      nodeMap.push(systemLabel)
-    }
-
-    if (moduleLabel) {
-      nodeMap.push(moduleLabel)
-    }
-
-    if (artifactGroupLabel) {
-      nodeMap.push(artifactGroupLabel)
-    }
-
-    if (artifactLabel) {
-      nodeMap.push(artifactLabel)
-    }
-
-    return nodeMap
-  }
-
-  /**
    * @description Method to get a blank System Map
    * @author FATE
    * @returns {CmmaSystem}
@@ -354,10 +318,8 @@ export default class CmmaSystemActions {
     return {
       systemArtifacts: {
         actions: [],
-        controllers: [],
-        validators: [],
         views: [],
-        typechecking: [],
+        typeChecking: [],
         models: [],
         migrations: [],
         routes: [],

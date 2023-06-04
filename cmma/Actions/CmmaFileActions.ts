@@ -9,10 +9,9 @@ import {
   writeFileSync,
 } from 'fs-extra'
 import prettier from 'prettier'
-import { extname, join } from 'path'
+import { basename, extname, join } from 'path'
 import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaNodePath from '../Models/CmmaNodePath'
-import differenceOfArrays from '../Helpers/Utils/symettericDifferenceOfArrays'
 
 export default class CmmaFileActions {
   /**
@@ -164,8 +163,34 @@ export default class CmmaFileActions {
    * @description
    * @author FATE
    * @param dirPath
+   * @param filesArray
    */
-  public static listFilesInDirWithoutExtension(dirPath: string) {
+  public static listAllFilesInADirIncludingSubDirectories(
+    dirPath: string,
+    filesArray: Array<string> = []
+  ) {
+    const files = readdirSync(dirPath)
+
+    files.forEach((file) => {
+      const filePath = this.joinPath([dirPath, file])
+      const stat = statSync(filePath)
+
+      if (stat.isDirectory()) {
+        this.listAllFilesInADirIncludingSubDirectories(filePath, filesArray)
+      } else {
+        filesArray.push(basename(filePath))
+      }
+    })
+
+    return filesArray
+  }
+
+  /**
+   * @description List Files in a Dir without their extension
+   * @author FATE
+   * @param dirPath
+   */
+  public static listFilesInDirWithoutTheirExtensions(dirPath: string) {
     const files = readdirSync(dirPath)
 
     const filesWithExtensions = files.filter((file) => {
@@ -220,19 +245,13 @@ export default class CmmaFileActions {
   }
 
   /**
-   * @description List the difference between to Directories
+   * @description List the Routes Files in System Route Dir
    * @author FATE
-   * @param {} listSubDirDifferenceBetweenDirsOptions
+   * @param dirPath
    */
-  public static listSubDirDifferenceBetweenDirs(listSubDirDifferenceBetweenDirsOptions: {
-    possiblyGreaterDirPath: string
-    possiblyLesserDirPath: string
-  }) {
-    const { possiblyGreaterDirPath, possiblyLesserDirPath } = listSubDirDifferenceBetweenDirsOptions
+  public static listRoutesInSystemRoutesDir(dirPath: string) {
+    const filesInRoutesDir = this.listFilesInDirWithoutTheirExtensions(dirPath)
 
-    const possiblyGreaterSubDirs = this.listSubDirsInDir(possiblyGreaterDirPath)
-    const possiblyLesserSubDirs = this.listSubDirsInDir(possiblyLesserDirPath)
-
-    return differenceOfArrays(possiblyGreaterSubDirs, possiblyLesserSubDirs)
+    return filesInRoutesDir.filter((file) => file !== 'index')
   }
 }

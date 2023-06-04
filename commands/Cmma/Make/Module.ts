@@ -37,7 +37,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected commandShortCode = 'mk|act'
+  protected commandShortCode = 'mk|mod'
   protected artifactLabel: string
   protected targetEntity = 'Module'
 
