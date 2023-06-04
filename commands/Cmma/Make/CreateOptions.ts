@@ -128,7 +128,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     this.logger.info(
       `Found ${this.colors.underline(this.artifactLabel)} Model in ${this.colors.underline(
         modelSystemPath.systemLabel!
-      )} System of ${this.colors.underline(modelSystemPath.contextLabel!)}`
+      )} System of ${this.colors.underline(modelSystemPath.contextLabel!)} Context`
     )
 
     const confirm = await this.prompt.confirm(
