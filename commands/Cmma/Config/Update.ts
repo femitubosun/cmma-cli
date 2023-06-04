@@ -7,9 +7,7 @@ import {
   ARTIFACT,
   CONTEXT,
   MODULE,
-  PRUNING_PROJECT_MAP,
   SYSTEM,
-  UPDATING_PROJECT_MAP,
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
@@ -80,7 +78,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         `${FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
           entityLabel: CONTEXT,
           entityCount: contextsOnDiskButNotOnMap.length,
-        })}| ${contextsOnDiskButNotOnMap} ${UPDATING_PROJECT_MAP}`
+        })}`
       )
     }
 
@@ -101,7 +99,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
           `${ENTITY_ADDED_TO_PROJECT_MAP({
             entityCount: contextsOnDiskButNotOnMap.length,
             entityLabel: CONTEXT,
-          })}| ${contextsOnDiskButNotOnMap}`
+          })}`
         )
       )
     }
@@ -122,7 +120,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         `${FOUND_NUMBER_OF_ENTITY_ON_MAP_BUT_NOT_ON_DISK({
           entityLabel: CONTEXT,
           entityCount: contextsOnMapNotOnDisk.length,
-        })}: ${contextsOnMapNotOnDisk}. ${PRUNING_PROJECT_MAP}`
+        })}`
       )
     }
 
@@ -208,7 +206,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         `${FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
           entityLabel: SYSTEM,
           entityCount: systemsOnDiskButNotOnProjectMap.length,
-        })}. ${UPDATING_PROJECT_MAP}`
+        })}`
       )
     }
 
@@ -260,7 +258,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         `${FOUND_NUMBER_OF_ENTITY_ON_MAP_BUT_NOT_ON_DISK({
           entityLabel: SYSTEM,
           entityCount: systemsOnProjectMapButNotOnDisk.length,
-        })}. ${PRUNING_PROJECT_MAP}`
+        })}`
       )
     }
 
@@ -378,7 +376,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
           `${FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
             entityLabel: MODULE,
             entityCount: routesOnDiskButNotOnMap.length,
-          })}. ${UPDATING_PROJECT_MAP}`
+          })}`
         )
       }
     }
@@ -444,7 +442,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
           `${FOUND_NUMBER_OF_ENTITY_ON_MAP_BUT_NOT_ON_DISK({
             entityLabel: MODULE,
             entityCount: routesOnMapButNotOnDisk.length,
-          })}. ${PRUNING_PROJECT_MAP}`
+          })}`
         )
       }
     }
