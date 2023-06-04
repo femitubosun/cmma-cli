@@ -5,7 +5,6 @@ import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
 import StringTransformations from '../TypeChecking/StringTransformations'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
-import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 
 export default class CmmaConfigurationActions {
   /**
@@ -268,7 +267,7 @@ export default class CmmaConfigurationActions {
    */
   public static getDefaultArtifactTypeDir(artifactType: CmmaArtifactType) {
     // NOTE: Default Dir for file & index are set to action for no reason at all.
-    const defaultDir: Record<CmmaArtifactType, CmmaDefaultSystemArtifactDirLabel> = {
+    const defaultDir: Record<CmmaArtifactType, CmmaArtifactDirs> = {
       'create-typechecking': 'typechecking',
       'identifier-options': 'typechecking',
       'model-interface': 'typechecking',

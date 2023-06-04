@@ -25,6 +25,7 @@ import {
 import CmmaArtifactActions from '../../../cmma/Actions/CmmaArtifactActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaModule from '../../../cmma/Models/CmmaModule'
+import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 
 export default class ConfigUpdate extends BaseCmmaCommand {
   /*
@@ -163,9 +164,18 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         contextMap,
         diskContextDirLabel: contextLabel,
       })
+    })
+
+    const projectContexts = CmmaProjectMapActions.listContextsInProject(this.projectMap)
+
+    projectContexts.forEach((contextLabel) => {
+      const contextMap = CmmaProjectMapActions.getContextMapByLabel({
+        contextLabel,
+        projectMap: this.projectMap,
+      })
 
       this.pruneLooseContextSystemsFromProjectMap({
-        diskContextDirLabel: contextLabel,
+        contextLabel,
         contextMap,
       })
     })
@@ -226,14 +236,14 @@ export default class ConfigUpdate extends BaseCmmaCommand {
   }
 
   private pruneLooseContextSystemsFromProjectMap(pruneLooseContextSystemsFromProjectMapOptions: {
-    diskContextDirLabel: string
+    contextLabel: string
     contextMap: CmmaContext
   }) {
-    const { diskContextDirLabel, contextMap } = pruneLooseContextSystemsFromProjectMapOptions
+    const { contextLabel, contextMap } = pruneLooseContextSystemsFromProjectMapOptions
 
     const diskContextDir = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPath()
-      .toContext(diskContextDirLabel)
+      .toContext(contextLabel)
       .getAbsoluteOsPath(this.application.appRoot)
 
     if (!CmmaFileActions.doesPathExist(diskContextDir)) {
@@ -707,6 +717,240 @@ export default class ConfigUpdate extends BaseCmmaCommand {
     }
   }
 
+  private updateProjectArtifacts() {
+    if (!this.projectRootPath) return
+
+    const diskContexts = CmmaFileActions.listSubDirsInDir(this.projectRootPath)
+
+    diskContexts.forEach((diskContextLabel) => {
+      const contextMap = CmmaProjectMapActions.getContextMapByLabel({
+        contextLabel: diskContextLabel,
+        projectMap: this.projectMap,
+      })
+
+      this.updateContextArtifacts({
+        contextMap,
+        diskContextLabel,
+      })
+    })
+  }
+
+  private updateContextArtifacts(updateContextArtifactsOptions: {
+    contextMap: CmmaContext
+    diskContextLabel: string
+  }) {
+    const { contextMap, diskContextLabel } = updateContextArtifactsOptions
+
+    const contextDirOnDisk = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(contextDirOnDisk)) return
+
+    const diskSystems = CmmaFileActions.listSubDirsInDir(contextDirOnDisk)
+
+    diskSystems.forEach((diskSystemLabel) => {
+      const systemMap = CmmaContextActions.getContextSystemMapByLabel({
+        systemLabel: diskSystemLabel,
+        contextMap,
+      })
+      this.updateSystemArtifacts({
+        systemMap,
+        diskSystemLabel,
+        diskContextLabel,
+      })
+    })
+  }
+
+  private updateSystemArtifacts(updateSystemArtifactsOptions: {
+    systemMap: CmmaSystem
+    diskSystemLabel: string
+    diskContextLabel: string
+  }) {
+    const { systemMap, diskSystemLabel, diskContextLabel } = updateSystemArtifactsOptions
+
+    const diskSystemDir = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .toSystem(diskSystemLabel)
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(diskSystemDir)) return
+
+    const excludedDirs = ['routes', 'controllers', 'validators', 'seeders'].map((dirLabel) => {
+      return CmmaConfigurationActions.transformLabel({
+        label: dirLabel,
+        transformations: {
+          pattern: 'camelcase',
+        },
+      })
+    })
+
+    const artifactsDirs = CmmaFileActions.listSubDirsInDir(diskSystemDir)
+      .map((dirLabel) => {
+        if (dirLabel === 'TypeChecking') return 'typechecking'
+
+        return CmmaConfigurationActions.transformLabel({
+          label: dirLabel,
+          transformations: {
+            pattern: 'camelcase',
+          },
+        })
+      })
+      .filter((subDir) => excludedDirs.indexOf(subDir) < 0) as Array<CmmaArtifactDirs>
+
+    artifactsDirs.forEach((artifactDir) => {
+      this.addSystemArtifactsOnDiskToProjectMap({
+        diskArtifactDir: artifactDir,
+        systemMap,
+        diskSystemLabel,
+        diskContextLabel,
+      })
+    })
+
+    const artifactDirsOnMap = CmmaSystemActions.listSystemArtifactGroups(
+      systemMap
+    ) as Array<CmmaArtifactDirs>
+
+    artifactDirsOnMap.forEach((artifactDir) => {
+      this.pruneLooseSystemArtifactsFromProjectMap({
+        diskArtifactDir: artifactDir,
+        systemMap,
+        diskContextLabel,
+        diskSystemLabel,
+      })
+    })
+  }
+
+  private addSystemArtifactsOnDiskToProjectMap(addSystemArtifactsOnDiskToProjectMapOptions: {
+    diskArtifactDir: CmmaArtifactDirs
+    systemMap: CmmaSystem
+    diskSystemLabel: string
+    diskContextLabel: string
+  }) {
+    const { diskArtifactDir, systemMap, diskSystemLabel, diskContextLabel } =
+      addSystemArtifactsOnDiskToProjectMapOptions
+
+    const artifactDir = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .toSystem(diskSystemLabel)
+      .toArtifactsDir(diskArtifactDir)
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(artifactDir)) return
+
+    const filesInArtifactDir =
+      CmmaFileActions.listAllFilesInADirIncludingSubDirectories(artifactDir)
+
+    const artifactsOnDisk = filesInArtifactDir
+      .map((file) => file.split('.')[0])
+      .filter((filename) => filename !== 'index')
+
+    const artifactGroup = CmmaSystemActions.listSystemArtifactsByGroupLabel({
+      artifactDir: diskArtifactDir,
+      systemMap,
+    })
+
+    console.log(artifactGroup)
+    console.log(diskArtifactDir)
+
+    const artifactsOnDiskButNotOnMap = differenceOfArrays(artifactsOnDisk, artifactGroup)
+
+    if (artifactsOnDiskButNotOnMap.length) {
+      this.logger.info(
+        FOUND_NUMBER_OF_ENTITIES_ON_DISK_BUT_NOT_ON_MAP({
+          entityLabel: ARTIFACT,
+          entityCount: artifactsOnDiskButNotOnMap.length,
+        })
+      )
+    }
+
+    artifactsOnDiskButNotOnMap.forEach((artifactLabel) => {
+      let artifact = CmmaArtifactActions.blankArtifact
+      artifact = artifactLabel
+
+      CmmaSystemActions.addArtifactToArtifactGroup({
+        artifact,
+        systemMap,
+        artifactsDir: diskArtifactDir,
+      })
+    })
+
+    if (artifactsOnDiskButNotOnMap.length) {
+      this.logger.info(
+        this.colors.cyan(
+          ENTITY_ADDED_TO_PROJECT_MAP({
+            entityLabel: ARTIFACT,
+            entityCount: artifactsOnDiskButNotOnMap.length,
+          })
+        )
+      )
+    }
+  }
+
+  private pruneLooseSystemArtifactsFromProjectMap(pruneLooseSystemArtifactsFromProjectMapOptions: {
+    diskArtifactDir: CmmaArtifactDirs
+    systemMap: CmmaSystem
+    diskSystemLabel: string
+    diskContextLabel: string
+  }) {
+    const { diskArtifactDir, systemMap, diskSystemLabel, diskContextLabel } =
+      pruneLooseSystemArtifactsFromProjectMapOptions
+
+    const artifactGroup = CmmaSystemActions.listSystemArtifactsByGroupLabel({
+      artifactDir: diskArtifactDir,
+      systemMap,
+    })
+
+    const artifactDir = new CmmaNodePath(this.PROJECT_CONFIG)
+      .buildPath()
+      .toContext(diskContextLabel)
+      .toSystem(diskSystemLabel)
+      .toArtifactsDir(diskArtifactDir)
+      .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(artifactDir)) return
+
+    const filesInArtifactDir =
+      CmmaFileActions.listAllFilesInADirIncludingSubDirectories(artifactDir)
+
+    const artifactsOnDisk = filesInArtifactDir
+      .map((file) => file.split('.')[0])
+      .filter((filename) => filename !== 'index')
+
+    const artifactsOnMapButNotOnDisk = differenceOfArrays(artifactGroup, artifactsOnDisk)
+
+    if (artifactsOnMapButNotOnDisk.length) {
+      this.logger.info(
+        FOUND_NUMBER_OF_ENTITY_ON_MAP_BUT_NOT_ON_DISK({
+          entityLabel: ARTIFACT,
+          entityCount: artifactsOnMapButNotOnDisk.length,
+        })
+      )
+    }
+
+    artifactsOnMapButNotOnDisk.forEach((artifactLabel) => {
+      CmmaSystemActions.deleteArtifactObjectFromArtifactGroupByLabel({
+        artifactLabel,
+        systemMap,
+        artifactDir: diskArtifactDir,
+      })
+    })
+
+    if (artifactsOnMapButNotOnDisk.length) {
+      this.logger.info(
+        this.colors.cyan(
+          ENTITY_PRUNED_FROM_PROJECT_MAP({
+            entityLabel: ARTIFACT,
+            entityCount: artifactsOnMapButNotOnDisk.length,
+          })
+        )
+      )
+    }
+  }
+
   /*
   |--------------------------------------------------------------------------------
   | Update Project System Artifacts
@@ -735,8 +979,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
     this.updateProjectModuleArtifacts()
 
-    //
-    // this.updateProjectArtifacts()
+    this.updateProjectArtifacts()
 
     await this.finishCmmaCommand()
   }

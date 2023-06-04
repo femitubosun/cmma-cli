@@ -1,7 +1,5 @@
 type CmmaDefaultSystemArtifactDirLabel =
   | 'views'
-  | 'controllers'
-  | 'validators'
   | 'models'
   | 'actions'
   | 'migrations'
