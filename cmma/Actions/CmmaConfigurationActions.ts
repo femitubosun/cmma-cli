@@ -268,10 +268,10 @@ export default class CmmaConfigurationActions {
   public static getDefaultArtifactTypeDir(artifactType: CmmaArtifactType) {
     // NOTE: Default Dir for file & index are set to action for no reason at all.
     const defaultDir: Record<CmmaArtifactType, CmmaArtifactDirs> = {
-      'create-typechecking': 'typechecking',
-      'identifier-options': 'typechecking',
-      'model-interface': 'typechecking',
-      'update-typechecking': 'typechecking',
+      'create-typechecking': 'typeChecking',
+      'identifier-options': 'typeChecking',
+      'model-interface': 'typeChecking',
+      'update-typechecking': 'typeChecking',
       'action': 'actions',
       'controller': 'controllers',
       'file': 'actions',
@@ -335,7 +335,7 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
-      typechecking: {
+      typeChecking: {
         extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
@@ -467,7 +467,7 @@ export default class CmmaConfigurationActions {
         'migrations',
         'models',
         'routes',
-        'typechecking',
+        'typeChecking',
         'views',
       ],
       defaultModuleDirIn: ['controllers', 'validators'],

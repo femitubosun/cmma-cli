@@ -7,6 +7,6 @@ type CmmaArtifactDirs =
   | 'migrations'
   | 'file'
   | 'routes'
-  | 'typechecking'
+  | 'typeChecking'
 
 export default CmmaArtifactDirs

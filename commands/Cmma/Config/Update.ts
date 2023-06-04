@@ -789,8 +789,6 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
     const artifactsDirs = CmmaFileActions.listSubDirsInDir(diskSystemDir)
       .map((dirLabel) => {
-        if (dirLabel === 'TypeChecking') return 'typechecking'
-
         return CmmaConfigurationActions.transformLabel({
           label: dirLabel,
           transformations: {
@@ -852,9 +850,6 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       artifactDir: diskArtifactDir,
       systemMap,
     })
-
-    console.log(artifactGroup)
-    console.log(diskArtifactDir)
 
     const artifactsOnDiskButNotOnMap = differenceOfArrays(artifactsOnDisk, artifactGroup)
 
@@ -970,6 +965,12 @@ export default class ConfigUpdate extends BaseCmmaCommand {
     this.projectRootPath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPath()
       .getAbsoluteOsPath(this.application.appRoot)
+
+    if (!CmmaFileActions.doesPathExist(this.projectRootPath)) {
+      await this.logger.error(`Project Path does not exist: ${this.projectRootPath}`)
+
+      await this.exit()
+    }
 
     this.updateProjectContexts()
 

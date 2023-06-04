@@ -1,6 +1,5 @@
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import CmmaProjectMap from './CmmaProjectMap'
-import CmmaDefaultSystemArtifactDirLabel from '../TypeChecking/CmmaDefaultSystemArtifactDirLabel'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 
 type CmmaConfiguration = {
@@ -10,7 +9,7 @@ type CmmaConfiguration = {
 
   defaultCasePattern: CmmaProjectCasePatternType
 
-  defaultSystemArtifactDirs: Array<CmmaDefaultSystemArtifactDirLabel>
+  defaultSystemArtifactDirs: Array<CmmaArtifactDirs>
 
   defaultModuleDirIn: Array<CmmaArtifactDirs>
 
