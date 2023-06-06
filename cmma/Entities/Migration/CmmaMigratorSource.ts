@@ -34,9 +34,11 @@ export class CmmaMigratorSource {
    * are not defined, then `database/migrations` fallback is used
    */
   private getMigrationsPath(): string[] {
-    // NOTE
+    /**
+     * Overwriting Migrations Path to Cmma Project MigrationPaths
+     */
     const migrationDirectoriesNodePaths =
-      CmmaNodePathActions.listProjectMigrationsDirectoryNodePath(this.cmmaConfigObject)
+      CmmaNodePathActions.listProjectMigrationsDirectoriesNodePaths(this.cmmaConfigObject)
 
     const directories = migrationDirectoriesNodePaths.map((nodePath) =>
       nodePath.getMigrationTypePath()
