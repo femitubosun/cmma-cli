@@ -23,6 +23,20 @@ export default class CmmaSystemActions {
   }
 
   /**
+   * @description Get a Module's index by Label
+   * @author FATE
+   * @param {} getModuleIndexByLabelOptions
+   */
+  public static getModuleIndexByLabel(getModuleIndexByLabelOptions: {
+    systemMap: CmmaSystem
+    moduleLabel: string
+  }) {
+    const { systemMap, moduleLabel } = getModuleIndexByLabelOptions
+
+    return this.listModulesInSystem(systemMap).indexOf(moduleLabel)
+  }
+
+  /**
    * @description List Modules in a System
    * @author FATE
    * @param {CmmaSystem} system

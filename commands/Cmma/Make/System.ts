@@ -6,6 +6,7 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 
 export default class System extends BaseCmmaBoundaryCommand {
   /*
@@ -181,10 +182,13 @@ export default class System extends BaseCmmaBoundaryCommand {
     /**
      * Finish Command
      */
-    // this.commandArgs = [
-    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    // ]
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.listSystemsInContext(this.contextMap).length - 1,
+    ]
 
     this.finishCmmaCommand()
   }

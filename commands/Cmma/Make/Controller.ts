@@ -10,6 +10,9 @@ import {
   YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE,
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 
 export default class Controller extends BaseCmmaArtifactCommand {
   /*
@@ -119,14 +122,22 @@ export default class Controller extends BaseCmmaArtifactCommand {
 
     /**
      * Finish Command
-     * Todo ARgs
      */
-    // this.commandArgs = [
-    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-    //   CmmaModuleActions.listModuleControllers(moduleMap).length - 1,
-    // ]
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.getModuleIndexByLabel({
+        systemMap: this.systemMap,
+        moduleLabel: this.moduleLabel,
+      }),
+      CmmaModuleActions.listModuleControllers(this.moduleMap).length - 1,
+    ]
 
     this.finishCmmaCommand()
   }
