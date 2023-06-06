@@ -477,11 +477,12 @@ export default class CmmaSystemActions {
     return {
       systemArtifacts: {
         actions: [],
+        migrations: [],
+        models: [],
+        routes: [],
+        seeders: [],
         views: [],
         typeChecking: [],
-        models: [],
-        migrations: [],
-        routes: [],
       },
       abstractArtifacts: {},
       modules: {},
