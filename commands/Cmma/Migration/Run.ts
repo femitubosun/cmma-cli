@@ -1,6 +1,6 @@
 import { BaseCmmaMigrationCommand } from '../../../cmma/BaseCommands/BaseCmmaMigrationCommand'
 import { flags } from '@adonisjs/core/build/standalone'
-import { CmmaMigratorContract } from '../../../cmma/TypeChecking/Migration/CmmaMigratorContract'
+import { CmmaMigratorContract } from '../../../cmma/Entities/Migration/CmmaMigratorContract'
 
 export default class Run extends BaseCmmaMigrationCommand {
   /*
