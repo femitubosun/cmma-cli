@@ -24,6 +24,15 @@ export default class DbSeed extends BaseCmmaCommand {
     loadApp: true,
   }
 
+  /*
+|--------------------------------------------------------------------------------
+| CMMA Configuration
+|--------------------------------------------------------------------------------
+|
+*/
+  protected commandShortCode = 'db|sed'
+  protected targetEntity = ''
+
   private seeder: CmmaSeedsRunner
 
   /**
@@ -284,7 +293,4 @@ export default class DbSeed extends BaseCmmaCommand {
       await this.seeder.close()
     }
   }
-
-  protected commandShortCode: string
-  protected targetEntity: string
 }

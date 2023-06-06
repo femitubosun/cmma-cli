@@ -1,12 +1,3 @@
-/*
- * @adonisjs/lucid
- *
- * (c) Harminder Virk <virk@adonisjs.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
 
 /**
@@ -19,6 +10,14 @@ export default class Reset extends BaseCommand {
   public static settings = {
     loadApp: true,
   }
+  /*
+|--------------------------------------------------------------------------------
+| CMMA Configuration
+|--------------------------------------------------------------------------------
+|
+*/
+  protected commandShortCode = 'mig|res'
+  protected targetEntity = ''
 
   /**
    * Custom connection for running migrations.

@@ -7,23 +7,27 @@
     "migrations",
     "models",
     "routes",
+    "seeders",
     "typeChecking",
     "views"
   ],
   "defaultModuleDirIn": ["controllers", "validators"],
   "logs": [
     "cr|",
-    "in|0|1",
+    "in|0",
     "mk|sys|0|0",
-    "mk|act|",
-    "mk|mod|0|0|0",
-    "mk|act|",
-    "mk|tyc|",
-    "mk|op|",
-    "mk|act|",
-    "mk|mop|",
     "mk|sys|0|1",
-    "mk|act|0|1|0"
+    "mk|sed|0|0|0",
+    "mk|sed|0|0|1",
+    "mig|run|",
+    "mig|run|",
+    "up|",
+    "mig|run|",
+    "mig|run|",
+    "mig|run|",
+    "mk|mig|0|0|7",
+    "mig|run|",
+    "mig|run|"
   ],
   "projectMap": {
     "contexts": {
@@ -32,44 +36,43 @@
         "systems": {
           "UserManagement": {
             "systemArtifacts": {
-              "actions": ["UserActions"],
-              "views": [],
-              "typeChecking": [
-                "CreateUserRecordOptions",
-                "CreateUserProfileRecordOptions",
-                "UpdateUserProfileRecordOptions",
-                "UserProfileIdentifierOptions",
-                "UserProfileInterface"
-              ],
-              "models": ["User", "UserProfile"],
-              "migrations": [],
-              "routes": []
-            },
-            "modules": {
-              "PasswordManagement": {
-                "controllers": ["CreateNewUserController"],
-                "validators": ["CreateNewUserRequestValidator"],
-                "moduleLabel": "PasswordManagement"
-              }
-            },
-            "systemLabel": "UserManagement"
-          },
-          "PermissionsManagement": {
-            "systemArtifacts": {
               "actions": [],
+              "migrations": [
+                "1676953451114_users",
+                "1676953451118_api_tokens",
+                "1676987537246_settings_user_roles",
+                "1676988037654_otp_tokens",
+                "1677073329408_user_roles",
+                "1683628197883_user_profiles",
+                "1683835145675_user_registration_steps",
+                "friends"
+              ],
+              "models": ["SettingsUserRole", "User", "UserRegistrationStep"],
+              "routes": [],
+              "seeders": ["UserSeeder", "UserFriendActionSeeder"],
               "views": [],
-              "typeChecking": [],
-              "models": ["UserFriend"],
-              "migrations": [],
-              "routes": []
+              "typeChecking": []
             },
             "abstractArtifacts": {},
             "modules": {},
-            "systemLabel": "PermissionsManagement"
+            "systemLabel": "UserManagement"
+          },
+          "Finance": {
+            "systemArtifacts": {
+              "actions": [],
+              "migrations": [],
+              "models": [],
+              "routes": [],
+              "seeders": [],
+              "views": [],
+              "typeChecking": []
+            },
+            "abstractArtifacts": {},
+            "modules": {},
+            "systemLabel": "Finance"
           }
         }
-      },
-      "Settings": { "contextLabel": "Settings", "systems": {} }
+      }
     },
     "artifacts": ["ProjectRoutes"]
   }

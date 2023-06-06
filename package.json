@@ -62,6 +62,7 @@
   "dependencies": {
     "@adonisjs/core": "^5.9.0",
     "@adonisjs/lucid": "^18.4.0",
+    "@adonisjs/lucid-slugify": "^2.2.1",
     "@adonisjs/repl": "^3.1.11",
     "@adonisjs/session": "^6.4.0",
     "@adonisjs/shield": "^7.1.0",
