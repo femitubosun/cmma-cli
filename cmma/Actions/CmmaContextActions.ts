@@ -20,6 +20,20 @@ export default class CmmaContextActions {
   }
 
   /**
+   * @description Get a System's Index
+   * @author FATE
+   * @param {} getSystemIndexByLabelOptions
+   */
+  public static getSystemIndexByLabel(getSystemIndexByLabelOptions: {
+    systemLabel: string
+    contextMap: CmmaContext
+  }) {
+    const { systemLabel, contextMap } = getSystemIndexByLabelOptions
+
+    return this.listSystemsInContext(contextMap).indexOf(systemLabel)
+  }
+
+  /**
    * @description Get a Context System By Index
    * @author FATE
    * @param {} getSystemByIndexOptions

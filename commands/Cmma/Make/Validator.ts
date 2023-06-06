@@ -6,6 +6,9 @@ import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationAct
 import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 
 export default class Validator extends BaseCmmaArtifactCommand {
   /*
@@ -128,13 +131,21 @@ export default class Validator extends BaseCmmaArtifactCommand {
     /**
      * Finish Command
      */
-    // this.commandArgs = [
-    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-    //   CmmaModuleActions.listModuleValidators(moduleMap).length - 1,
-    // ]
-
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.getModuleIndexByLabel({
+        systemMap: this.systemMap,
+        moduleLabel: this.moduleLabel,
+      }),
+      CmmaModuleActions.listModuleValidators(this.moduleMap).length - 1,
+    ]
     this.finishCmmaCommand()
   }
 }

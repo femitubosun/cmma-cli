@@ -13,17 +13,17 @@
   "defaultModuleDirIn": ["controllers", "validators"],
   "logs": [
     "cr|",
-    "in|0",
-    "mk|sys|",
+    "in|0|1",
+    "mk|sys|0|0",
+    "mk|act|",
+    "mk|mod|0|0|0",
     "mk|act|",
     "mk|tyc|",
-    "up|",
-    "up|",
-    "up|",
-    "up|",
-    "up|",
-    "up|",
-    "mk|mop|"
+    "mk|op|",
+    "mk|act|",
+    "mk|mop|",
+    "mk|sys|0|1",
+    "mk|act|0|1|0"
   ],
   "projectMap": {
     "contexts": {
@@ -32,23 +32,44 @@
         "systems": {
           "UserManagement": {
             "systemArtifacts": {
-              "actions": [],
+              "actions": ["UserActions"],
               "views": [],
               "typeChecking": [
                 "CreateUserRecordOptions",
-                "UpdateUserRecordOptions",
-                "UserIdentifierOptions",
-                "UserInterface"
+                "CreateUserProfileRecordOptions",
+                "UpdateUserProfileRecordOptions",
+                "UserProfileIdentifierOptions",
+                "UserProfileInterface"
               ],
-              "models": ["User"],
+              "models": ["User", "UserProfile"],
               "migrations": [],
               "routes": []
             },
-            "modules": {},
+            "modules": {
+              "PasswordManagement": {
+                "controllers": ["CreateNewUserController"],
+                "validators": ["CreateNewUserRequestValidator"],
+                "moduleLabel": "PasswordManagement"
+              }
+            },
             "systemLabel": "UserManagement"
+          },
+          "PermissionsManagement": {
+            "systemArtifacts": {
+              "actions": [],
+              "views": [],
+              "typeChecking": [],
+              "models": ["UserFriend"],
+              "migrations": [],
+              "routes": []
+            },
+            "abstractArtifacts": {},
+            "modules": {},
+            "systemLabel": "PermissionsManagement"
           }
         }
-      }
+      },
+      "Settings": { "contextLabel": "Settings", "systems": {} }
     },
     "artifacts": ["ProjectRoutes"]
   }

@@ -21,6 +21,20 @@ export default class CmmaProjectMapActions {
   }
 
   /**
+   * @description Get a Context's Index By Label
+   * @author FATE
+   * @param {} getContextIndexByLabelOptions
+   */
+  public static getContextIndexByLabel(getContextIndexByLabelOptions: {
+    contextLabel: string
+    projectMap: CmmaProjectMap
+  }) {
+    const { contextLabel, projectMap } = getContextIndexByLabelOptions
+
+    return this.listContextsInProject(projectMap).indexOf(contextLabel)
+  }
+
+  /**
    * @description Get Context By Index
    * @param getContextObjectByIndexOptions
    * @author Fate

@@ -8,6 +8,8 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
 import CmmaStringTransformations from 'cmma/TypeChecking/StringTransformations'
 import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 
 export default class Migration extends BaseCmmaArtifactCommand {
   /*
@@ -205,15 +207,20 @@ export default class Migration extends BaseCmmaArtifactCommand {
 
     await this.generate()
 
-    // this.commandArgs = [
-    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-    //   CmmaSystemActions.listSystemArtifactsByGroupLabel({
-    //     systemMap,
-    //     artifactGroupLabel: 'migrations',
-    //   }).length - 1,
-    // ]
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.listSystemArtifactsByGroupLabel({
+        systemMap: this.systemMap,
+        artifactsDir: this.artifactGroupDir,
+      }).length - 1,
+    ]
 
     this.finishCmmaCommand()
   }

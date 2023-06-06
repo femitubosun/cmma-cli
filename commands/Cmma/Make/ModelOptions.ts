@@ -10,6 +10,7 @@ import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
 import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 
 /*
 |--------------------------------------------------------------------------------
@@ -57,6 +58,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
   protected commandShortCode = 'mk|mop'
   protected artifactLabel: string
+  protected abstractArtifactType: CmmaAbstractArtifactEnum = 'model-options'
   protected targetEntity = 'Model Options'
   protected artifactType: CmmaArtifactType = 'file'
   protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
@@ -69,7 +71,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   ]
 
   public async run() {
-    await this.startCmmaCommand()
+    await this.ensureConfigFileExistsCommandStep()
 
     const projectMap = this.PROJECT_CONFIG.projectMap
 
@@ -106,14 +108,14 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     this.contextLabel = modelNodePath.contextLabel!
     this.systemLabel = modelNodePath.systemLabel!
 
-    const contextMap = CmmaProjectMapActions.getContextMapByLabel({
+    this.contextMap = CmmaProjectMapActions.getContextMapByLabel({
       contextLabel: this.contextLabel,
       projectMap,
     })
 
     this.systemMap = CmmaContextActions.getContextSystemMapByLabel({
       systemLabel: this.systemLabel,
-      contextMap,
+      contextMap: this.contextMap,
     })
 
     /**
@@ -238,6 +240,12 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
       systemMap: this.systemMap,
     })
 
+    // CmmaSystemActions.addAbstractArtifactToAbstractArtifactGroup({
+    //   abstractArtifactGroupLabel: 'model-options',
+    //   abstractArtifact: identifierOptionsLabel,
+    //   systemMap: this.systemMap,
+    // })
+
     /**
      * Setting Destination Dirs
      */
@@ -294,6 +302,21 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     })
 
     await this.generate()
+
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.getContextIndexByLabel({
+    //     projectMap: this.projectMap,
+    //     contextLabel: this.contextLabel,
+    //   }),
+    //   CmmaContextActions.getSystemIndexByLabel({
+    //     contextMap: this.contextMap,
+    //     systemLabel: this.systemLabel,
+    //   }),
+    //   CmmaSystemActions.listSystemAbstractArtifactsByGroupLabel({
+    //     systemMap: this.systemMap,
+    //     abstractArtifactGroupLabel: this.abstractArtifactType,
+    //   }).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

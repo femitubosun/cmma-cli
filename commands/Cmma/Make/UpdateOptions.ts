@@ -44,7 +44,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
   protected artifactLabel: string
   protected targetEntity = 'Update Options'
   protected artifactType: CmmaArtifactType = 'update-typechecking'
-  protected artifactGroupDir: CmmaArtifactDirs = 'typechecking'
+  protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
 
   /*
   |--------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
     return new CmmaNodePath(this.PROJECT_CONFIG)
       .toContext(this.contextLabel)
       .toSystem(this.systemLabel)
-      .toArtifactsDir('typechecking')
+      .toArtifactsDir('typeChecking')
       .toModelDir(this.artifactLabel)
       .getAbsoluteOsPath(this.application.appRoot)
   }
@@ -162,11 +162,26 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
 
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact,
-      artifactsDir: 'typechecking',
+      artifactsDir: 'typeChecking',
       systemMap: this.systemMap,
     })
 
     await this.generate()
+
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.listSystemArtifactsByGroupLabel({
+        systemMap: this.systemMap,
+        artifactsDir: this.artifactGroupDir,
+      }).length - 1,
+    ]
 
     this.finishCmmaCommand()
   }

@@ -13,6 +13,7 @@ import {
 } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
 import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 
 /*
 |--------------------------------------------------------------------------------
@@ -57,6 +58,7 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
   protected commandShortCode = 'mk|op'
   protected artifactType: CmmaArtifactType = 'file'
+  protected abstractArtifactType: CmmaAbstractArtifactEnum = 'operation'
   protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
   protected artifactLabel: string
   protected targetEntity = 'Operation'
@@ -240,6 +242,21 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
     })
 
     await this.generate()
+
+    // this.commandArgs = [
+    //   CmmaProjectMapActions.getContextIndexByLabel({
+    //     projectMap: this.projectMap,
+    //     contextLabel: this.contextLabel,
+    //   }),
+    //   CmmaContextActions.getSystemIndexByLabel({
+    //     contextMap: this.contextMap,
+    //     systemLabel: this.systemLabel,
+    //   }),
+    //   CmmaSystemActions.listSystemAbstractArtifactsByGroupLabel({
+    //     systemMap: this.systemMap,
+    //     abstractArtifactGroupLabel: this.abstractArtifactType,
+    //   }).length - 1,
+    // ]
 
     this.finishCmmaCommand()
   }

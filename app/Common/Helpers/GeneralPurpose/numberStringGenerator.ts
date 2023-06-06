@@ -26,7 +26,7 @@ const numberStringGenerator = (randomGeneratorOptions: RandomGeneratorOptionsInt
   return randomstring.generate({
     length: characterLength,
     charset: outputOption,
-    capitalization: isCapitalized === true ? 'uppercase' : 'lowercase',
+    capitalization: isCapitalized ? 'uppercase' : 'lowercase',
   })
 }
 

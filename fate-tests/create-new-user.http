@@ -1,0 +1,4 @@
+GET {{baseUrl}}/Interface/Create/Customer
+Accept: application/json
+
+###

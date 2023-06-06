@@ -6,6 +6,8 @@ import { args } from '@adonisjs/core/build/standalone'
 import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
 import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
 
 export default class Module extends BaseCmmaBoundaryCommand {
   /*
@@ -138,11 +140,17 @@ export default class Module extends BaseCmmaBoundaryCommand {
     /**
      * Finish Command
      */
-    // this.commandArgs = [
-    //   CmmaProjectMapActions.listContextsInProject(projectMap).length - 1,
-    //   CmmaContextActions.listSystemsInContext(contextMap).length - 1,
-    //   CmmaSystemActions.listModulesInSystem(systemMap).length - 1,
-    // ]
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        contextLabel: this.contextLabel,
+        projectMap: this.projectMap,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.listModulesInSystem(this.systemMap).length - 1,
+    ]
 
     this.finishCmmaCommand()
   }

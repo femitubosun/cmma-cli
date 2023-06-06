@@ -168,6 +168,21 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
     await this.generate()
 
+    this.commandArgs = [
+      CmmaProjectMapActions.getContextIndexByLabel({
+        projectMap: this.projectMap,
+        contextLabel: this.contextLabel,
+      }),
+      CmmaContextActions.getSystemIndexByLabel({
+        contextMap: this.contextMap,
+        systemLabel: this.systemLabel,
+      }),
+      CmmaSystemActions.listSystemArtifactsByGroupLabel({
+        systemMap: this.systemMap,
+        artifactsDir: this.artifactGroupDir,
+      }).length - 1,
+    ]
+
     this.finishCmmaCommand()
   }
 }
