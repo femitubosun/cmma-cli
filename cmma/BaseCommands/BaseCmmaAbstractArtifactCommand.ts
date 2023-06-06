@@ -3,6 +3,7 @@ import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaAbstractArtifact from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaFileActions from '../Actions/CmmaFileActions'
+import CmmaAbstractArtifactEnum from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 
 /*
 |--------------------------------------------------------------------------------
@@ -45,6 +46,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |
   */
   protected abstract abstractArtifact: CmmaAbstractArtifact
+  protected abstract abstractArtifactType: CmmaAbstractArtifactEnum
 
   /*
   |--------------------------------------------------------------------------------

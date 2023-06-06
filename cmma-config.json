@@ -22,7 +22,8 @@
     "mk|op|",
     "mk|act|",
     "mk|mop|",
-    "mk|sys|0|1"
+    "mk|sys|0|1",
+    "mk|act|0|1|0"
   ],
   "projectMap": {
     "contexts": {
@@ -58,7 +59,7 @@
               "actions": [],
               "views": [],
               "typeChecking": [],
-              "models": [],
+              "models": ["UserFriend"],
               "migrations": [],
               "routes": []
             },
