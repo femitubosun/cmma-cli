@@ -845,7 +845,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       .filter((filename) => filename !== 'index')
 
     const artifactGroup = CmmaSystemActions.listSystemArtifactsByGroupLabel({
-      artifactDir: diskArtifactDir,
+      artifactsDir: diskArtifactDir,
       systemMap,
     })
 
@@ -893,7 +893,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       pruneLooseSystemArtifactsFromProjectMapOptions
 
     const artifactGroup = CmmaSystemActions.listSystemArtifactsByGroupLabel({
-      artifactDir: diskArtifactDir,
+      artifactsDir: diskArtifactDir,
       systemMap,
     })
 

@@ -3,6 +3,7 @@ import CmmaModule from '../Models/CmmaModule'
 import CmmaArtifact from '../Models/CmmaArtifact'
 import CmmaArtifactsGroup from '../Models/CmmaArtifactsGroup'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
+import CmmaAbstractArtifactEnum from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 
 export default class CmmaSystemActions {
   /**
@@ -55,17 +56,40 @@ export default class CmmaSystemActions {
   }
 
   /**
+   * @description List Systemm Abstract Artifacts Label
+   * @author FATE
+   * @param {} system
+   */
+  public static listSystemAbstractArtifactGroups(system: CmmaSystem) {
+    return Object.keys(system.abstractArtifacts)
+  }
+
+  /**
    * @description E.g List Models, List Controllers
    * @author FATE
    * @param {} listSystemArtifactsByGroupLabelOptions
    */
   public static listSystemArtifactsByGroupLabel(listSystemArtifactsByGroupLabelOptions: {
-    artifactDir: CmmaArtifactDirs
+    artifactsDir: CmmaArtifactDirs
     systemMap: CmmaSystem
   }): CmmaArtifactsGroup {
-    const { systemMap, artifactDir } = listSystemArtifactsByGroupLabelOptions
+    const { systemMap, artifactsDir } = listSystemArtifactsByGroupLabelOptions
 
-    return systemMap.systemArtifacts[artifactDir]
+    return systemMap.systemArtifacts[artifactsDir]
+  }
+
+  /**
+   * @description
+   * @author FATE
+   * @param {} listSystemAbstractArtifactsByGroupLabelOptions
+   */
+  public static listSystemAbstractArtifactsByGroupLabel(listSystemAbstractArtifactsByGroupLabelOptions: {
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { systemMap, abstractArtifactGroupLabel } = listSystemAbstractArtifactsByGroupLabelOptions
+
+    return systemMap.abstractArtifacts[abstractArtifactGroupLabel]
   }
 
   /**
@@ -81,11 +105,32 @@ export default class CmmaSystemActions {
     const { artifact, artifactsDir, systemMap } = addArtifactToArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactsDir,
+      artifactsDir,
       systemMap,
     })
 
     artifactGroup.push(artifact)
+  }
+
+  /**
+   * @description Add an abstract artifact to Project
+   * @author FATE
+   * @param {} addAbstractArtifactToAbstractArtifactGroupOptions
+   */
+  public static addAbstractArtifactToAbstractArtifactGroup(addAbstractArtifactToAbstractArtifactGroupOptions: {
+    abstractArtifact: string
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifact, abstractArtifactGroupLabel, systemMap } =
+      addAbstractArtifactToAbstractArtifactGroupOptions
+
+    const abstractArtifactGroup = this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    })
+
+    abstractArtifactGroup.push(abstractArtifact)
   }
 
   /**
@@ -101,13 +146,34 @@ export default class CmmaSystemActions {
     const { artifactLabel, artifactGroupLabel, system } = getArtifactObjectFromArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactGroupLabel,
+      artifactsDir: artifactGroupLabel,
       systemMap: system,
     })
 
     const buffer = artifactGroup.filter((artifact) => artifact === artifactLabel)
 
     return buffer[0]
+  }
+
+  /**
+   * @description Get abstract Artifact from Abstract Artifact Group By Label
+   * @author FATE
+   * @param {} getAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+   */
+  public static getAbstractArtifactFromAbstractArtifactGroupByLabel(getAbstractArtifactFromAbstractArtifactGroupByLabelOptions: {
+    abstractArtifact: string
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifact, abstractArtifactGroupLabel, systemMap } =
+      getAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+
+    const abstractArtifactsGroup = this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    })
+
+    return abstractArtifactsGroup[abstractArtifactsGroup.indexOf(abstractArtifact)]
   }
 
   /**
@@ -124,11 +190,32 @@ export default class CmmaSystemActions {
       getArtifactObjectFromArtifactGroupByIndexOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactGroupLabel,
+      artifactsDir: artifactGroupLabel,
       systemMap: system,
     })
 
     return artifactGroup[artifactIndex]
+  }
+
+  /**
+   * @description Get abstract Artifact from Abstract Artifact Group By Index
+   * @author FATE
+   * @param {} getAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+   */
+  public static getAbstractArtifactFromAbstractArtifactGroupByIndex(getAbstractArtifactFromAbstractArtifactGroupByLabelOptions: {
+    abstractArtifactIndex: number
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifactIndex, abstractArtifactGroupLabel, systemMap } =
+      getAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+
+    const abstractArtifactsGroup = this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    })
+
+    return abstractArtifactsGroup[abstractArtifactIndex]
   }
 
   /**
@@ -144,13 +231,36 @@ export default class CmmaSystemActions {
     const { artifactLabel, artifactDir, systemMap } = deleteArtifactObjectFromArtifactGroupOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactDir,
+      artifactsDir: artifactDir,
       systemMap: systemMap,
     })
 
     const artifactIndex = artifactGroup.indexOf(artifactLabel)
 
     artifactGroup.splice(artifactIndex, 1)
+  }
+
+  /**
+   * @description Delete an Abstract Artifact from System Abstract Artifact Group By Label
+   * @author FATE
+   * @param {} deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+   */
+  public static deleteAbstractArtifactFromAbstractArtifactGroupByLabel(deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions: {
+    abstractArtifactLabel: string
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifactLabel, abstractArtifactGroupLabel, systemMap } =
+      deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+
+    const abstractArtifactGroup = this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    })
+
+    const artifactIndex = abstractArtifactGroup.indexOf(abstractArtifactLabel)
+
+    abstractArtifactGroup.splice(artifactIndex, 1)
   }
 
   /**
@@ -167,11 +277,32 @@ export default class CmmaSystemActions {
       deleteArtifactObjectFromArtifactGroupByIndexOptions
 
     const artifactGroup = this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactGroupLabel,
+      artifactsDir: artifactGroupLabel,
       systemMap: system,
     })
 
     artifactGroup.splice(artifactIndex, 1)
+  }
+
+  /**
+   * @description Delete an Abstract Artifact from System Abstract Artifact Group By Index
+   * @author FATE
+   * @param {} deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+   */
+  public static deleteAbstractArtifactFromAbstractArtifactGroupByIndex(deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions: {
+    abstractArtifactIndex: number
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifactIndex, abstractArtifactGroupLabel, systemMap } =
+      deleteAbstractArtifactFromAbstractArtifactGroupByLabelOptions
+
+    const abstractArtifactGroup = this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    })
+
+    abstractArtifactGroup.splice(abstractArtifactIndex, 1)
   }
 
   /**
@@ -318,9 +449,23 @@ export default class CmmaSystemActions {
     const { systemMap, artifactLabel, artifactDir } = isSystemArtifactInSystemOptions
 
     return this.listSystemArtifactsByGroupLabel({
-      artifactDir: artifactDir,
+      artifactsDir: artifactDir,
       systemMap,
     }).includes(artifactLabel)
+  }
+
+  public static isAbstractArtifactInArtifactGroup(isAbstractArtifactInArtifactGroupOptions: {
+    abstractArtifactLabel: string
+    abstractArtifactGroupLabel: CmmaAbstractArtifactEnum
+    systemMap: CmmaSystem
+  }) {
+    const { abstractArtifactLabel, abstractArtifactGroupLabel, systemMap } =
+      isAbstractArtifactInArtifactGroupOptions
+
+    return this.listSystemAbstractArtifactsByGroupLabel({
+      abstractArtifactGroupLabel,
+      systemMap,
+    }).includes(abstractArtifactLabel)
   }
 
   /**
@@ -338,6 +483,7 @@ export default class CmmaSystemActions {
         migrations: [],
         routes: [],
       },
+      abstractArtifacts: {},
       modules: {},
       systemLabel: '',
     }

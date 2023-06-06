@@ -179,7 +179,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
       }),
       CmmaSystemActions.listSystemArtifactsByGroupLabel({
         systemMap: this.systemMap,
-        artifactDir: this.artifactGroupDir,
+        artifactsDir: this.artifactGroupDir,
       }).length - 1,
     ]
 

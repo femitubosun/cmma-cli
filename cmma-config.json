@@ -10,10 +10,7 @@
     "typeChecking",
     "views"
   ],
-  "defaultModuleDirIn": [
-    "controllers",
-    "validators"
-  ],
+  "defaultModuleDirIn": ["controllers", "validators"],
   "logs": [
     "cr|",
     "in|0|1",
@@ -24,7 +21,8 @@
     "mk|tyc|",
     "mk|op|",
     "mk|act|",
-    "mk|mop|"
+    "mk|mop|",
+    "mk|sys|0|1"
   ],
   "projectMap": {
     "contexts": {
@@ -33,9 +31,7 @@
         "systems": {
           "UserManagement": {
             "systemArtifacts": {
-              "actions": [
-                "UserActions"
-              ],
+              "actions": ["UserActions"],
               "views": [],
               "typeChecking": [
                 "CreateUserRecordOptions",
@@ -44,35 +40,36 @@
                 "UserProfileIdentifierOptions",
                 "UserProfileInterface"
               ],
-              "models": [
-                "User",
-                "UserProfile"
-              ],
+              "models": ["User", "UserProfile"],
               "migrations": [],
               "routes": []
             },
             "modules": {
               "PasswordManagement": {
-                "controllers": [
-                  "CreateNewUserController"
-                ],
-                "validators": [
-                  "CreateNewUserRequestValidator"
-                ],
+                "controllers": ["CreateNewUserController"],
+                "validators": ["CreateNewUserRequestValidator"],
                 "moduleLabel": "PasswordManagement"
               }
             },
             "systemLabel": "UserManagement"
+          },
+          "PermissionsManagement": {
+            "systemArtifacts": {
+              "actions": [],
+              "views": [],
+              "typeChecking": [],
+              "models": [],
+              "migrations": [],
+              "routes": []
+            },
+            "abstractArtifacts": {},
+            "modules": {},
+            "systemLabel": "PermissionsManagement"
           }
         }
       },
-      "Settings": {
-        "contextLabel": "Settings",
-        "systems": {}
-      }
+      "Settings": { "contextLabel": "Settings", "systems": {} }
     },
-    "artifacts": [
-      "ProjectRoutes"
-    ]
+    "artifacts": ["ProjectRoutes"]
   }
 }
