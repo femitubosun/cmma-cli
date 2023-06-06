@@ -140,4 +140,6 @@ export default class Status extends BaseCmmaCommand {
       await this.migrator.close()
     }
   }
+
+  protected targetEntity: string
 }
