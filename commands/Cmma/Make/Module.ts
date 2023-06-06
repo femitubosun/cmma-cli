@@ -43,6 +43,18 @@ export default class Module extends BaseCmmaBoundaryCommand {
   protected artifactLabel: string
   protected targetEntity = 'Module'
 
+  public get moduleRouteNamespaceString() {
+    return `import Route from '@ioc:Adonis/Core/Route'
+
+Route.group(() => {
+
+  })
+.prefix('/Interface')
+.namespace('App/${CmmaConfigurationActions.whatIsDefaultProjectRootInApp(this.PROJECT_CONFIG)}/${
+      this.contextLabel
+    }/${this.systemLabel}/Controllers/${this.moduleLabel}')`
+  }
+
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
 
@@ -103,6 +115,11 @@ export default class Module extends BaseCmmaBoundaryCommand {
       .getAbsoluteOsPath(this.application.appRoot)
 
     CmmaFileActions.ensureAFileExists(moduleRoutesFile)
+
+    CmmaFileActions.writeToFile({
+      filePath: moduleRoutesFile,
+      text: this.moduleRouteNamespaceString,
+    })
 
     this.logger.action('create').succeeded(moduleRoutesFile)
 

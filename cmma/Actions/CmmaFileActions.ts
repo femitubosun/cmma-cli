@@ -57,7 +57,21 @@ export default class CmmaFileActions {
       parser,
     })
 
-    writeFileSync(filePath, formattedCode)
+    this.writeToFile({
+      filePath,
+      text: formattedCode,
+    })
+  }
+
+  /**
+   * @description Write to a File
+   * @author FATE
+   * @param {} writeToFileOptions
+   */
+  public static writeToFile(writeToFileOptions: { filePath: string; text: string }) {
+    const { filePath, text } = writeToFileOptions
+
+    writeFileSync(filePath, text)
   }
 
   /**
