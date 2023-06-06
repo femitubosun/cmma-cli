@@ -776,7 +776,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
     if (!CmmaFileActions.doesPathExist(diskSystemDir)) return
 
-    const excludedDirs = ['routes', 'controllers', 'validators', 'seeders'].map((dirLabel) => {
+    const excludedDirs = ['routes', 'controllers', 'validators'].map((dirLabel) => {
       return CmmaConfigurationActions.transformLabel({
         label: dirLabel,
         transformations: {

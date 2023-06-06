@@ -1,12 +1,3 @@
-/*
- * @adonisjs/lucid
- *
- * (c) Harminder Virk <virk@adonisjs.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import { flags, BaseCommand } from '@adonisjs/core/build/standalone'
 
 /**
@@ -119,7 +110,7 @@ export default class Refresh extends BaseCommand {
       args.push(`--connection="${this.connection}"`)
     }
 
-    const dbSeed = await this.kernel.exec('db:seed', args)
+    const dbSeed = await this.kernel.exec('cmma:db-seed', args)
     this.exitCode = dbSeed.exitCode
     this.error = dbSeed.error
   }

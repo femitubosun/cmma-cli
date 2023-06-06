@@ -230,6 +230,16 @@ export default class CmmaNodePath {
   }
 
   /**
+   * @description Get Seeders Folder Imports Style Path
+   * @author FATE
+   */
+  public getSeedersTypePath() {
+    return (
+      './app/' + this.cmmaConfiguration.defaultProjectRootDirInApp + '/' + this.getRelativePath()
+    )
+  }
+
+  /**
    * @description Get import used in Artifacts
    * @author FATE
    */

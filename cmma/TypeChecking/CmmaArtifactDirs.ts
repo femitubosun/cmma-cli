@@ -5,8 +5,8 @@ type CmmaArtifactDirs =
   | 'models'
   | 'actions'
   | 'migrations'
-  | 'file'
   | 'routes'
   | 'typeChecking'
+  | 'seeders'
 
 export default CmmaArtifactDirs

@@ -306,6 +306,26 @@
         }
       ]
     },
+    "cmma:make-seeder": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Seeder",
+      "commandName": "cmma:make-seeder",
+      "description": "Create a new CMMA Seeder",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Seeder to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:make-system": {
       "settings": {
         "loadApp": false,
@@ -623,6 +643,45 @@
           "type": "string",
           "description": "Define a custom database connection",
           "alias": "c"
+        }
+      ]
+    },
+    "cmma:db-seed": {
+      "settings": {
+        "loadApp": true
+      },
+      "commandPath": "./commands/Cmma/Seed/DbSeed",
+      "commandName": "cmma:db-seed",
+      "description": "Execute database seeders",
+      "args": [],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "connection",
+          "propertyName": "connection",
+          "type": "string",
+          "description": "Define a custom database connection for the seeders",
+          "alias": "c"
+        },
+        {
+          "name": "interactive",
+          "propertyName": "interactive",
+          "type": "boolean",
+          "description": "Run seeders in interactive mode",
+          "alias": "i"
+        },
+        {
+          "name": "files",
+          "propertyName": "files",
+          "type": "array",
+          "description": "Define a custom set of seeders files names to run",
+          "alias": "f"
+        },
+        {
+          "name": "compact-output",
+          "propertyName": "compactOutput",
+          "type": "boolean",
+          "description": "A compact single-line output"
         }
       ]
     },

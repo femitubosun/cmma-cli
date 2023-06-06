@@ -18,6 +18,11 @@
     * [`logs`](#logs)
     * [`projectMap`](#projectmap)
   * [CMMA Commands](#cmma-commands)
+    * [Configuration Commands](#configuration-commands)
+    * [Initialization Commands](#initialization-commands)
+    * [Make Artifact Commands](#make-artifact-commands)
+    * [Make Abstract Artifacts](#make-abstract-artifacts)
+    * [Make Migration Command](#make-migration-command)
     * [Command Short Codes](#command-short-codes)
 
 <!-- TOC -->
@@ -30,7 +35,7 @@ To facilitate communication between systems, an internal api is used.
 
 ## Installation
 
-The CMMA CLI is aimed at working in and [AdonisJs](https://docs.adonisjs.com/guides/introduction) environment and
+The CMMA CLI is aimed at working in an [AdonisJs](https://docs.adonisjs.com/guides/introduction) environment, and
 it assumes an Adonis Project has been set up and Lucid has optionally been set up.
 
 1. Copy the `cmma` folder into your project root. This contains the CLI's logic.
@@ -39,20 +44,19 @@ it assumes an Adonis Project has been set up and Lucid has optionally been set u
 
 ## Terminologies
 
-| Term                | Meaning                                     | Example                              |
-|---------------------|---------------------------------------------|--------------------------------------|
-| Context             | Typically, a type/group of consumer clients | `PublicAPi`, `Admin`, `MobileClient` |
-| System              |                                             |                                      |
-| Module              |                                             |                                      |
-| Artifact            |                                             |                                      |
-| ArtifactGroup       |                                             |                                      |
-| ConfigurationObject |                                             |                                      |
-| ProjectMap          |                                             |                                      |
-| Boundary            |                                             |                                      |
-| Node                |                                             |                                      |
-| NodeMap             |                                             |                                      |
-| Command             |                                             |                                      |
-| Entity              | General Name for CMMA Identifiers           |                                      |
+| Term                | Meaning                                                                              | Example                              |
+|---------------------|--------------------------------------------------------------------------------------|--------------------------------------|
+| Context             | Typically, a type/group of consumer clients                                          | `PublicAPi`, `Admin`, `MobileClient` |
+| System              | A System is a group of closely related artifacts                                     |                                      |
+| Module              | A Module is a group of related operations that satisfy related user stories          |                                      |
+| ConfigurationObject | The Object that defines the properties of a CMMA Project                             |                                      |
+| ProjectMap          | A property of the Configuration Object that shows the structure of the Project       |                                      |
+| Boundary            | A Context, System, or Module.                                                        |                                      |
+| Artifact            | A Controller, Action, Model etc.                                                     |                                      |
+| AbstractArtifact    | A Collection of two or more closely related Artifacts e.g A Controller & a Validator | `Operation`, `Model Options`         |
+| ArtifactsGroup      | A group of Artifacts of the same type e.g Controllers Artifact Group                 |                                      |
+| Node                | A Node is a point on the project map. Typically a Boundary, Artifact, ArtifactsGroup |                                      |                                      |
+| Entity              | General Name for CMMA Identifiers                                                    |                                      |
 
 ## Cmma Configuration File
 
@@ -64,14 +68,13 @@ it assumes an Adonis Project has been set up and Lucid has optionally been set u
   "defaultProjectRootDirInApp": "Systems",
   "defaultSystemInternalApiSuffix": "System",
   "defaultCasePattern": "pascalcase",
-  "defaultProjectRoutesFileName": "Project",
   "defaultSystemArtifactDirs": [
     "actions",
-    "controllers",
     "migrations",
     "models",
     "routes",
-    "typechecking",
+    "seeders",
+    "typeChecking",
     "views"
   ],
   "defaultModuleDirIn": [
@@ -79,20 +82,17 @@ it assumes an Adonis Project has been set up and Lucid has optionally been set u
     "validators"
   ],
   "logs": [
-    "in|"
   ],
   "projectMap": {
     "Contexts": {},
-    "Artifacts": [
-      "Project"
-    ]
+    "Artifacts": []
   }
 }
 ```
 
 ### `defaultProjectRootDirInApp`
 
-This refers to the location in `./app/` Where the Project will live. With the above settings, CMMA will be generate in
+This refers to the location in `./app/` Where the Project will live. With the above settings, CMMA will be generated in
 `./app/Systems/`
 
 ### `defaultSystemInternalApiSuffix`
@@ -107,7 +107,7 @@ This refers to the case pattern that would be used to generate files and directo
 ### `defaultSystemArtifactDirs`
 
 This refers to the folders that will be created in every System. With the above settings, a
-`Finance` System would have `Actions`, `Controllers`, `Migrations`...etc folders when it is generated.
+`Finance` System would have `Actions`, `Migrations`...etc. folders when it is generated.
 
 ### `defaultModuleDir`
 
@@ -125,21 +125,68 @@ This is a graph of the current System's structure
 
 ## CMMA Commands
 
-| Command                    | ShortCode   | Description                        |
-|----------------------------|-------------|------------------------------------|
-| `cmma:init`                | `in\|`      | Initialize Adonis Project for CMMA |
-| `cmma:make-<entity>`       | `mk\|`      | Structure for make commands        |
-| `cmma:make-context`        | `mk\|con\|` | Make a Context                     |                                    |
-| `cmma:make-system`         | `mk\|sys\|` | Make a System                      |
-| `cmma:make-module`         | `mk\|mod\|` | Make a Module                      |
-| `cmma:make-model`          | `mk\|mdl\|` | Make a Model                       |
-| `cmma:make-action`         | `mk\|act\|` | Make an Action                     |
-| `cmma:make-controller`     | `mk\|ctr\|` | Make a Controller                  |
-| `cmma:make-view`           | `mk\|viw\|` | Make a View                        |
-| `cmma:make-validator`      | `mk\|val\|` | Make a Validator                   |
-| `cmma:make-create-options` | `mk\|cop\|` | Make a Model Create Options        |
-|                            |             |                                    |
+### Configuration Commands
+
+| Command              | ShortCode | Description                                                                                                                                                                                                                                                   |
+|----------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cmma:config-create` | `cr`      | Create a CMMA Configuration File                                                                                                                                                                                                                              |
+| `cmma:config-update` | `up`      | Synchronize the Files on Disk with the `ProjectMap`. Here, files on Disk is king. If for example an artifact doesn't exist on Disk, but it exists on the Project Map, the CLI will remove the artifact from the Project Map. This Process is called `Pruning` |
+
+### Initialization Commands
+
+| Command     | ShortCode | Description                                                                           |
+|-------------|-----------|---------------------------------------------------------------------------------------|
+| `cmma:init` | `in`      | Initialize the CMMA Project.  This requires you to have created a configuration file. |
+
+### Make Artifact Commands
+
+| Command                    | ShortCode   | Description                 |
+|----------------------------|-------------|-----------------------------|
+| `cmma:make-<entity>`       | `mk\|`      | Structure for make commands |
+| `cmma:make-context`        | `mk\|con\|` | Make a Context              |                                 
+| `cmma:make-system`         | `mk\|sys\|` | Make a System               |
+| `cmma:make-module`         | `mk\|mod\|` | Make a Module               |
+| `cmma:make-action`         | `mk\|act\|` | Make an Action              |
+| `cmma:make-controller`     | `mk\|ctr\|` | Make a Controller           |
+| `cmma:make-create-options` | `mk\|tyc\|` | Make a Model Create Options |
+| `cmma:make-migration`      | `mk\|mig\|` | Make a Migration            |
+| `cmma:make-model`          | `mk\|mdl\|` | Make a Model                |
+| `cmma:make-seeder`         | `mk\|sed\|` | Make a Seeder               |
+| `cmma:make-update-option`  | `mk\|tyu\|` | Make a Model Update Options |
+| `cmma:make-validator`      | `mk\|val\|` | Make a Validator            |
+| `cmma:make-view`           | `mk\|viw\|` | Make a View                 |
+
+### Make Abstract Artifacts
+
+| Command                   | ShortCode   | Description                                                                                                                           |
+|---------------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `cmma:make-operation`     | `mk\|op\|`  | Make Operation Abstract Artifact. An Operation is a Controller-Validator pair. Both artifact types live in a Module.                  |
+| `cmma:make-model-options` | `mk\|mop\|` | Make Model Options Abstract Artifact. Model Options is a ModelInterface-CreateModelOptions-UpdateModelOptions-ModelIdentifier quintet |
+
+### Migration Commands
+
+All the following command work exactly the same way default Lucid Commands work, the only difference is that they pick
+up all Migrations & Seeders you have created in a CMMA Project while default Lucid Commands will only look in
+the `database/` folder, hence they won't find CMMA Migrations and Seeders. This means you can use flags like `--seed`
+when running a CMMA `cmma:migration-fresh`
+
+| Command                   | Short Code | Description                                                 |
+|---------------------------|------------|-------------------------------------------------------------|
+| `cmma:migration-run`      | `mig\|run` | Migrate database by running pending CMMA Project Migrations |
+| `cmma:migration-fresh`    | `mig\|fre` | Drop all tables and re-migrate the database                 |
+| `cmma:migration:refresh`  | `mig\|rfr` | Rollback and migrate database                               |
+| `cmma:migration:reset`    | `mig\|res` | Rollback all migrations in CMMA Project                     |
+| `cmma:migration:rollback` | `mig\|rol` | Rollback migrations to a specific batch number              |
+| `cmma:migration:status`   | `mig\|sta` | View CMMA Project migrations status                         |
+
+### Seeder Commands
+
+| Command         | Short Code | Description                           |
+|-----------------|------------|---------------------------------------|
+| `cmma:db-seed ` | `mig\|run` | Execute CMMA Project Database seeders |
 
 ### Command Short Codes
+
+Command Short codes follow this structure `commandShortCode|indexOfSelectedValue1|indexOfSelectedValue2` and so on
 
 

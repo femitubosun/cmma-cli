@@ -12,5 +12,6 @@ type CmmaArtifactType =
   | 'route'
   | 'validator'
   | 'index'
+  | 'seeder'
 
 export default CmmaArtifactType
