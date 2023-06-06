@@ -1,6 +1,6 @@
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
-import { FileNode, DatabaseContract } from '@ioc:Adonis/Lucid/Database'
-import { SeederFileNode, SeederConstructorContract } from '@ioc:Adonis/Lucid/Seeder'
+import { DatabaseContract, FileNode } from '@ioc:Adonis/Lucid/Database'
+import { SeederConstructorContract, SeederFileNode } from '@ioc:Adonis/Lucid/Seeder'
 import { CmmaSeedersSource } from './CmmaSeedersSource'
 import CmmaConfiguration from '../../Models/CmmaConfiguration'
 
@@ -34,7 +34,7 @@ export class CmmaSeedsRunner {
    * Returns an array of seeders
    */
   public async getList() {
-    return new CmmaSeedersSource(this.app, this.cmmaConfig).getSeeders()
+    return await new CmmaSeedersSource(this.app, this.cmmaConfig).getSeeders()
   }
 
   /**
