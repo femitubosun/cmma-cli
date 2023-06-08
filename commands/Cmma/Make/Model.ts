@@ -75,7 +75,7 @@ export default class Model extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: 'models',
+        artifactsDir: 'models',
         artifactLabel: this.artifactLabel,
       })
     ) {

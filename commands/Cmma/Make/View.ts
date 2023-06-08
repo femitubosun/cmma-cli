@@ -72,7 +72,7 @@ export default class View extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: 'views',
+        artifactsDir: 'views',
         artifactLabel: this.artifactLabel,
       })
     ) {

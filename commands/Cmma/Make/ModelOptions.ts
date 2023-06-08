@@ -63,7 +63,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected artifactType: CmmaArtifactType = 'file'
   protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
 
-  protected abstractArtifact: CmmaAbstractArtifact = [
+  protected abstractArtifactConstituents: CmmaAbstractArtifact = [
     'create-typechecking',
     'update-typechecking',
     'model-interface',
@@ -136,7 +136,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: createOptionsLabel,
-        artifactDir: 'typeChecking',
+        artifactsDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -159,7 +159,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: updateOptionsLabel,
-        artifactDir: 'typeChecking',
+        artifactsDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -182,7 +182,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: identifierOptionsLabel,
-        artifactDir: 'typeChecking',
+        artifactsDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {
@@ -207,7 +207,7 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: modelInterfaceLabel,
-        artifactDir: 'typeChecking',
+        artifactsDir: 'typeChecking',
         systemMap: this.systemMap,
       })
     ) {

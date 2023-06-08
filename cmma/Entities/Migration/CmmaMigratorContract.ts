@@ -189,11 +189,13 @@ export class CmmaMigratorContract extends EventEmitter implements MigratorContra
    * Returns the migration source by ensuring value is a class constructor and
    * has disableTransactions property.
    */
+
   private async getMigrationSource(
     migration: FileNode<unknown>
   ): Promise<SchemaConstructorContract> {
     const source = await migration.getSource()
     if (typeof source === 'function' && 'disableTransactions' in source) {
+      // @ts-ignore
       return source
     }
 

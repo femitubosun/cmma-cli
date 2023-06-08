@@ -1,5 +1,3 @@
-import OtpTokenTypeEnum from 'App/Systems/Client/UserManagement/TypeChecking/OtpToken/OtpTokenTypeEnum'
-
 interface TokenOptionsInterface {
   /**
    * This is the generated token
@@ -9,7 +7,7 @@ interface TokenOptionsInterface {
   /**
    * This is the type of token action being carried out
    */
-  tokenType: OtpTokenTypeEnum
+  tokenType: string
 
   /**
    * The email value to check for

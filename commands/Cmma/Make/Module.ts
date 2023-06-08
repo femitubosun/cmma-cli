@@ -29,7 +29,7 @@ export default class Module extends BaseCmmaBoundaryCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the System to be Created' })
+  @args.string({ description: 'Name of the Module to be Created' })
   public name: string
 
   /*

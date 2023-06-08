@@ -27,7 +27,23 @@
     "mig|run|",
     "mk|mig|0|0|7",
     "mig|run|",
-    "mig|run|"
+    "mig|run|",
+    "mk|mod|0|0|0",
+    "mk|mod|0|0|1",
+    "mk|act|0|1|0",
+    "up|",
+    "mk|act|0|0|0",
+    "mk|mop|",
+    "up|",
+    "mk|mop|",
+    "up|",
+    "up|",
+    "up|",
+    "mk|mop|",
+    "up|",
+    "mk|mop|",
+    "mk|mop|",
+    "mk|mop|"
   ],
   "projectMap": {
     "contexts": {
@@ -36,7 +52,7 @@
         "systems": {
           "UserManagement": {
             "systemArtifacts": {
-              "actions": [],
+              "actions": ["BIgActions"],
               "migrations": [
                 "1676953451114_users",
                 "1676953451118_api_tokens",
@@ -45,25 +61,43 @@
                 "1677073329408_user_roles",
                 "1683628197883_user_profiles",
                 "1683835145675_user_registration_steps",
-                "friends"
+                "1686235634561_friends",
+                "1686235703389_keyboards"
               ],
-              "models": ["SettingsUserRole", "User", "UserRegistrationStep"],
+              "models": [
+                "SettingsUserRole",
+                "User",
+                "UserRegistrationStep",
+                "Friend",
+                "Keyboard"
+              ],
               "routes": [],
-              "seeders": ["UserSeeder", "UserFriendActionSeeder"],
+              "seeders": ["UserRoleSeeder"],
               "views": [],
               "typeChecking": []
             },
             "abstractArtifacts": {},
-            "modules": {},
+            "modules": {
+              "FriendsAndFamily": {
+                "controllers": [],
+                "validators": [],
+                "moduleLabel": "FriendsAndFamily"
+              },
+              "Friends": {
+                "controllers": [],
+                "validators": [],
+                "moduleLabel": "Friends"
+              }
+            },
             "systemLabel": "UserManagement"
           },
           "Finance": {
             "systemArtifacts": {
-              "actions": [],
-              "migrations": [],
-              "models": [],
+              "actions": ["WalletActions"],
+              "migrations": ["1686235754909_keyboards"],
+              "models": ["Keyboard"],
               "routes": [],
-              "seeders": [],
+              "seeders": ["UserSeeder"],
               "views": [],
               "typeChecking": []
             },

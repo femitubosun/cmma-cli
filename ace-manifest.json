@@ -179,6 +179,26 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-db-model": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/DbModel",
+      "commandName": "cmma:make-db-model",
+      "description": "Create a new CMMA Model Options",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:make-migration": {
       "settings": {
         "loadApp": true,
@@ -272,7 +292,7 @@
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the System to be Created"
+          "description": "Name of the Module to be Created"
         }
       ],
       "aliases": [],

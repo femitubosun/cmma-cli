@@ -138,6 +138,7 @@ export default class DbSeed extends BaseCmmaCommand {
     if (this.files.length) {
       return this.files.map((file) => {
         const fileExt = extname(file)
+
         return (fileExt ? file.replace(fileExt, '') : file).replace(/^\.\/|^\.\\\\/, '')
       })
     } else if (this.interactive) {
@@ -149,7 +150,18 @@ export default class DbSeed extends BaseCmmaCommand {
       )
     }
 
-    return seedersFiles.map((file) => file.name)
+    /**
+     * Skip Appwrite Seeders
+     */
+    const filesToSeed: Array<string> = []
+
+    for (let file of seedersFiles) {
+      if (file.name.includes('Appwrite')) continue
+
+      filesToSeed.push(file.name)
+    }
+
+    return filesToSeed
   }
 
   /**

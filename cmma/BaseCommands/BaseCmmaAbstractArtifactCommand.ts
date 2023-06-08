@@ -1,9 +1,18 @@
 import { BaseCmmaArtifactCommand } from './BaseCmmaArtifactCommand'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
-import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
 import CmmaAbstractArtifact from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaFileActions from '../Actions/CmmaFileActions'
 import CmmaAbstractArtifactEnum from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
+import CmmaAbstractArtifactTemplates from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactTemplates'
+import CmmaAbstractArtifactTemplateData from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactTemplateData'
+import CmmaAbstractArtifactDestinationDir from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactDestinationDir'
+import CmmaAbstractArtifactTransformations from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactTransformations'
+import CmmaStringTransformations from '../TypeChecking/CmmaStringTransformations'
+import CmmaConfigurationActions from '../Actions/CmmaConfigurationActions'
+import CmmaSystemActions from '../Actions/CmmaSystemActions'
+import { EXITING } from '../Helpers/SystemMessages/SystemMessages'
+import CmmaNodePath from '../Models/CmmaNodePath'
+import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 
 /*
 |--------------------------------------------------------------------------------
@@ -37,7 +46,9 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |
   */
 
-  protected artifactType
+  // Defaulting as it's not relevant
+  protected artifactType: CmmaArtifactType = 'file'
+  protected artifactGroupDir: CmmaArtifactDirs = 'actions'
 
   /*
   |--------------------------------------------------------------------------------
@@ -45,7 +56,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  protected abstract abstractArtifact: CmmaAbstractArtifact
+  protected abstract abstractArtifactConstituents: CmmaAbstractArtifact
   protected abstract abstractArtifactType: CmmaAbstractArtifactEnum
 
   /*
@@ -54,21 +65,27 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  // refactor key -> shit
-  protected artifactTemplates: Record<CmmaArtifactType, string> = {
-    'controller': 'operation-controllers.txt',
-    'validator': 'operation-validators.txt',
-    'view': '',
-    'create-typechecking': 'model-options-create-typechecking.txt',
-    'update-typechecking': 'model-options-update-typechecking.txt',
-    'identifier-options': 'model-options-identifier-typechecking.txt',
-    'model-interface': 'model-options-model-interface.txt',
-    'file': '',
-    'model': '',
-    'migration': '',
-    'action': '',
-    'route': '',
-    'index': '',
+  protected artifactTemplates: CmmaAbstractArtifactTemplates = {
+    'operation': {
+      controller: 'operation-controllers.txt',
+      validator: 'operation-validators.txt',
+    },
+    'model-options': {
+      'create-typechecking': 'model-options-create-typechecking.txt',
+      'update-typechecking': 'model-options-update-typechecking.txt',
+      'identifier-options': 'model-options-identifier-typechecking.txt',
+      'model-interface': 'model-options-model-interface.txt',
+    },
+    'db-model': {
+      model: 'db-model/model.txt',
+      migration: 'db-model/migration-make.txt',
+    },
+    'resource': {
+      'model': 'resource-model.txt',
+      'action': 'resource-action.txt',
+      'model-options': '',
+      'migration': '',
+    },
   }
 
   /*
@@ -77,20 +94,26 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  protected templateData: Record<CmmaArtifactType, Record<string, any>> = {
-    'controller': {},
-    'validator': {},
-    'view': {},
-    'create-typechecking': {},
-    'update-typechecking': {},
-    'identifier-options': {},
-    'model-interface': {},
-    'file': {},
-    'model': {},
-    'migration': {},
-    'action': {},
-    'route': {},
-    'index': {},
+  protected templateData: CmmaAbstractArtifactTemplateData = {
+    'operation': {
+      controller: {},
+      validator: {},
+    },
+    'model-options': {
+      'create-typechecking': {},
+      'update-typechecking': {},
+      'identifier-options': {},
+      'model-interface': {},
+    },
+    'db-model': {
+      model: {},
+      migration: {},
+    },
+    'resource': {
+      'db-model': {},
+      'model-options': {},
+      'action': {},
+    },
   }
 
   /*
@@ -99,20 +122,49 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   |--------------------------------------------------------------------------------
   |
   */
-  protected destinationDirs: Record<CmmaArtifactType, string> = {
-    'controller': '',
-    'validator': '',
-    'view': '',
-    'create-typechecking': '',
-    'update-typechecking': '',
-    'identifier-options': '',
-    'model-interface': '',
-    'file': '',
-    'model': '',
-    'migration': '',
-    'action': '',
-    'route': '',
-    'index': '',
+  protected destinationDirs: CmmaAbstractArtifactDestinationDir = {
+    'operation': {
+      controller: '',
+      validator: '',
+    },
+    'model-options': {
+      'create-typechecking': '',
+      'update-typechecking': '',
+      'identifier-options': '',
+      'model-interface': '',
+    },
+    'db-model': {
+      model: '',
+      migration: '',
+    },
+    'resource': {
+      'model': '',
+      'action': '',
+      'model-options': '',
+      'migration': '',
+    },
+  }
+
+  protected abstractArtifactTransformations: CmmaAbstractArtifactTransformations = {
+    'operation': {
+      controller: {},
+      validator: {},
+    },
+    'model-options': {
+      'create-typechecking': {},
+      'update-typechecking': {},
+      'identifier-options': {},
+      'model-interface': {},
+    },
+    'db-model': {
+      model: {},
+      migration: {},
+    },
+    'resource': {
+      'db-model': {},
+      'model-options': {},
+      'action': {},
+    },
   }
 
   /**
@@ -123,27 +175,13 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @returns StringTransformations
    */
   protected getArtifactTemplateFileDir(artifactType: CmmaArtifactType) {
-    const artifactTemplateFilename = this.artifactTemplates[artifactType]
+    const artifactTemplateFilename = this.artifactTemplates[this.abstractArtifactType][artifactType]
 
     const templateDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
 
     templateDir.push(artifactTemplateFilename)
 
     return CmmaFileActions.joinPath(templateDir)
-  }
-
-  /**
-   * @description Set an Artifact's Template Data
-   * @protected
-   * @author FATE
-   * @param artifactType
-   * @returns StringTransformations
-   */
-  protected getAbstractArtifactTransformations(artifactType: CmmaArtifactType) {
-    return CmmaConfigurationActions.getArtifactTypeTransformationWithExtension({
-      artifactType,
-      configObject: this.projectConfigurationFromFile!,
-    })
   }
 
   /**
@@ -159,7 +197,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   }) {
     const { artifactType, templateData } = setAbstractArtifactTemplateDataOptions
 
-    this.templateData[artifactType] = templateData
+    this.templateData[this.abstractArtifactType][artifactType] = templateData
   }
 
   /**
@@ -170,7 +208,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @param artifactType
    */
   protected getArtifactTemplateData(artifactType: CmmaArtifactType) {
-    return this.templateData[artifactType]
+    return this.templateData[this.abstractArtifactType][artifactType]
   }
 
   /**
@@ -186,7 +224,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   }) {
     const { artifactType, destinationDir } = setArtifactDestinationDirOptions
 
-    return (this.destinationDirs[artifactType] = destinationDir)
+    this.destinationDirs[this.abstractArtifactType][artifactType] = destinationDir
   }
 
   /**
@@ -197,7 +235,103 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @param artifactType
    */
   protected getArtifactDestinationDir(artifactType: CmmaArtifactType) {
-    return this.destinationDirs[artifactType]
+    console.log(this.destinationDirs[this.abstractArtifactType])
+    console.log(this.destinationDirs[this.abstractArtifactType][artifactType])
+    return this.destinationDirs[this.abstractArtifactType][artifactType]
+  }
+
+  /**
+   * @description Set an Artifact's Transformation
+   * @protected
+   * @returns void
+   * @author FATE
+   * @param setArtifactDestinationDirOptions
+   */
+  protected setAbstractArtifactTransformation(setArtifactDestinationDirOptions: {
+    artifactType: CmmaArtifactType
+    transformation: CmmaStringTransformations
+  }) {
+    const { artifactType, transformation } = setArtifactDestinationDirOptions
+
+    this.abstractArtifactTransformations[this.abstractArtifactType][artifactType] = transformation
+  }
+
+  /**
+   * @description Set an Artifact's Transformation
+   * @protected
+   * @returns void
+   * @author FATE
+   * @param artifactType
+   */
+  protected getAbstractArtifactTransformation(artifactType: CmmaArtifactType) {
+    return this.abstractArtifactTransformations[this.abstractArtifactType][artifactType]
+  }
+
+  /**
+   * @description Add Artifacts to Project Map Step
+   * @protected
+   * @returns void
+   * @author FATE
+   */
+  protected async addArtifactsToProjectMapCommandStep() {
+    for (let artifact of this.abstractArtifactConstituents) {
+      const artifactTranformationsWithoutExtension =
+        CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+          artifactType: artifact,
+          configObject: this.PROJECT_CONFIG,
+        })
+
+      const artifactLabel = CmmaConfigurationActions.transformLabel({
+        label: this.artifactLabel,
+        transformations: artifactTranformationsWithoutExtension,
+      })
+
+      const artifactsDir = CmmaConfigurationActions.getDefaultArtifactTypeDir(artifact)
+
+      if (
+        CmmaSystemActions.isArtifactInSystemArtifactGroup({
+          artifactLabel: artifactLabel,
+          artifactsDir,
+          systemMap: this.systemMap,
+        })
+      ) {
+        this.logger.error(`${artifactLabel} already exists in ${this.systemLabel}. ${EXITING}`)
+
+        await this.exit()
+      }
+    }
+  }
+
+  protected async setArtifactsTransformationsCommandStep() {
+    for (let artifact of this.abstractArtifactConstituents) {
+      const artifactTransformations =
+        CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+          artifactType: artifact,
+          configObject: this.PROJECT_CONFIG,
+        })
+
+      if (artifact === 'migration') {
+        artifactTransformations.prefix = `${new Date().getTime()}_`
+      }
+
+      this.setAbstractArtifactTransformation({
+        artifactType: artifact,
+        transformation: artifactTransformations,
+      })
+    }
+  }
+
+  protected async setArtifactDestinationPathCommandStep() {
+    for (let artifactType of this.abstractArtifactConstituents) {
+      const artifactDestinationPath = new CmmaNodePath(this.PROJECT_CONFIG)
+        .buildPath()
+        .toContext(this.contextLabel)
+        .toSystem(this.systemLabel)
+        .toArtifactsDir(CmmaConfigurationActions.getDefaultArtifactTypeDir(artifactType))
+        .getAbsoluteOsPath(this.application.appRoot)
+
+      this.setArtifactDestinationDir({ artifactType, destinationDir: artifactDestinationPath })
+    }
   }
 
   /*
@@ -214,12 +348,17 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
       return
     }
 
-    this.abstractArtifact.forEach((artifact) => {
+    this.abstractArtifactConstituents.forEach((artifact) => {
+      const artifactTransformation = this.getAbstractArtifactTransformation(artifact)
+      const templateFile = this.getArtifactTemplateFileDir(artifact)
+      const destinationDir = this.getArtifactDestinationDir(artifact)
+
+      console.log(this.application.appRoot)
       this.generator
-        .addFile(this.artifactLabel, this.getAbstractArtifactTransformations(artifact))
-        .stub(this.getArtifactTemplateFileDir(artifact))
+        .addFile(this.artifactLabel, artifactTransformation)
+        .stub(templateFile)
         .useMustache()
-        .destinationDir(this.getArtifactDestinationDir(artifact))
+        .destinationDir(destinationDir)
         .appRoot(this.application.appRoot)
         .apply(this.getArtifactTemplateData(artifact))
     })

@@ -62,7 +62,7 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
   protected artifactLabel: string
   protected targetEntity = 'Operation'
-  protected abstractArtifact: CmmaAbstractArtifact = ['controller', 'validator']
+  protected abstractArtifactConstituents: CmmaAbstractArtifact = ['controller', 'validator']
 
   /*
   |--------------------------------------------------------------------------------

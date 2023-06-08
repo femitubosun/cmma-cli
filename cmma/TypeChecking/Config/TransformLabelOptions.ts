@@ -1,7 +1,7 @@
-import StringTransformations from '../StringTransformations'
+import CmmaStringTransformations from '../CmmaStringTransformations'
 
 type TransformLabelOptions = {
-  transformations: StringTransformations
+  transformations: CmmaStringTransformations
   label: string
   noExt?: boolean
 }

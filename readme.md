@@ -22,7 +22,8 @@
     * [Initialization Commands](#initialization-commands)
     * [Make Artifact Commands](#make-artifact-commands)
     * [Make Abstract Artifacts](#make-abstract-artifacts)
-    * [Make Migration Command](#make-migration-command)
+    * [Migration Commands](#migration-commands)
+    * [Seeder Commands](#seeder-commands)
     * [Command Short Codes](#command-short-codes)
 
 <!-- TOC -->
@@ -125,6 +126,8 @@ This is a graph of the current System's structure
 
 ## CMMA Commands
 
+> Note: Most CMMA Commands are interactive, and will ask you for Context, System and Modules depending on the situation.
+
 ### Configuration Commands
 
 | Command              | ShortCode | Description                                                                                                                                                                                                                                                   |
@@ -156,12 +159,49 @@ This is a graph of the current System's structure
 | `cmma:make-validator`      | `mk\|val\|` | Make a Validator            |
 | `cmma:make-view`           | `mk\|viw\|` | Make a View                 |
 
+Typical flow of a Make Artifact command looks like this.
+
+```shell
+PS D:/fate-projects/cmma-cli> node ace cmma:make-action Wallet
+> What Context does this Action belong to? ...  Press <ENTER> to select
+> Client
+
+```
+
+```shell
+PS D:/fate-projects/cmma-cli> node ace cmma:make-action Wallet
+> What Context does this Action belong to? · Client
+> What System does this  Action belong to? ...  Press <ENTER> to select
+> UserManagement
+  Finance
+
+```
+
+```json
+PS D:/fate-projects/cmma-cli> node ace cmma: make-action Wallet
+> What Context does this Action belong to? · Client
+> What System does this  Action belong to? · Finance
+[info]  Creating WalletActions Artifact in Finance System in Client Context.
+CREATE: app/Systems/Client/Finance/Actions/WalletActions.ts
+[success]  mk|act|0|1|0. Happy Coding 🚀 -- FATE.
+
+```
+
 ### Make Abstract Artifacts
 
 | Command                   | ShortCode   | Description                                                                                                                           |
 |---------------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | `cmma:make-operation`     | `mk\|op\|`  | Make Operation Abstract Artifact. An Operation is a Controller-Validator pair. Both artifact types live in a Module.                  |
 | `cmma:make-model-options` | `mk\|mop\|` | Make Model Options Abstract Artifact. Model Options is a ModelInterface-CreateModelOptions-UpdateModelOptions-ModelIdentifier quintet |
+
+#### `cmma:make-operation`
+
+This Command takes the name of the Operation as an argument and will ask for Context, System and Module
+
+#### `cmma:make-model-options`
+
+This Command takes the name of the Model the ModelOptions belong to. The CLI will search for the Model in the Project
+and will ask for confirmation
 
 ### Migration Commands
 
@@ -170,14 +210,14 @@ up all Migrations & Seeders you have created in a CMMA Project while default Luc
 the `database/` folder, hence they won't find CMMA Migrations and Seeders. This means you can use flags like `--seed`
 when running a CMMA `cmma:migration-fresh`
 
-| Command                   | Short Code | Description                                                 |
-|---------------------------|------------|-------------------------------------------------------------|
-| `cmma:migration-run`      | `mig\|run` | Migrate database by running pending CMMA Project Migrations |
-| `cmma:migration-fresh`    | `mig\|fre` | Drop all tables and re-migrate the database                 |
-| `cmma:migration:refresh`  | `mig\|rfr` | Rollback and migrate database                               |
-| `cmma:migration:reset`    | `mig\|res` | Rollback all migrations in CMMA Project                     |
-| `cmma:migration:rollback` | `mig\|rol` | Rollback migrations to a specific batch number              |
-| `cmma:migration:status`   | `mig\|sta` | View CMMA Project migrations status                         |
+| Command                   | Short Code | Description                                    |
+|---------------------------|------------|------------------------------------------------|
+| `cmma:migration-run`      | `mig       | run`                                           | Migrate database by running pending CMMA Project Migrations |
+| `cmma:migration-fresh`    | `mig\|fre` | Drop all tables and re-migrate the database    |
+| `cmma:migration:refresh`  | `mig\|rfr` | Rollback and migrate database                  |
+| `cmma:migration:reset`    | `mig\|res` | Rollback all migrations in CMMA Project        |
+| `cmma:migration:rollback` | `mig\|rol` | Rollback migrations to a specific batch number |
+| `cmma:migration:status`   | `mig\|sta` | View CMMA Project migrations status            |
 
 ### Seeder Commands
 

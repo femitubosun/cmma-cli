@@ -78,7 +78,7 @@ export default class Seeder extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: this.artifactGroupDir,
+        artifactsDir: this.artifactGroupDir,
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {

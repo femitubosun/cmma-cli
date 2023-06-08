@@ -2,7 +2,7 @@ import CmmaConfiguration from '../Models/CmmaConfiguration'
 import CmmaProjectCasePatternType from '../TypeChecking/CmmaProjectCasePatternType'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import TransformLabelOptions from '../TypeChecking/Config/TransformLabelOptions'
-import StringTransformations from '../TypeChecking/StringTransformations'
+import CmmaStringTransformations from '../TypeChecking/CmmaStringTransformations'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaArtifactType from '../TypeChecking/CmmaArtifactType'
 
@@ -77,15 +77,15 @@ export default class CmmaConfigurationActions {
    * @description Get the string transformations for an artifact type
    * @param getArtifactGroupTransformationOptions
    * @author FATE
-   * @returns StringTransformations
+   * @returns CmmaStringTransformations
    */
   public static getArtifactTypeTransformationWithExtension(getArtifactGroupTransformationOptions: {
     artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
-  }): StringTransformations {
+  }): CmmaStringTransformations {
     const { artifactType, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactType, StringTransformations> = {
+    const transformations: Record<CmmaArtifactType, CmmaStringTransformations> = {
       'index': {
         extname: '.ts',
         pattern: 'snakecase',
@@ -120,6 +120,7 @@ export default class CmmaConfigurationActions {
       'migration': {
         extname: '.ts',
         pattern: 'snakecase',
+        form: 'plural',
       },
 
       'model': {
@@ -184,15 +185,15 @@ export default class CmmaConfigurationActions {
    * @description Get the string transformations for an artifact type without an extension
    * @param getArtifactGroupTransformationOptions
    * @author FATE
-   * @returns StringTransformations
+   * @returns CmmaStringTransformations
    */
   public static getArtifactTypeTransformationWithoutExtension(getArtifactGroupTransformationOptions: {
     artifactType: CmmaArtifactType
     configObject: CmmaConfiguration
-  }): StringTransformations {
+  }): CmmaStringTransformations {
     const { artifactType, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactType, StringTransformations> = {
+    const transformations: Record<CmmaArtifactType, CmmaStringTransformations> = {
       'index': {
         pattern: 'snakecase',
       },
@@ -215,6 +216,7 @@ export default class CmmaConfigurationActions {
 
       'migration': {
         pattern: 'snakecase',
+        form: 'plural',
       },
 
       'seeder': {
@@ -304,15 +306,15 @@ export default class CmmaConfigurationActions {
    * @description Get the string transformations for an artifact group
    * @param getArtifactGroupTransformationOptions
    * @author FATE
-   * @returns StringTransformations
+   * @returns CmmaStringTransformations
    */
   public static getArtifactGroupTransformation(getArtifactGroupTransformationOptions: {
     artifactGroup: CmmaArtifactDirs
     configObject: CmmaConfiguration
-  }): StringTransformations {
+  }): CmmaStringTransformations {
     const { artifactGroup, configObject } = getArtifactGroupTransformationOptions
 
-    const transformations: Record<CmmaArtifactDirs, StringTransformations> = {
+    const transformations: Record<CmmaArtifactDirs, CmmaStringTransformations> = {
       actions: {
         extname: '.ts',
         suffix: 'Actions',

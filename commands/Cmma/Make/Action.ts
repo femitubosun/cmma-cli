@@ -78,7 +78,7 @@ export default class Action extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: 'actions',
+        artifactsDir: 'actions',
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {
