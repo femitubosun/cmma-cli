@@ -1,17 +1,17 @@
-import { BaseCmmaAbstractArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaAbstractArtifactCommand'
+import { BaseCmmaAbstractArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaAbstractArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaAbstractArtifact from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaAbstractArtifact from '../../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
 import {
   EXITING,
   MODULE_NOT_FOUND_IN_PROJECT,
-} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
-import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaAbstractArtifactEnum from '../../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
+import CmmaModuleActions from '../../../../cmma/Actions/CmmaModuleActions'
 
 /*
 |--------------------------------------------------------------------------------

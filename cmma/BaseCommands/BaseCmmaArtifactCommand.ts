@@ -28,7 +28,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
 
     this.generator
       .addFile(this.artifactLabel, this.getArtifactTransformations())
-      .stub(this.getTemplateFileDir())
+      .stub(this.getTemplateFilePath())
       .useMustache()
       .destinationDir(this.getArtifactDestinationFilePath())
       .appRoot(this.application.appRoot)
@@ -53,7 +53,7 @@ export abstract class BaseCmmaArtifactCommand extends BaseCmmaCommand {
    * @protected
    * @author FATE
    */
-  protected getTemplateFileDir() {
+  protected getTemplateFilePath() {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
     const artifactGroupTemplateFileName = `${this.artifactType}.txt`
 

@@ -1,0 +1,107 @@
+import { NULL_OBJECT } from 'App/Common/Helpers/Messages/SystemMessages'
+import Create{{ modelName }}RecordOptions from 'App/{{ projectRootDir }}/{{ contextLabel }}/{{systemLabel }}/{{ typeCheckingArtifactDirLabel }}/{{ modelName }}/Create{{ modelName }}RecordOptions'
+import {{ modelName }} from 'App/{{ projectRootDir }}/{{ contextLabel }}/{{systemLabel }}/Models/{{ modelName }}'
+import {{ modelName }}IdentifierOptions from 'App/{{ projectRootDir }}/{{ contextLabel }}/{{systemLabel }}/{{ typeCheckingArtifactDirLabel }}/{{ modelName }}/{{ modelName }}IdentifierOptions'
+import Update{{ modelName }}RecordOptions from 'App/{{ projectRootDir }}/{{ contextLabel }}/{{systemLabel }}/{{ typeCheckingArtifactDirLabel }}/{{ modelName }}/Update{{ modelName }}RecordOptions'
+
+export default class {{ filename }} {
+  private static {{ modelNameInCaps }}_RECORD_NOT_FOUND = NULL_OBJECT
+
+  /**
+   * @description Method to create a {{ modelName }} record
+   * @author CMMA-CLI
+   * @static
+   * @param {Create{{ modelName }}RecordOptions} create{{modelName}}RecordOptions
+   * @returns {*}  {(Promise<{{modelName}}>)}
+   * @memberof {{ filename }}
+   */
+  public static async create{{ modelName }}Record(
+    create{{ modelName }}RecordOptions: Create{{ modelName }}RecordOptions
+  ): Promise<{{ modelName }}> {
+    const { createPayload, dbTransactionOptions } = create{{ modelName }}RecordOptions
+
+    const {{ modelVariableName }} = new {{ modelName }}()
+
+    Object.assign({{ modelVariableName }}, createPayload)
+
+    if (dbTransactionOptions.useTransaction) {
+      {{ modelVariableName }}.useTransaction(dbTransactionOptions.dbTransaction)
+    }
+
+    return await {{ modelVariableName }}.save()
+  }
+
+  /**
+   * @description Method to get a {{ modelName }} record by its primary key
+   * @author CMMA-CLI
+   * @static
+   * @param {number} {{ modelVariableName }}Id
+   * @returns {*}  {(Promise<{{ modelName }} | null>)}
+   * @memberof {{ filename }}
+   */
+  private static async get{{ modelName }}RecordById({{ modelVariableName }}Id: number) {
+    const {{ modelVariableName }} = await {{ modelName }}.query().where('id', {{ modelVariableName }}Id).first()
+
+    return {{ modelVariableName }} || this.{{ modelNameInCaps }}_RECORD_NOT_FOUND
+  }
+
+  /**
+   * @description Method to get a {{ modelName }} record by its identifier
+   * @author CMMA-CLI
+   * @static
+   * @param {string} identifier
+   * @returns {*}  {(Promise<{{ modelName }} | null>)}
+   * @memberof {{ filename }}
+   */
+  private static async get{{ modelName }}RecordByIdentifier(identifier: string) {
+    const {{ modelVariableName }} = await {{modelName}}.query().where('identifier', identifier).first()
+
+    return {{ modelVariableName }} || this.{{ modelNameInCaps }}_RECORD_NOT_FOUND
+  }
+
+  /**
+   * @description Method to get a {{ modelName }} Record
+   * @author CMMA-CLI
+   * @static
+   * @param { {{modelName}}IdentifierOptions} get{{ modelName }}Options
+   * @returns {*}  {(Promise<{{ modelName }} | null>)}
+   * @memberof {{ filename }}
+   */
+  public static async get{{ modelName }}Record(
+    get{{ modelName }}Options: {{ modelName }}IdentifierOptions
+  ): Promise<{{ modelName }} | null> {
+    const { identifier, identifierType } = get{{ modelName }}Options
+
+    const Get{{ modelName }}: Record<string, Function> = {
+      id: async () => await this.get{{ modelName }}RecordById(Number(identifier)),
+
+      identifier: async () => await this.get{{ modelName }}RecordByIdentifier(String(identifier)),
+    }
+
+    return await Get{{ modelName }}[identifierType]()
+  }
+
+  /**
+   * @description
+   * @author CMMA-CLI
+   * @static
+   * @param {Update{{ modelName }}RecordOptions} update{{ modelName }}RecordOptions
+   * @returns {*}  {(Promise<{{ modelName }} | null>)}
+   * @memberof {{ modelName }}Actions
+   */
+  public static async update{{ modelName }}Record(update{{ modelName }}RecordOptions: Update{{ modelName }}RecordOptions) {
+    const { identifierOptions, updatePayload, dbTransactionOptions } = update{{ modelName }}RecordOptions
+
+    const {{ modelVariableName }} = await this.get{{ modelName }}Record(identifierOptions)
+
+    if ({{ modelVariableName }} === this.{{ modelNameInCaps }}_RECORD_NOT_FOUND) return
+
+    Object.assign({{ modelVariableName }}, updatePayload)
+
+    if (dbTransactionOptions.useTransaction) {
+      {{ modelVariableName }}.useTransaction(dbTransactionOptions.dbTransaction)
+    }
+
+    return await {{ modelVariableName }}.save()
+  }
+}

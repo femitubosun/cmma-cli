@@ -1,15 +1,15 @@
-import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
+import { BaseCmmaBoundaryCommand } from '../../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaFileActions from '../../../../cmma/Actions/CmmaFileActions'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_CONTEXT_IN_PROJECT,
-} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
 
 export default class Context extends BaseCmmaBoundaryCommand {
   /*

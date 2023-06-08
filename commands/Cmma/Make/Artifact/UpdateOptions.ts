@@ -1,14 +1,14 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import { NOT_CONFIRMED_EXITING } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
+import CmmaFileActions from '../../../../cmma/Actions/CmmaFileActions'
+import { NOT_CONFIRMED_EXITING } from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class UpdateOptions extends BaseCmmaArtifactCommand {
   /*
@@ -80,7 +80,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  protected getTemplateFileDir(): string {
+  protected getTemplateFilePath(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
     const createRecordTemplate = 'update-options.txt'
 

@@ -1,18 +1,18 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaModuleActions from '../../../../cmma/Actions/CmmaModuleActions'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_CONTROLLER_IN_MODULE,
-} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
 
 export default class Controller extends BaseCmmaArtifactCommand {
   /*

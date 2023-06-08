@@ -1,12 +1,12 @@
-import { BaseCmmaBoundaryCommand } from '../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
+import { BaseCmmaBoundaryCommand } from '../../../../cmma/BaseCommands/BaseCmmaBoundaryCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaFileActions from '../../../../cmma/Actions/CmmaFileActions'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
 
 export default class System extends BaseCmmaBoundaryCommand {
   /*
