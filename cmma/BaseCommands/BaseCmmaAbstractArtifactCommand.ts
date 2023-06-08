@@ -67,14 +67,14 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
   */
   protected artifactTemplates: CmmaAbstractArtifactTemplates = {
     'operation': {
-      controller: 'operation-controllers.txt',
-      validator: 'operation-validators.txt',
+      controller: 'operation/controller.txt',
+      validator: 'operation/validator.txt',
     },
     'model-options': {
-      'create-typechecking': 'model-options-create-typechecking.txt',
-      'update-typechecking': 'model-options-update-typechecking.txt',
-      'identifier-options': 'model-options-identifier-typechecking.txt',
-      'model-interface': 'model-options-model-interface.txt',
+      'create-options': 'model-options/create-options.txt',
+      'update-options': 'model-options/update-options.txt',
+      'identifier-options': 'model-options/identifier-options.txt',
+      'model-interface': 'model-options/model-interface.txt',
     },
     'db-model': {
       model: 'db-model/model.txt',
@@ -100,8 +100,8 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
       validator: {},
     },
     'model-options': {
-      'create-typechecking': {},
-      'update-typechecking': {},
+      'create-options': {},
+      'update-options': {},
       'identifier-options': {},
       'model-interface': {},
     },
@@ -128,8 +128,8 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
       validator: '',
     },
     'model-options': {
-      'create-typechecking': '',
-      'update-typechecking': '',
+      'create-options': '',
+      'update-options': '',
       'identifier-options': '',
       'model-interface': '',
     },
@@ -151,8 +151,8 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
       validator: {},
     },
     'model-options': {
-      'create-typechecking': {},
-      'update-typechecking': {},
+      'create-options': {},
+      'update-options': {},
       'identifier-options': {},
       'model-interface': {},
     },
@@ -220,11 +220,11 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    */
   protected setArtifactDestinationDir(setArtifactDestinationDirOptions: {
     artifactType: CmmaArtifactType
-    destinationDir: string
+    artifactDestinationDir: string
   }) {
-    const { artifactType, destinationDir } = setArtifactDestinationDirOptions
+    const { artifactType, artifactDestinationDir } = setArtifactDestinationDirOptions
 
-    this.destinationDirs[this.abstractArtifactType][artifactType] = destinationDir
+    this.destinationDirs[this.abstractArtifactType][artifactType] = artifactDestinationDir
   }
 
   /**
@@ -235,8 +235,6 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @param artifactType
    */
   protected getArtifactDestinationDir(artifactType: CmmaArtifactType) {
-    console.log(this.destinationDirs[this.abstractArtifactType])
-    console.log(this.destinationDirs[this.abstractArtifactType][artifactType])
     return this.destinationDirs[this.abstractArtifactType][artifactType]
   }
 
@@ -274,10 +272,10 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
    * @author FATE
    */
   protected async addArtifactsToProjectMapCommandStep() {
-    for (let artifact of this.abstractArtifactConstituents) {
+    for (let artifactType of this.abstractArtifactConstituents) {
       const artifactTranformationsWithoutExtension =
         CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-          artifactType: artifact,
+          artifactType,
           configObject: this.PROJECT_CONFIG,
         })
 
@@ -286,7 +284,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
         transformations: artifactTranformationsWithoutExtension,
       })
 
-      const artifactsDir = CmmaConfigurationActions.getDefaultArtifactTypeDir(artifact)
+      const artifactsDir = CmmaConfigurationActions.getDefaultArtifactTypeDir(artifactType)
 
       if (
         CmmaSystemActions.isArtifactInSystemArtifactGroup({
@@ -299,10 +297,16 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
 
         await this.exit()
       }
+
+      CmmaSystemActions.addArtifactToArtifactGroup({
+        artifactsDir: CmmaConfigurationActions.getDefaultArtifactTypeDir(artifactType),
+        artifact: artifactLabel,
+        systemMap: this.systemMap,
+      })
     }
   }
 
-  protected async setArtifactsTransformationsCommandStep() {
+  protected setArtifactsTransformationsCommandStep() {
     for (let artifact of this.abstractArtifactConstituents) {
       const artifactTransformations =
         CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
@@ -321,7 +325,7 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
     }
   }
 
-  protected async setArtifactDestinationPathCommandStep() {
+  protected setArtifactDestinationPathCommandStep() {
     for (let artifactType of this.abstractArtifactConstituents) {
       const artifactDestinationPath = new CmmaNodePath(this.PROJECT_CONFIG)
         .buildPath()
@@ -330,7 +334,10 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
         .toArtifactsDir(CmmaConfigurationActions.getDefaultArtifactTypeDir(artifactType))
         .getAbsoluteOsPath(this.application.appRoot)
 
-      this.setArtifactDestinationDir({ artifactType, destinationDir: artifactDestinationPath })
+      this.setArtifactDestinationDir({
+        artifactType,
+        artifactDestinationDir: artifactDestinationPath,
+      })
     }
   }
 

@@ -3,7 +3,6 @@ import { args } from '@adonisjs/core/build/standalone'
 import CmmaAbstractArtifact from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
 import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
 import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 import { string } from '@ioc:Adonis/Core/Helpers'
 
@@ -55,8 +54,6 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected artifactLabel: string
   protected abstractArtifactType: CmmaAbstractArtifactEnum = 'db-model'
   protected targetEntity = 'Db Model'
-  protected artifactGroupDir: CmmaArtifactDirs = 'models'
-
   protected abstractArtifactConstituents: CmmaAbstractArtifact = ['model', 'migration']
 
   public async run() {
@@ -70,9 +67,9 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
 
     await this.addArtifactsToProjectMapCommandStep()
 
-    await this.setArtifactsTransformationsCommandStep()
+    this.setArtifactsTransformationsCommandStep()
 
-    await this.setArtifactDestinationPathCommandStep()
+    this.setArtifactDestinationPathCommandStep()
 
     for (let artifactType of this.abstractArtifactConstituents) {
       if (artifactType === 'migration') {

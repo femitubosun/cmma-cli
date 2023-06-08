@@ -44,7 +44,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   protected artifactLabel: string
   protected targetEntity = 'Create Options'
   protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
-  protected artifactType: CmmaArtifactType = 'create-typechecking'
+  protected artifactType: CmmaArtifactType = 'create-options'
 
   /*
  |--------------------------------------------------------------------------------
@@ -155,7 +155,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     const artifact = CmmaConfigurationActions.transformLabel({
       label: this.artifactLabel,
       transformations: CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'create-typechecking',
+        artifactType: 'create-options',
         configObject: this.PROJECT_CONFIG,
       }),
     })

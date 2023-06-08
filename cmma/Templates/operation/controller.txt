@@ -35,6 +35,7 @@ export default class {{ filename }} {
         try {
               await request.validate({{ validatorLabel }})
             } catch (ValidationError) {
+              await dbTransaction.commit()
               return response.status(this.unprocessableEntity).send({
                 status_code: this.unprocessableEntity,
                 status: ERROR,

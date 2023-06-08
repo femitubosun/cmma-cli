@@ -43,7 +43,22 @@
     "up|",
     "mk|mop|",
     "mk|mop|",
-    "mk|mop|"
+    "mk|mop|",
+    "mk|mod|0|1|0",
+    "mk|op|",
+    "mk|op|",
+    "mk|act|0|1|1",
+    "mk|mop|",
+    "mk|mop|",
+    "up|",
+    "up|",
+    "mk|mop|",
+    "mk|mop|",
+    "mk|dbm|",
+    "mk|mod|0|1|1",
+    "mk|op|",
+    "mk|op|",
+    "up|"
   ],
   "projectMap": {
     "contexts": {
@@ -94,15 +109,49 @@
           "Finance": {
             "systemArtifacts": {
               "actions": ["WalletActions"],
-              "migrations": ["1686235754909_keyboards"],
-              "models": ["Keyboard"],
+              "migrations": [
+                "1686235754909_keyboards",
+                "1686237241846_user",
+                "1686237423059_wallet",
+                "1686237473675_accounts",
+                "1686242140520_settlement_accounts"
+              ],
+              "models": [
+                "Keyboard",
+                "Wallet",
+                "Account",
+                "User",
+                "SettlementAccount"
+              ],
               "routes": [],
               "seeders": ["UserSeeder"],
               "views": [],
-              "typeChecking": []
+              "typeChecking": [
+                "CreateWalletRecordOptions",
+                "UpdateWalletRecordOptions",
+                "WalletInterface",
+                "WalletIdentifierOptions"
+              ]
             },
             "abstractArtifacts": {},
-            "modules": {},
+            "modules": {
+              "WalletManagement": {
+                "controllers": [
+                  "CreateWalletPinController",
+                  "FundWalletController"
+                ],
+                "validators": [
+                  "CreateWalletPinRequestValidator",
+                  "FundWalletRequestValidator"
+                ],
+                "moduleLabel": "WalletManagement"
+              },
+              "SettlementAccount": {
+                "controllers": ["CreateSettlementAccountController"],
+                "validators": ["CreateSettlementAccountRequestValidator"],
+                "moduleLabel": "SettlementAccount"
+              }
+            },
             "systemLabel": "Finance"
           }
         }

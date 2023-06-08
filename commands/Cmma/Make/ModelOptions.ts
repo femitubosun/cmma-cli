@@ -6,10 +6,7 @@ import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
 import { EXITING } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
 import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
 import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
 import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
 
 /*
@@ -60,15 +57,30 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
   protected artifactLabel: string
   protected abstractArtifactType: CmmaAbstractArtifactEnum = 'model-options'
   protected targetEntity = 'Model Options'
-  protected artifactType: CmmaArtifactType = 'file'
-  protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
 
   protected abstractArtifactConstituents: CmmaAbstractArtifact = [
-    'create-typechecking',
-    'update-typechecking',
+    'create-options',
+    'update-options',
     'model-interface',
     'identifier-options',
   ]
+
+  protected setArtifactDestinationPathCommandStep() {
+    for (let artifactType of this.abstractArtifactConstituents) {
+      const artifactDestinationDir = new CmmaNodePath(this.PROJECT_CONFIG)
+        .buildPath()
+        .toContext(this.contextLabel)
+        .toSystem(this.systemLabel)
+        .toArtifactsDir('typeChecking')
+        .toModelDir(this.artifactLabel)
+        .getAbsoluteOsPath(this.application.appRoot)
+
+      this.setArtifactDestinationDir({
+        artifactType,
+        artifactDestinationDir,
+      })
+    }
+  }
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -122,124 +134,6 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
      * Add Artifacts to project
      */
 
-    const createOptionsTransformation =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'create-typechecking',
-        configObject: this.PROJECT_CONFIG,
-      })
-
-    const createOptionsLabel = CmmaConfigurationActions.transformLabel({
-      transformations: createOptionsTransformation,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        artifactLabel: createOptionsLabel,
-        artifactsDir: 'typeChecking',
-        systemMap: this.systemMap,
-      })
-    ) {
-      this.logger.error(`${createOptionsLabel} already exists in ${this.systemLabel}. ${EXITING}`)
-
-      await this.exit()
-    }
-
-    const updateOptionsTransformations =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'update-typechecking',
-        configObject: this.PROJECT_CONFIG,
-      })
-
-    const updateOptionsLabel = CmmaConfigurationActions.transformLabel({
-      transformations: updateOptionsTransformations,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        artifactLabel: updateOptionsLabel,
-        artifactsDir: 'typeChecking',
-        systemMap: this.systemMap,
-      })
-    ) {
-      this.logger.error(`${updateOptionsLabel} already exists in ${this.systemLabel}. ${EXITING}`)
-
-      await this.exit()
-    }
-
-    const identifierOptionsTransformations =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'identifier-options',
-        configObject: this.PROJECT_CONFIG,
-      })
-
-    const identifierOptionsLabel = CmmaConfigurationActions.transformLabel({
-      transformations: identifierOptionsTransformations,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        artifactLabel: identifierOptionsLabel,
-        artifactsDir: 'typeChecking',
-        systemMap: this.systemMap,
-      })
-    ) {
-      this.logger.error(
-        `${identifierOptionsLabel} already exists in ${this.systemLabel}. ${EXITING}`
-      )
-
-      await this.exit()
-    }
-
-    const modelInterfaceTransformations =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'model-interface',
-        configObject: this.PROJECT_CONFIG,
-      })
-
-    const modelInterfaceLabel = CmmaConfigurationActions.transformLabel({
-      transformations: modelInterfaceTransformations,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaSystemActions.isArtifactInSystemArtifactGroup({
-        artifactLabel: modelInterfaceLabel,
-        artifactsDir: 'typeChecking',
-        systemMap: this.systemMap,
-      })
-    ) {
-      this.logger.error(`${modelInterfaceLabel} already exists in ${this.systemLabel}. ${EXITING}`)
-
-      await this.exit()
-    }
-
-    CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typeChecking',
-      artifact: createOptionsLabel,
-      systemMap: this.systemMap,
-    })
-
-    CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typeChecking',
-      artifact: updateOptionsLabel,
-      systemMap: this.systemMap,
-    })
-
-    CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typeChecking',
-      artifact: identifierOptionsLabel,
-      systemMap: this.systemMap,
-    })
-
-    CmmaSystemActions.addArtifactToArtifactGroup({
-      artifactsDir: 'typeChecking',
-      artifact: modelInterfaceLabel,
-      systemMap: this.systemMap,
-    })
-
     // CmmaSystemActions.addAbstractArtifactToAbstractArtifactGroup({
     //   abstractArtifactGroupLabel: 'model-options',
     //   abstractArtifact: identifierOptionsLabel,
@@ -250,6 +144,12 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
      * Setting Destination Dirs
      */
 
+    await this.addArtifactsToProjectMapCommandStep()
+
+    this.setArtifactsTransformationsCommandStep()
+
+    this.setArtifactDestinationPathCommandStep()
+
     const typecheckingDestinationNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPath()
       .toContext(this.contextLabel)
@@ -257,50 +157,44 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
       .toArtifactsDir('typeChecking')
       .toModelDir(this.artifactLabel)
 
-    const typecheckingDestinationDir = typecheckingDestinationNodePath.getAbsoluteOsPath(
-      this.application.appRoot
-    )
+    for (let artifactType of this.abstractArtifactConstituents) {
+      const identifierOptionsTransformation =
+        CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+          artifactType: 'identifier-options',
+          configObject: this.PROJECT_CONFIG,
+        })
 
-    this.setArtifactDestinationDir({
-      artifactType: 'create-typechecking',
-      destinationDir: typecheckingDestinationDir,
-    })
+      const identifierOptionsLabel = CmmaConfigurationActions.transformLabel({
+        label: this.artifactLabel,
+        transformations: identifierOptionsTransformation,
+      })
 
-    this.setArtifactDestinationDir({
-      artifactType: 'update-typechecking',
-      destinationDir: typecheckingDestinationDir,
-    })
+      const modelInterfaceTransformations =
+        CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+          artifactType: 'model-interface',
+          configObject: this.PROJECT_CONFIG,
+        })
 
-    this.setArtifactDestinationDir({
-      artifactType: 'identifier-options',
-      destinationDir: typecheckingDestinationDir,
-    })
+      const modelInterfaceLabel = CmmaConfigurationActions.transformLabel({
+        label: this.artifactLabel,
+        transformations: modelInterfaceTransformations,
+      })
 
-    this.setArtifactDestinationDir({
-      artifactType: 'model-interface',
-      destinationDir: typecheckingDestinationDir,
-    })
+      const templateData = {
+        identifierOptionsLabel,
+        modelInterfaceLabel,
+        defaultProjectDir: this.PROJECT_CONFIG.defaultProjectRootDirInApp,
+        contextLabel: this.contextLabel,
+        systemLabel: this.systemLabel,
+        artifactDirLabel: typecheckingDestinationNodePath.artifactDirLabel,
+        artifactLabel: this.artifactLabel,
+      }
 
-    const templateData = {
-      identifierOptionsLabel,
-      modelInterfaceLabel,
-      defaultProjectDir: this.PROJECT_CONFIG.defaultProjectRootDirInApp,
-      contextLabel: this.contextLabel,
-      systemLabel: this.systemLabel,
-      artifactDirLabel: typecheckingDestinationNodePath.artifactDirLabel,
-      artifactLabel: this.artifactLabel,
+      this.setArtifactTemplateData({
+        artifactType,
+        templateData,
+      })
     }
-
-    this.setArtifactTemplateData({
-      artifactType: 'create-typechecking',
-      templateData,
-    })
-
-    this.setArtifactTemplateData({
-      artifactType: 'update-typechecking',
-      templateData,
-    })
-
     await this.generate()
 
     // this.commandArgs = [

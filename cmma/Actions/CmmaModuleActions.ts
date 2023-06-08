@@ -38,12 +38,12 @@ export default class CmmaModuleActions {
    */
   public static addArtifactToModule(addArtifactToModuleOptions: {
     artifact: string
-    artifactDirLabel: CmmaArtifactDirs
+    artifactsDir: CmmaArtifactDirs
     moduleMap: CmmaModule
   }) {
-    const { artifact, artifactDirLabel, moduleMap } = addArtifactToModuleOptions
+    const { artifact, artifactsDir, moduleMap } = addArtifactToModuleOptions
 
-    moduleMap[artifactDirLabel].push(artifact)
+    moduleMap[artifactsDir].push(artifact)
   }
 
   /**
@@ -71,11 +71,11 @@ export default class CmmaModuleActions {
    */
   public static listModuleArtifactsByDirLabel(listModuleArtifactsByTypeOptions: {
     moduleMap: CmmaModule
-    artifactDir: CmmaArtifactDirs
+    artifactsDir: CmmaArtifactDirs
   }) {
-    const { moduleMap, artifactDir } = listModuleArtifactsByTypeOptions
+    const { moduleMap, artifactsDir } = listModuleArtifactsByTypeOptions
 
-    return moduleMap[artifactDir]
+    return moduleMap[artifactsDir]
   }
 
   /**
@@ -113,12 +113,12 @@ export default class CmmaModuleActions {
    */
   public static isModuleArtifactInArtifactDir(isModuleArtifactInArtifactDirOptions: {
     artifactLabel: CmmaArtifact
-    artifactDir: CmmaArtifactDirs
+    artifactsDir: CmmaArtifactDirs
     moduleMap: CmmaModule
   }) {
-    const { artifactDir, artifactLabel, moduleMap } = isModuleArtifactInArtifactDirOptions
+    const { artifactsDir, artifactLabel, moduleMap } = isModuleArtifactInArtifactDirOptions
 
-    return this.listModuleArtifactsByDirLabel({ artifactDir, moduleMap }).includes(artifactLabel)
+    return this.listModuleArtifactsByDirLabel({ artifactsDir, moduleMap }).includes(artifactLabel)
   }
 
   /**
@@ -135,7 +135,7 @@ export default class CmmaModuleActions {
 
     const artifactsInDir = this.listModuleArtifactsByDirLabel({
       moduleMap,
-      artifactDir,
+      artifactsDir: artifactDir,
     })
 
     const artifactIndex = artifactsInDir.indexOf(artifactLabel)

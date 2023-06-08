@@ -603,7 +603,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
         .map((file) => file.split('.')[0])
         .filter((filename) => filename !== 'index')
       const moduleArtifactsOnMap = CmmaModuleActions.listModuleArtifactsByDirLabel({
-        artifactDir: moduleInDir,
+        artifactsDir: moduleInDir,
         moduleMap,
       })
 
@@ -627,7 +627,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
 
         CmmaModuleActions.addArtifactToModule({
           artifact,
-          artifactDirLabel: moduleInDir,
+          artifactsDir: moduleInDir,
           moduleMap,
         })
       })
@@ -668,7 +668,7 @@ export default class ConfigUpdate extends BaseCmmaCommand {
       if (!CmmaFileActions.doesPathExist(moduleArtifactsDirOnDiskDir)) return
 
       const moduleArtifactsOnMap = CmmaModuleActions.listModuleArtifactsByDirLabel({
-        artifactDir: moduleInDir,
+        artifactsDir: moduleInDir,
         moduleMap,
       })
 

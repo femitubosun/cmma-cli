@@ -43,7 +43,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
   protected commandShortCode = 'mk|tyU'
   protected artifactLabel: string
   protected targetEntity = 'Update Options'
-  protected artifactType: CmmaArtifactType = 'update-typechecking'
+  protected artifactType: CmmaArtifactType = 'update-options'
   protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
 
   /*
@@ -82,7 +82,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
   */
   protected getTemplateFileDir(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const createRecordTemplate = 'update-record.txt'
+    const createRecordTemplate = 'update-options.txt'
 
     templatesDir.push(createRecordTemplate)
     return CmmaFileActions.joinPath(templatesDir)
@@ -155,7 +155,7 @@ export default class UpdateOptions extends BaseCmmaArtifactCommand {
     const artifact = CmmaConfigurationActions.transformLabel({
       label: this.artifactLabel,
       transformations: CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'update-typechecking',
+        artifactType: 'update-options',
         configObject: this.PROJECT_CONFIG,
       }),
     })
