@@ -1,15 +1,15 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
 import { string } from '@ioc:Adonis/Core/Helpers'
-import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import CmmaStringTransformations from 'cmma/TypeChecking/StringTransformations'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaFileActions from '../../../../cmma/Actions/CmmaFileActions'
+import CmmaStringTransformations from '../../../../cmma/TypeChecking/CmmaStringTransformations'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
 
 export default class Migration extends BaseCmmaArtifactCommand {
   /*
@@ -90,7 +90,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
     )
   }
 
-  protected getTemplateFileDir(): string {
+  protected getTemplateFilePath(): string {
     const migrationTemplate = this.table ? 'migration-alter.txt' : 'migration-make.txt'
 
     const templateDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
@@ -160,7 +160,7 @@ export default class Migration extends BaseCmmaArtifactCommand {
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         artifactLabel: migrationName,
         systemMap: this.systemMap,
-        artifactDir: 'migrations',
+        artifactsDir: 'migrations',
       })
     ) {
       migrationName = migrationName + '+'

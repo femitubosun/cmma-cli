@@ -1,6 +1,6 @@
 import CmmaProjectCasePatternType from './CmmaProjectCasePatternType'
 
-type StringTransformations = {
+type CmmaStringTransformations = {
   form?: 'plural' | 'singular'
   pattern?: CmmaProjectCasePatternType
   extname?: string
@@ -8,4 +8,4 @@ type StringTransformations = {
   suffix?: string
 }
 
-export default StringTransformations
+export default CmmaStringTransformations

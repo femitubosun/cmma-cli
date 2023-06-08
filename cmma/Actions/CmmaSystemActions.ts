@@ -443,13 +443,13 @@ export default class CmmaSystemActions {
    */
   public static isArtifactInSystemArtifactGroup(isSystemArtifactInSystemOptions: {
     artifactLabel: string
-    artifactDir: CmmaArtifactDirs
+    artifactsDir: CmmaArtifactDirs
     systemMap: CmmaSystem
   }) {
-    const { systemMap, artifactLabel, artifactDir } = isSystemArtifactInSystemOptions
+    const { systemMap, artifactLabel, artifactsDir } = isSystemArtifactInSystemOptions
 
     return this.listSystemArtifactsByGroupLabel({
-      artifactsDir: artifactDir,
+      artifactsDir: artifactsDir,
       systemMap,
     }).includes(artifactLabel)
   }

@@ -99,12 +99,80 @@
         }
       ]
     },
+    "cmma:make-db-model": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/AbstractArtifact/DbModel",
+      "commandName": "cmma:make-db-model",
+      "description": "Create a new CMMA Model Options",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-model-options": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/AbstractArtifact/ModelOptions",
+      "commandName": "cmma:make-model-options",
+      "description": "Create a new CMMA Model Options",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Model the Model Options to be Created belongs to"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-operation": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/AbstractArtifact/Operation",
+      "commandName": "cmma:make-operation",
+      "description": "Create a new CMMA Operation",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Operation to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": [
+        {
+          "name": "module",
+          "propertyName": "module",
+          "type": "string",
+          "description": "The name of the Module this operation belongs to",
+          "alias": "m"
+        }
+      ]
+    },
     "cmma:make-action": {
       "settings": {
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Action",
+      "commandPath": "./commands/Cmma/Make/Artifact/Action",
       "commandName": "cmma:make-action",
       "description": "Create a new CMMA Action",
       "args": [
@@ -119,32 +187,12 @@
       "aliases": [],
       "flags": []
     },
-    "cmma:make-context": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/Context",
-      "commandName": "cmma:make-context",
-      "description": "Create a new CMMA Context",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the Context to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
     "cmma:make-controller": {
       "settings": {
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Controller",
+      "commandPath": "./commands/Cmma/Make/Artifact/Controller",
       "commandName": "cmma:make-controller",
       "description": "Create a new CMMA Context",
       "args": [
@@ -164,7 +212,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/CreateOptions",
+      "commandPath": "./commands/Cmma/Make/Artifact/CreateOptions",
       "commandName": "cmma:make-create-options",
       "description": "Create a new CMMA Create Record Options",
       "args": [
@@ -184,7 +232,7 @@
         "loadApp": true,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Migration",
+      "commandPath": "./commands/Cmma/Make/Artifact/Migration",
       "commandName": "cmma:make-migration",
       "description": "Create a new CMMA Migration",
       "args": [
@@ -223,7 +271,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Model",
+      "commandPath": "./commands/Cmma/Make/Artifact/Model",
       "commandName": "cmma:make-model",
       "description": "Create a new CMMA Model",
       "args": [
@@ -238,80 +286,32 @@
       "aliases": [],
       "flags": []
     },
-    "cmma:make-model-options": {
+    "cmma:make-model-action": {
       "settings": {
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/ModelOptions",
-      "commandName": "cmma:make-model-options",
-      "description": "Create a new CMMA Model Options",
+      "commandPath": "./commands/Cmma/Make/Artifact/ModelAction",
+      "commandName": "cmma:make-model-action",
+      "description": "Create a new CMMA Model Action",
       "args": [
         {
           "type": "string",
           "propertyName": "name",
           "name": "name",
           "required": true,
-          "description": "Name of the Model the Model Options to be Created belongs to"
+          "description": "Name of the Model this Action is for"
         }
       ],
       "aliases": [],
       "flags": []
-    },
-    "cmma:make-module": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/Module",
-      "commandName": "cmma:make-module",
-      "description": "Make a new CMMA CmmaModule",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the System to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
-    "cmma:make-operation": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/Operation",
-      "commandName": "cmma:make-operation",
-      "description": "Create a new CMMA Operation",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the Operation to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": [
-        {
-          "name": "module",
-          "propertyName": "module",
-          "type": "string",
-          "description": "The name of the Module this operation belongs to",
-          "alias": "m"
-        }
-      ]
     },
     "cmma:make-seeder": {
       "settings": {
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Seeder",
+      "commandPath": "./commands/Cmma/Make/Artifact/Seeder",
       "commandName": "cmma:make-seeder",
       "description": "Create a new CMMA Seeder",
       "args": [
@@ -326,32 +326,12 @@
       "aliases": [],
       "flags": []
     },
-    "cmma:make-system": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Cmma/Make/System",
-      "commandName": "cmma:make-system",
-      "description": "Make a new CMMA System",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the System to be Created"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
     "cmma:make-update-options": {
       "settings": {
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/UpdateOptions",
+      "commandPath": "./commands/Cmma/Make/Artifact/UpdateOptions",
       "commandName": "cmma:make-update-options",
       "description": "Create a new CMMA Update Record TypeChecking",
       "args": [
@@ -371,7 +351,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/Validator",
+      "commandPath": "./commands/Cmma/Make/Artifact/Validator",
       "commandName": "cmma:make-validator",
       "description": "Create a new CMMA Validator",
       "args": [
@@ -391,7 +371,7 @@
         "loadApp": false,
         "stayAlive": false
       },
-      "commandPath": "./commands/Cmma/Make/View",
+      "commandPath": "./commands/Cmma/Make/Artifact/View",
       "commandName": "cmma:make-view",
       "description": "Create a new CMMA View",
       "args": [
@@ -401,6 +381,66 @@
           "name": "name",
           "required": true,
           "description": "Name of the View to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-context": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Boundary/Context",
+      "commandName": "cmma:make-context",
+      "description": "Create a new CMMA Context",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Context to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-module": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Boundary/Module",
+      "commandName": "cmma:make-module",
+      "description": "Make a new CMMA CmmaModule",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Module to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
+    "cmma:make-system": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Boundary/System",
+      "commandName": "cmma:make-system",
+      "description": "Make a new CMMA System",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the System to be Created"
         }
       ],
       "aliases": [],

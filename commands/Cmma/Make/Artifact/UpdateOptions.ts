@@ -1,24 +1,24 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import CmmaFileActions from '../../../cmma/Actions/CmmaFileActions'
-import { NOT_CONFIRMED_EXITING } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
+import CmmaFileActions from '../../../../cmma/Actions/CmmaFileActions'
+import { NOT_CONFIRMED_EXITING } from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
 
-export default class CreateOptions extends BaseCmmaArtifactCommand {
+export default class UpdateOptions extends BaseCmmaArtifactCommand {
   /*
   |--------------------------------------------------------------------------------
   | ACE Command Configuration
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-create-options'
-  public static description = 'Create a new CMMA Create Record Options'
+  public static commandName = 'cmma:make-update-options'
+  public static description = 'Create a new CMMA Update Record TypeChecking'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -30,7 +30,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the Model this Create Options is for' })
+  @args.string({ description: 'Name of the Model this Update TypeChecking is for' })
   public name: string
 
   /*
@@ -40,18 +40,18 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
-  protected commandShortCode = 'mk|tyc'
+  protected commandShortCode = 'mk|tyU'
   protected artifactLabel: string
-  protected targetEntity = 'Create Options'
+  protected targetEntity = 'Update Options'
+  protected artifactType: CmmaArtifactType = 'update-options'
   protected artifactGroupDir: CmmaArtifactDirs = 'typeChecking'
-  protected artifactType: CmmaArtifactType = 'create-typechecking'
 
   /*
- |--------------------------------------------------------------------------------
- | Set the template data for Moustache
- |--------------------------------------------------------------------------------
- |
- */
+  |--------------------------------------------------------------------------------
+  | Set the template data for Moustache
+  |--------------------------------------------------------------------------------
+  |
+  */
   protected getTemplateData(): any {
     const interfaceImport = new CmmaNodePath(this.PROJECT_CONFIG)
       .buildPath()
@@ -76,13 +76,13 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
 
   /*
   |--------------------------------------------------------------------------------
-  | Get Artifact Template File
+  | Get Template File
   |--------------------------------------------------------------------------------
   |
   */
-  protected getTemplateFileDir(): string {
+  protected getTemplateFilePath(): string {
     const templatesDir = CmmaFileActions.getCmmaTemplatesDir(this.application.appRoot)
-    const createRecordTemplate = 'create-options.txt'
+    const createRecordTemplate = 'update-options.txt'
 
     templatesDir.push(createRecordTemplate)
     return CmmaFileActions.joinPath(templatesDir)
@@ -128,7 +128,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     this.logger.info(
       `Found ${this.colors.underline(this.artifactLabel)} Model in ${this.colors.underline(
         modelSystemPath.systemLabel!
-      )} System of ${this.colors.underline(modelSystemPath.contextLabel!)} Context`
+      )} System of ${this.colors.underline(modelSystemPath.contextLabel!)}`
     )
 
     const confirm = await this.prompt.confirm(
@@ -155,7 +155,7 @@ export default class CreateOptions extends BaseCmmaArtifactCommand {
     const artifact = CmmaConfigurationActions.transformLabel({
       label: this.artifactLabel,
       transformations: CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'create-typechecking',
+        artifactType: 'update-options',
         configObject: this.PROJECT_CONFIG,
       }),
     })

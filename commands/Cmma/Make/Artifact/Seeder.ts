@@ -1,23 +1,26 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
-import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
+import {
+  EXITING,
+  YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM,
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
 
-export default class Model extends BaseCmmaArtifactCommand {
+export default class Seeder extends BaseCmmaArtifactCommand {
   /*
   |--------------------------------------------------------------------------------
   | ACE Command Configuration
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-model'
-  public static description = 'Create a new CMMA Model'
+  public static commandName = 'cmma:make-seeder'
+  public static description = 'Create a new CMMA Seeder'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -29,7 +32,7 @@ export default class Model extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the Model to be Created' })
+  @args.string({ description: 'Name of the Seeder to be Created' })
   public name: string
 
   /*
@@ -39,11 +42,11 @@ export default class Model extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected commandShortCode = 'mk|act'
+  protected commandShortCode = 'mk|sed'
   protected artifactLabel: string
-  protected targetEntity = 'Model'
-  protected artifactGroupDir: CmmaArtifactDirs = 'models'
-  protected artifactType: CmmaArtifactType = 'model'
+  protected targetEntity = 'Seeder'
+  protected artifactGroupDir: CmmaArtifactDirs = 'seeders'
+  protected artifactType: CmmaArtifactType = 'seeder'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -55,53 +58,56 @@ export default class Model extends BaseCmmaArtifactCommand {
     /**
      * Compute Name. Delete Prefix if included in argument
      */
+
     this.artifactLabel = this.name
 
-    const modelTransformations =
+    const seederTransformation =
       CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'model',
+        artifactType: this.artifactType,
         configObject: this.PROJECT_CONFIG,
       })
 
     this.artifactLabel = CmmaConfigurationActions.transformLabel({
-      transformations: modelTransformations,
+      transformations: seederTransformation,
       label: this.artifactLabel,
     })
 
     /*
-     * Ensure the Model isn't already in module
+     * Ensure the Action isn't already in module
      */
-
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: 'models',
-        artifactLabel: this.artifactLabel,
+        artifactsDir: this.artifactGroupDir,
+        artifactLabel: this.computedNameWithSuffix,
       })
     ) {
-      this.logger.warning(YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM)
+      this.logger.warning(`${YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM} ${EXITING}`)
       await this.exit()
     }
 
     this.logger.info(
-      `Creating ${this.colors.underline(this.artifactLabel)} ${
-        this.artifactLabel
-      } Artifact in ${this.colors.underline(this.systemLabel)} System in ${this.colors.underline(
-        this.contextLabel
-      )} Context.`
+      `Creating ${this.colors.underline(this.artifactLabel)} Artifact in ${this.colors.underline(
+        this.systemLabel
+      )} System in ${this.colors.underline(this.contextLabel)} Context.`
     )
-
+    /**
+     * Add Artifact to Project
+     */
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactsDir: 'models',
+      artifactsDir: this.artifactGroupDir,
       systemMap: this.systemMap,
     })
 
     /**
-     * Generate Model
+     * Generate Controller
      */
     await this.generate()
 
+    /**
+     * Finish Command
+     */
     this.commandArgs = [
       CmmaProjectMapActions.getContextIndexByLabel({
         projectMap: this.projectMap,

@@ -27,7 +27,56 @@
     "mig|run|",
     "mk|mig|0|0|7",
     "mig|run|",
-    "mig|run|"
+    "mig|run|",
+    "mk|mod|0|0|0",
+    "mk|mod|0|0|1",
+    "mk|act|0|1|0",
+    "up|",
+    "mk|act|0|0|0",
+    "mk|mop|",
+    "up|",
+    "mk|mop|",
+    "up|",
+    "up|",
+    "up|",
+    "mk|mop|",
+    "up|",
+    "mk|mop|",
+    "mk|mop|",
+    "mk|mop|",
+    "mk|mod|0|1|0",
+    "mk|op|",
+    "mk|op|",
+    "mk|act|0|1|1",
+    "mk|mop|",
+    "mk|mop|",
+    "up|",
+    "up|",
+    "mk|mop|",
+    "mk|mop|",
+    "mk|dbm|",
+    "mk|mod|0|1|1",
+    "mk|op|",
+    "mk|op|",
+    "up|",
+    "mk|mac|0|1|1",
+    "mk|mac|0|1|2",
+    "mk|mac|0|1|3",
+    "up|",
+    "mk|mac|0|1|0",
+    "up|",
+    "up|",
+    "mk|mac|0|1|0",
+    "mk|mac|0|1|1",
+    "up|",
+    "mk|mac|0|1|0",
+    "mk|act|0|0|5",
+    "mk|mop|",
+    "mk|mac|0|0|1",
+    "mk|mop|",
+    "mk|act|0|0|6",
+    "mk|mop|",
+    "mk|mac|0|0|2"
   ],
   "projectMap": {
     "contexts": {
@@ -36,7 +85,7 @@
         "systems": {
           "UserManagement": {
             "systemArtifacts": {
-              "actions": [],
+              "actions": ["BIgActions", "UserProfileActions", "AdminActions"],
               "migrations": [
                 "1676953451114_users",
                 "1676953451118_api_tokens",
@@ -45,30 +94,97 @@
                 "1677073329408_user_roles",
                 "1683628197883_user_profiles",
                 "1683835145675_user_registration_steps",
-                "friends"
+                "1686235634561_friends",
+                "1686235703389_keyboards"
               ],
-              "models": ["SettingsUserRole", "User", "UserRegistrationStep"],
+              "models": [
+                "SettingsUserRole",
+                "User",
+                "UserRegistrationStep",
+                "Friend",
+                "Keyboard",
+                "UserProfile",
+                "Admin"
+              ],
               "routes": [],
-              "seeders": ["UserSeeder", "UserFriendActionSeeder"],
+              "seeders": ["UserRoleSeeder"],
               "views": [],
-              "typeChecking": []
+              "typeChecking": [
+                "CreateUserProfileRecordOptions",
+                "UpdateUserProfileRecordOptions",
+                "UserProfileInterface",
+                "UserProfileIdentifierOptions",
+                "CreateUserRecordOptions",
+                "UpdateUserRecordOptions",
+                "UserInterface",
+                "UserIdentifierOptions",
+                "CreateAdminRecordOptions",
+                "UpdateAdminRecordOptions",
+                "AdminInterface",
+                "AdminIdentifierOptions"
+              ]
             },
             "abstractArtifacts": {},
-            "modules": {},
+            "modules": {
+              "FriendsAndFamily": {
+                "controllers": [],
+                "validators": [],
+                "moduleLabel": "FriendsAndFamily"
+              },
+              "Friends": {
+                "controllers": [],
+                "validators": [],
+                "moduleLabel": "Friends"
+              }
+            },
             "systemLabel": "UserManagement"
           },
           "Finance": {
             "systemArtifacts": {
-              "actions": [],
-              "migrations": [],
-              "models": [],
+              "actions": ["WalletActions"],
+              "migrations": [
+                "1686235754909_keyboards",
+                "1686237241846_user",
+                "1686237423059_wallet",
+                "1686237473675_accounts",
+                "1686242140520_settlement_accounts"
+              ],
+              "models": [
+                "Keyboard",
+                "Wallet",
+                "Account",
+                "User",
+                "SettlementAccount"
+              ],
               "routes": [],
-              "seeders": [],
+              "seeders": ["UserSeeder"],
               "views": [],
-              "typeChecking": []
+              "typeChecking": [
+                "CreateWalletRecordOptions",
+                "UpdateWalletRecordOptions",
+                "WalletInterface",
+                "WalletIdentifierOptions"
+              ]
             },
             "abstractArtifacts": {},
-            "modules": {},
+            "modules": {
+              "WalletManagement": {
+                "controllers": [
+                  "CreateWalletPinController",
+                  "FundWalletController"
+                ],
+                "validators": [
+                  "CreateWalletPinRequestValidator",
+                  "FundWalletRequestValidator"
+                ],
+                "moduleLabel": "WalletManagement"
+              },
+              "SettlementAccount": {
+                "controllers": ["CreateSettlementAccountController"],
+                "validators": ["CreateSettlementAccountRequestValidator"],
+                "moduleLabel": "SettlementAccount"
+              }
+            },
             "systemLabel": "Finance"
           }
         }

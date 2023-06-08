@@ -1,26 +1,26 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
 import {
   EXITING,
   YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM,
-} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
 
-export default class Seeder extends BaseCmmaArtifactCommand {
+export default class Action extends BaseCmmaArtifactCommand {
   /*
   |--------------------------------------------------------------------------------
   | ACE Command Configuration
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-seeder'
-  public static description = 'Create a new CMMA Seeder'
+  public static commandName = 'cmma:make-action'
+  public static description = 'Create a new CMMA Action'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -32,7 +32,7 @@ export default class Seeder extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the Seeder to be Created' })
+  @args.string({ description: 'Name of the Action to be Created' })
   public name: string
 
   /*
@@ -42,11 +42,11 @@ export default class Seeder extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected commandShortCode = 'mk|sed'
+  protected commandShortCode = 'mk|act'
   protected artifactLabel: string
-  protected targetEntity = 'Seeder'
-  protected artifactGroupDir: CmmaArtifactDirs = 'seeders'
-  protected artifactType: CmmaArtifactType = 'seeder'
+  protected targetEntity = 'Action'
+  protected artifactGroupDir: CmmaArtifactDirs = 'actions'
+  protected artifactType: CmmaArtifactType = 'action'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -61,14 +61,14 @@ export default class Seeder extends BaseCmmaArtifactCommand {
 
     this.artifactLabel = this.name
 
-    const seederTransformation =
+    const actionTransformations =
       CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: this.artifactType,
+        artifactType: 'action',
         configObject: this.PROJECT_CONFIG,
       })
 
     this.artifactLabel = CmmaConfigurationActions.transformLabel({
-      transformations: seederTransformation,
+      transformations: actionTransformations,
       label: this.artifactLabel,
     })
 
@@ -78,7 +78,7 @@ export default class Seeder extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: this.artifactGroupDir,
+        artifactsDir: 'actions',
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {
@@ -96,12 +96,12 @@ export default class Seeder extends BaseCmmaArtifactCommand {
      */
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactsDir: this.artifactGroupDir,
+      artifactsDir: 'actions',
       systemMap: this.systemMap,
     })
 
     /**
-     * Generate Controller
+     * Generate Artifact
      */
     await this.generate()
 

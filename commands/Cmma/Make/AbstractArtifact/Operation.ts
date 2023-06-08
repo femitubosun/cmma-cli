@@ -1,19 +1,17 @@
-import { BaseCmmaAbstractArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaAbstractArtifactCommand'
+import { BaseCmmaAbstractArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaAbstractArtifactCommand'
 import { args, flags } from '@adonisjs/core/build/standalone'
-import CmmaAbstractArtifact from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
-import CmmaProjectMapActions from '../../../cmma/Actions/CmmaProjectMapActions'
-import CmmaContextActions from '../../../cmma/Actions/CmmaContextActions'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaNodePath from '../../../cmma/Models/CmmaNodePath'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaModuleActions from '../../../cmma/Actions/CmmaModuleActions'
+import CmmaAbstractArtifact from '../../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifact'
+import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
+import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaNodePath from '../../../../cmma/Models/CmmaNodePath'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
 import {
   EXITING,
   MODULE_NOT_FOUND_IN_PROJECT,
-} from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
-import CmmaAbstractArtifactEnum from '../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
+} from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaAbstractArtifactEnum from '../../../../cmma/TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
+import CmmaModuleActions from '../../../../cmma/Actions/CmmaModuleActions'
 
 /*
 |--------------------------------------------------------------------------------
@@ -57,12 +55,68 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
 
   protected PROJECT_CONFIG = this.projectConfigurationFromFile!
   protected commandShortCode = 'mk|op'
-  protected artifactType: CmmaArtifactType = 'file'
-  protected abstractArtifactType: CmmaAbstractArtifactEnum = 'operation'
-  protected artifactGroupDir: CmmaArtifactDirs = 'controllers'
   protected artifactLabel: string
+  protected abstractArtifactType: CmmaAbstractArtifactEnum = 'operation'
   protected targetEntity = 'Operation'
-  protected abstractArtifact: CmmaAbstractArtifact = ['controller', 'validator']
+  protected abstractArtifactConstituents: CmmaAbstractArtifact = ['controller', 'validator']
+
+  protected setArtifactDestinationPathCommandStep(): void {
+    for (let artifactType of this.abstractArtifactConstituents) {
+      const artifactDestinationDir = new CmmaNodePath(this.PROJECT_CONFIG)
+        .buildPath()
+        .toContext(this.contextLabel)
+        .toSystem(this.systemLabel)
+        .toArtifactsDir(CmmaConfigurationActions.getDefaultArtifactTypeDir(artifactType))
+        .toModule(this.moduleLabel)
+        .getAbsoluteOsPath(this.application.appRoot)
+
+      this.setArtifactDestinationDir({
+        artifactType,
+        artifactDestinationDir: artifactDestinationDir,
+      })
+    }
+  }
+
+  /**
+   * @description Add Artifacts to Project Map Step
+   * @protected
+   * @returns void
+   * @author FATE
+   */
+  protected async addArtifactsToProjectMapCommandStep() {
+    for (let artifact of this.abstractArtifactConstituents) {
+      const artifactTransformationsWithoutExtension =
+        CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
+          artifactType: artifact,
+          configObject: this.PROJECT_CONFIG,
+        })
+
+      const artifactLabel = CmmaConfigurationActions.transformLabel({
+        label: this.artifactLabel,
+        transformations: artifactTransformationsWithoutExtension,
+      })
+
+      const artifactsDir = CmmaConfigurationActions.getDefaultArtifactTypeDir(artifact)
+
+      if (
+        CmmaModuleActions.isModuleArtifactInArtifactDir({
+          artifactLabel: artifactLabel,
+          artifactsDir,
+          moduleMap: this.moduleMap,
+        })
+      ) {
+        this.logger.error(`${artifactLabel} already exists in ${this.moduleLabel}. ${EXITING}`)
+
+        await this.exit()
+      }
+
+      CmmaModuleActions.addArtifactToModule({
+        artifact: artifactLabel,
+        artifactsDir,
+        moduleMap: this.moduleMap,
+      })
+    }
+  }
 
   /*
   |--------------------------------------------------------------------------------
@@ -70,8 +124,11 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
+
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
+
+    this.artifactLabel = this.name
 
     if (this.module) {
       this.module = CmmaConfigurationActions.normalizeProjectIdentifier({
@@ -126,60 +183,11 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
       await this.selectModuleCommandStep()
     }
 
-    this.artifactLabel = this.name
+    await this.addArtifactsToProjectMapCommandStep()
 
-    const controllerTransformation =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'controller',
-        configObject: this.PROJECT_CONFIG,
-      })
+    this.setArtifactsTransformationsCommandStep()
 
-    const controllerLabel = CmmaConfigurationActions.transformLabel({
-      transformations: controllerTransformation,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaModuleActions.isControllerInModule({
-        controllerLabel,
-        moduleMap: this.moduleMap,
-      })
-    ) {
-      this.logger.error(`${controllerLabel} is already in ${this.moduleLabel}. ${EXITING}`)
-
-      await this.exit()
-    }
-    CmmaModuleActions.addModuleControllerToModule({
-      moduleMap: this.moduleMap,
-      controller: controllerLabel,
-    })
-
-    const validatorTransformation =
-      CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: 'validator',
-        configObject: this.PROJECT_CONFIG,
-      })
-
-    const validatorLabel = CmmaConfigurationActions.transformLabel({
-      transformations: validatorTransformation,
-      label: this.artifactLabel,
-    })
-
-    if (
-      CmmaModuleActions.isValidatorInModule({
-        validatorLabel,
-        moduleMap: this.moduleMap,
-      })
-    ) {
-      this.logger.error(`${controllerLabel} is already in ${this.moduleLabel}. ${EXITING}`)
-
-      await this.exit()
-    }
-
-    CmmaModuleActions.addModuleValidatorToModule({
-      moduleMap: this.moduleMap,
-      validator: validatorLabel,
-    })
+    this.setArtifactDestinationPathCommandStep()
 
     /**
      * Set Destination Directories
@@ -190,28 +198,6 @@ export default class Operation extends BaseCmmaAbstractArtifactCommand {
       .toSystem(this.systemLabel)
       .toArtifactsDir('validators')
       .toModule(this.moduleLabel)
-
-    const validatorDestinationDir = validationDestinationNodePath.getAbsoluteOsPath(
-      this.application.appRoot
-    )
-
-    this.setArtifactDestinationDir({
-      artifactType: 'validator',
-      destinationDir: validatorDestinationDir,
-    })
-
-    const controllerDirNodePath = new CmmaNodePath(this.PROJECT_CONFIG)
-      .buildPath()
-      .toContext(this.contextLabel)
-      .toSystem(this.systemLabel)
-      .toArtifactsDir('controllers')
-      .toModule(this.moduleLabel)
-      .getAbsoluteOsPath(this.application.appRoot)
-
-    this.setArtifactDestinationDir({
-      artifactType: 'controller',
-      destinationDir: controllerDirNodePath,
-    })
 
     /**
      * Set template data

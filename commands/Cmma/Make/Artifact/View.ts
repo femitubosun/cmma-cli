@@ -1,11 +1,11 @@
-import { BaseCmmaArtifactCommand } from '../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
+import { BaseCmmaArtifactCommand } from '../../../../cmma/BaseCommands/BaseCmmaArtifactCommand'
 import { args } from '@adonisjs/core/build/standalone'
-import CmmaSystemActions from '../../../cmma/Actions/CmmaSystemActions'
-import CmmaConfigurationActions from '../../../cmma/Actions/CmmaConfigurationActions'
-import CmmaArtifactDirs from '../../../cmma/TypeChecking/CmmaArtifactDirs'
-import CmmaConfiguration from '../../../cmma/Models/CmmaConfiguration'
-import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../cmma/Helpers/SystemMessages/SystemMessages'
-import CmmaArtifactType from '../../../cmma/TypeChecking/CmmaArtifactType'
+import CmmaSystemActions from '../../../../cmma/Actions/CmmaSystemActions'
+import CmmaConfigurationActions from '../../../../cmma/Actions/CmmaConfigurationActions'
+import CmmaArtifactDirs from '../../../../cmma/TypeChecking/CmmaArtifactDirs'
+import CmmaConfiguration from '../../../../cmma/Models/CmmaConfiguration'
+import { YOU_HAVE_ALREADY_REGISTERED_ARTIFACT_IN_SYSTEM } from '../../../../cmma/Helpers/SystemMessages/SystemMessages'
+import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
 
 export default class View extends BaseCmmaArtifactCommand {
   /*
@@ -72,7 +72,7 @@ export default class View extends BaseCmmaArtifactCommand {
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactDir: 'views',
+        artifactsDir: 'views',
         artifactLabel: this.artifactLabel,
       })
     ) {
