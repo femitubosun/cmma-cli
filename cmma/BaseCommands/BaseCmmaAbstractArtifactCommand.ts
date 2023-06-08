@@ -360,7 +360,6 @@ export abstract class BaseCmmaAbstractArtifactCommand extends BaseCmmaArtifactCo
       const templateFile = this.getArtifactTemplateFileDir(artifact)
       const destinationDir = this.getArtifactDestinationDir(artifact)
 
-      console.log(this.application.appRoot)
       this.generator
         .addFile(this.artifactLabel, artifactTransformation)
         .stub(templateFile)
