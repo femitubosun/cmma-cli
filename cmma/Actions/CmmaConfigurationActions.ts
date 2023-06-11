@@ -497,6 +497,7 @@ export default class CmmaConfigurationActions {
       defaultCasePattern: 'pascalcase',
       defaultSystemArtifactDirs: [
         'actions',
+        'helpers',
         'migrations',
         'models',
         'routes',
