@@ -13,5 +13,6 @@ type CmmaArtifactType =
   | 'validator'
   | 'index'
   | 'seeder'
+  | 'helper'
 
 export default CmmaArtifactType

@@ -8,5 +8,6 @@ type CmmaArtifactDirs =
   | 'routes'
   | 'typeChecking'
   | 'seeders'
+  | 'helpers'
 
 export default CmmaArtifactDirs

@@ -135,6 +135,11 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
+      'helper': {
+        extname: '.ts',
+        pattern: configObject.defaultCasePattern,
+      },
+
       'create-options': {
         extname: '.ts',
         prefix: 'Create',
@@ -207,6 +212,10 @@ export default class CmmaConfigurationActions {
       'controller': {
         suffix: 'Controller',
         form: 'singular',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      'helper': {
         pattern: configObject.defaultCasePattern,
       },
 
@@ -297,6 +306,7 @@ export default class CmmaConfigurationActions {
       'route': 'routes',
       'validator': 'validators',
       'view': 'views',
+      'helper': 'helpers',
     }
 
     return defaultDir[artifactType]
@@ -350,6 +360,11 @@ export default class CmmaConfigurationActions {
       routes: {
         extname: '.ts',
         suffix: 'Routes',
+        pattern: configObject.defaultCasePattern,
+      },
+
+      helpers: {
+        extname: '.ts',
         pattern: configObject.defaultCasePattern,
       },
 

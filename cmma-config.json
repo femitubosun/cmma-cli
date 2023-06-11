@@ -76,7 +76,8 @@
     "mk|mop|",
     "mk|act|0|0|6",
     "mk|mop|",
-    "mk|mac|0|0|2"
+    "mk|mac|0|0|2",
+    "mk|con|1"
   ],
   "projectMap": {
     "contexts": {
@@ -188,7 +189,8 @@
             "systemLabel": "Finance"
           }
         }
-      }
+      },
+      "MobileClient": { "contextLabel": "MobileClient", "systems": {} }
     },
     "artifacts": ["ProjectRoutes"]
   }
