@@ -177,7 +177,7 @@ PS D:/fate-projects/cmma-cli> node ace cmma:make-action Wallet
 
 ```
 
-```json
+```shell
 PS D:/fate-projects/cmma-cli> node ace cmma: make-action Wallet
 > What Context does this Action belong to? · Client
 > What System does this  Action belong to? · Finance
