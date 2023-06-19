@@ -187,6 +187,26 @@
       "aliases": [],
       "flags": []
     },
+    "cmma:make-appwrite-seeder": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Make/Artifact/AppwriteSeeder",
+      "commandName": "cmma:make-appwrite-seeder",
+      "description": "Create a new CMMA Appwrite Seeder",
+      "args": [
+        {
+          "type": "string",
+          "propertyName": "name",
+          "name": "name",
+          "required": true,
+          "description": "Name of the Appwrite Seeder to be Created"
+        }
+      ],
+      "aliases": [],
+      "flags": []
+    },
     "cmma:make-controller": {
       "settings": {
         "loadApp": false,
@@ -685,6 +705,18 @@
           "alias": "c"
         }
       ]
+    },
+    "cmma:appwrite-seed": {
+      "settings": {
+        "loadApp": false,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/Cmma/Seed/AppwriteSeed",
+      "commandName": "cmma:appwrite-seed",
+      "description": "Run Appwrite Seeds",
+      "args": [],
+      "aliases": [],
+      "flags": []
     },
     "cmma:db-seed": {
       "settings": {

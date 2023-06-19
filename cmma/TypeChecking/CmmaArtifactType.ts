@@ -13,6 +13,7 @@ type CmmaArtifactType =
   | 'validator'
   | 'index'
   | 'seeder'
+  | 'appwrite-seeder'
   | 'helper'
 
 export default CmmaArtifactType

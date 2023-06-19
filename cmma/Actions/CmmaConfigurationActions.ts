@@ -116,6 +116,13 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
         extname: '.ts',
       },
+      'appwrite-seeder': {
+        prefix: 'Appwrite',
+        suffix: 'Seeder',
+        form: 'singular',
+        pattern: configObject.defaultCasePattern,
+        extname: '.ts',
+      },
 
       'migration': {
         extname: '.ts',
@@ -234,6 +241,12 @@ export default class CmmaConfigurationActions {
         pattern: configObject.defaultCasePattern,
       },
 
+      'appwrite-seeder': {
+        suffix: 'Seeder',
+        prefix: 'Appwrite',
+        pattern: configObject.defaultCasePattern,
+      },
+
       'model': {
         form: 'singular',
         pattern: configObject.defaultCasePattern,
@@ -301,6 +314,7 @@ export default class CmmaConfigurationActions {
       'file': 'actions',
       'index': 'actions',
       'seeder': 'seeders',
+      'appwrite-seeder': 'seeders',
       'migration': 'migrations',
       'model': 'models',
       'route': 'routes',

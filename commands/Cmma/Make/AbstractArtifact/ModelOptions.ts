@@ -140,10 +140,6 @@ export default class ModelOptions extends BaseCmmaAbstractArtifactCommand {
     //   systemMap: this.systemMap,
     // })
 
-    /**
-     * Setting Destination Dirs
-     */
-
     await this.addArtifactsToProjectMapCommandStep()
 
     this.setArtifactsTransformationsCommandStep()

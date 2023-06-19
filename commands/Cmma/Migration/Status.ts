@@ -1,6 +1,6 @@
 import { flags } from '@adonisjs/core/build/standalone'
 import { MigrationListNode } from '@ioc:Adonis/Lucid/Migrator'
-import { CmmaMigratorContract } from '../../../cmma/Entities/Migration/CmmaMigratorContract'
+import { CmmaMigratorContract } from '../../../cmma/Helpers/Migration/CmmaMigratorContract'
 import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
 
 /**

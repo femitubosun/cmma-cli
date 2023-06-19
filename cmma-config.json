@@ -77,7 +77,8 @@
     "mk|act|0|0|6",
     "mk|mop|",
     "mk|mac|0|0|2",
-    "mk|con|1"
+    "mk|con|1",
+    "mk|a-seed|0|0|1"
   ],
   "projectMap": {
     "contexts": {
@@ -108,7 +109,7 @@
                 "Admin"
               ],
               "routes": [],
-              "seeders": ["UserRoleSeeder"],
+              "seeders": ["UserRoleSeeder", "AppwriteOrganizationSizeSeeder"],
               "views": [],
               "typeChecking": [
                 "CreateUserProfileRecordOptions",

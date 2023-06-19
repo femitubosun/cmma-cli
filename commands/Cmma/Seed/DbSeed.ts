@@ -13,7 +13,7 @@ import { FileNode } from '@ioc:Adonis/Lucid/Database'
 import { SeederFileNode } from '@ioc:Adonis/Lucid/Seeder'
 import { flags } from '@adonisjs/core/build/standalone'
 
-import { CmmaSeedsRunner } from '../../../cmma/Entities/Seeders/CmmaSeedsRunner'
+import { CmmaSeedsRunner } from '../../../cmma/Helpers/Seeder/CmmaSeedsRunner'
 import { BaseCmmaCommand } from '../../../cmma/BaseCommands/BaseCmmaCommand'
 import CmmaProjectMap from '../../../cmma/Models/CmmaProjectMap'
 
@@ -30,7 +30,7 @@ export default class DbSeed extends BaseCmmaCommand {
 |--------------------------------------------------------------------------------
 |
 */
-  protected commandShortCode = 'db|sed'
+  protected commandShortCode = 'db|seed'
   protected targetEntity = ''
 
   private seeder: CmmaSeedsRunner
@@ -169,7 +169,7 @@ export default class DbSeed extends BaseCmmaCommand {
    */
   private async instantiateSeeder() {
     const db = this.application.container.use('Adonis/Lucid/Database')
-    const { CmmaSeedsRunner } = await import('../../../cmma/Entities/Seeders/CmmaSeedsRunner')
+    const { CmmaSeedsRunner } = await import('../../../cmma/Helpers/Seeder/CmmaSeedsRunner')
     this.seeder = new CmmaSeedsRunner(db, this.application, this.PROJECT_CONFIG, this.connection)
   }
 

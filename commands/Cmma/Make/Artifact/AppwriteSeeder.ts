@@ -12,15 +12,15 @@ import CmmaArtifactType from '../../../../cmma/TypeChecking/CmmaArtifactType'
 import CmmaProjectMapActions from '../../../../cmma/Actions/CmmaProjectMapActions'
 import CmmaContextActions from '../../../../cmma/Actions/CmmaContextActions'
 
-export default class Seeder extends BaseCmmaArtifactCommand {
+export default class Action extends BaseCmmaArtifactCommand {
   /*
   |--------------------------------------------------------------------------------
   | ACE Command Configuration
   |--------------------------------------------------------------------------------
   |
   */
-  public static commandName = 'cmma:make-seeder'
-  public static description = 'Create a new CMMA Seeder'
+  public static commandName = 'cmma:make-appwrite-seeder'
+  public static description = 'Create a new CMMA Appwrite Seeder'
   public static settings = {
     loadApp: false,
     stayAlive: false,
@@ -32,7 +32,7 @@ export default class Seeder extends BaseCmmaArtifactCommand {
   |--------------------------------------------------------------------------------
   |
   */
-  @args.string({ description: 'Name of the Seeder to be Created' })
+  @args.string({ description: 'Name of the Appwrite Seeder to be Created' })
   public name: string
 
   /*
@@ -42,11 +42,11 @@ export default class Seeder extends BaseCmmaArtifactCommand {
   |
   */
   protected PROJECT_CONFIG: CmmaConfiguration = this.projectConfigurationFromFile!
-  protected commandShortCode = 'mk|seed'
+  protected commandShortCode = 'mk|a-seed'
   protected artifactLabel: string
   protected targetEntity = 'Seeder'
   protected artifactGroupDir: CmmaArtifactDirs = 'seeders'
-  protected artifactType: CmmaArtifactType = 'seeder'
+  protected artifactType: CmmaArtifactType = 'appwrite-seeder'
 
   public async run() {
     await this.ensureConfigFileExistsCommandStep()
@@ -55,30 +55,26 @@ export default class Seeder extends BaseCmmaArtifactCommand {
 
     await this.selectSystemCommandStep()
 
-    /**
-     * Compute Name. Delete Prefix if included in argument
-     */
-
     this.artifactLabel = this.name
 
-    const seederTransformation =
+    const appwriteSeederTransformation =
       CmmaConfigurationActions.getArtifactTypeTransformationWithoutExtension({
-        artifactType: this.artifactType,
+        artifactType: 'appwrite-seeder',
         configObject: this.PROJECT_CONFIG,
       })
 
     this.artifactLabel = CmmaConfigurationActions.transformLabel({
-      transformations: seederTransformation,
+      transformations: appwriteSeederTransformation,
       label: this.artifactLabel,
     })
 
     /*
-     * Ensure the Action isn't already in module
+     * Ensure the Seeder isn't already in module
      */
     if (
       CmmaSystemActions.isArtifactInSystemArtifactGroup({
         systemMap: this.systemMap,
-        artifactsDir: this.artifactGroupDir,
+        artifactsDir: 'seeders',
         artifactLabel: this.computedNameWithSuffix,
       })
     ) {
@@ -96,12 +92,12 @@ export default class Seeder extends BaseCmmaArtifactCommand {
      */
     CmmaSystemActions.addArtifactToArtifactGroup({
       artifact: this.artifactLabel,
-      artifactsDir: this.artifactGroupDir,
+      artifactsDir: 'seeders',
       systemMap: this.systemMap,
     })
 
     /**
-     * Generate Controller
+     * Generate Artifact
      */
     await this.generate()
 

@@ -1,0 +1,10 @@
+import AppwriteSeederInterface from 'App/Common/TypeChecking/GeneralPurpose/AppwriteSeederInterface'
+
+
+export default class {{ filename }} implements AppwriteSeederInterface {
+  public MODEL_ACTION =
+
+  public async run(): Promise<void> {
+
+  }
+}

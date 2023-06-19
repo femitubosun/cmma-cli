@@ -1,6 +1,6 @@
 import prettyHrTime from 'pretty-hrtime'
 import { MigratedFileNode } from '@ioc:Adonis/Lucid/Migrator'
-import { CmmaMigratorContract } from '../Entities/Migration/CmmaMigratorContract'
+import { CmmaMigratorContract } from '../Helpers/Migration/CmmaMigratorContract'
 import { getDDLMethod } from '../Helpers/LucidCommandsUtils'
 import { prettyPrint } from '../Helpers/PrettyPrint'
 import { BaseCmmaCommand } from './BaseCmmaCommand'

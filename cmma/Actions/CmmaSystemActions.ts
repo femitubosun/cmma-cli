@@ -4,6 +4,8 @@ import CmmaArtifact from '../Models/CmmaArtifact'
 import CmmaArtifactsGroup from '../Models/CmmaArtifactsGroup'
 import CmmaArtifactDirs from '../TypeChecking/CmmaArtifactDirs'
 import CmmaAbstractArtifactEnum from '../TypeChecking/AbstractArtifact/CmmaAbstractArtifactEnum'
+import CmmaConfiguration from '../Models/CmmaConfiguration'
+import CmmaConfigurationActions from './CmmaConfigurationActions'
 
 export default class CmmaSystemActions {
   /**
@@ -466,6 +468,28 @@ export default class CmmaSystemActions {
       abstractArtifactGroupLabel,
       systemMap,
     }).includes(abstractArtifactLabel)
+  }
+
+  /**
+   * @description List Appwrite Seeders in System
+   * @author FATE
+   * @param {} listSystemAppwriteSeedersOptions
+   */
+  public static listSystemAppwriteSeeders(listSystemAppwriteSeedersOptions: {
+    systemMap: CmmaSystem
+    configObject: CmmaConfiguration
+  }) {
+    const { systemMap, configObject } = listSystemAppwriteSeedersOptions
+    const seeders = this.listSystemArtifactsByGroupLabel({
+      systemMap,
+      artifactsDir: 'seeders',
+    })
+    // NOTE ->. Probably want to transfrom this
+    const appwriteLabel = CmmaConfigurationActions.normalizeProjectIdentifier({
+      identifier: 'Appwrite',
+      configObject,
+    })
+    return seeders.filter((seeder) => seeder.includes(appwriteLabel))
   }
 
   /**
