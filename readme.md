@@ -212,7 +212,7 @@ when running a CMMA `cmma:migration-fresh`
 
 | Command                   | Short Code | Description                                    |
 |---------------------------|------------|------------------------------------------------|
-| `cmma:migration-run`      | `mig       | run`                                           | Migrate database by running pending CMMA Project Migrations |
+| `cmma:migration-run`      | `mig\|run` | Migrate database by running pending CMMA Project Migrations |
 | `cmma:migration-fresh`    | `mig\|fre` | Drop all tables and re-migrate the database    |
 | `cmma:migration:refresh`  | `mig\|rfr` | Rollback and migrate database                  |
 | `cmma:migration:reset`    | `mig\|res` | Rollback all migrations in CMMA Project        |
